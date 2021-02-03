@@ -28,6 +28,3 @@ catkin_ws/install/
 
 # 'rosbag' files.
 *.bag
-
-# 'darknet_ros' YOLO models.
-catkin_ws/src/hsr_launch/config/darknet_ros/weights/

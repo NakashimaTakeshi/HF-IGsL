@@ -7,9 +7,9 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "sdewg_talker");
+  ros::init(argc, argv, "rulo_talker");
   ros::NodeHandle n;
-  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("sdewg_chatter", 1000);
+  ros::Publisher chatter_pub = n.advertise<std_msgs::String>("rulo_chatter", 1000);
   ros::Rate loop_rate(10);
 
   int count = 0;

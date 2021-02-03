@@ -16,7 +16,7 @@ DOCKER_PROJECT=$1
 if [ -z "${DOCKER_PROJECT}" ]; then
   DOCKER_PROJECT=${USER}
 fi
-DOCKER_CONTAINER="${DOCKER_PROJECT}_hsr_1"
+DOCKER_CONTAINER="${DOCKER_PROJECT}_rulo_1"
 echo "$0: DOCKER_PROJECT=${DOCKER_PROJECT}"
 echo "$0: DOCKER_CONTAINER=${DOCKER_CONTAINER}"
 
@@ -34,13 +34,13 @@ fi
 ################################################################################
 
 # Inject the 'Dockerfile' commit hash into the Docker container implicitly via a build argument in 'docker-compose.yml'.
-export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/hsr-devel/Dockerfile)"
+export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/rulo-devel/Dockerfile)"
 
 ################################################################################
 
 # Ask the user credentials to login into the GitLab Docker registry.
-echo "Login into 'registry.hsr.io'. Enter your GitLab credentials below:"
-docker login registry.hsr.io
+echo "Login into 'registry.rulo.io'. Enter your GitLab credentials below:"
+docker login registry.rulo.io
 
 # If the script runs in CI mode, build the image directly.
 # Otherwise, try to pull it from the registry. If it fails, build locally.

@@ -7,7 +7,7 @@
 # https://marc.info/?l=git&m=145932862024551&w=2
 
 # Replaces full paths in '.git' files with the corresponding relative paths.
-cd /root/HSR/
+cd /root/RULO/
 find . -type f -iname '.git' | \
   while read f ; do
     if grep -qE '^gitdir: /' $f ; then

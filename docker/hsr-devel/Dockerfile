@@ -7,7 +7,6 @@
 ARG nvidia_cudagl_version=10.1-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.6.0.64-1+cuda10.1
 ARG ros_desktop_version=1.4.1-0bionic.20201103.021523
-ARG ros_tmc_version=0.14.0-1.bionic.20201023.0857.+0000
 
 ################################################################################
 
@@ -82,52 +81,6 @@ RUN rosdep init
 
 ################################################################################
 
-# Install the Toyota Motor Corporation ROS packages.
-# https://docs.hsr.io/manual_en/howto/pc_install.html
-
-# Install the missing required tools.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  apt-transport-https=1.6.12ubuntu0.1 \
-  wget=1.19.4-1ubuntu2.2 \
-  && rm -rf /var/lib/apt/lists/*
-
-# Update the package lists.
-RUN echo "deb https://hsr-user:???@packages.hsr.io/ros/ubuntu bionic main" > /etc/apt/sources.list.d/tmc.list \
-  && echo "deb https://hsr-user:???@packages.hsr.io/tmc/ubuntu bionic multiverse main" >> /etc/apt/sources.list.d/tmc.list \
-  && echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable bionic main" > /etc/apt/sources.list.d/gazebo-stable.list \
-  && echo "deb https://apache.bintray.com/couchdb-deb bionic main" > /etc/apt/sources.list.d/couchdb.list
-
-# Add the package keys.
-RUN wget https://hsr-user:???@packages.hsr.io/tmc.key -P /tmp \
-  && apt-key add /tmp/tmc.key \
-  && rm /tmp/tmc.key \
-  && wget http://packages.osrfoundation.org/gazebo.key -P /tmp \
-  && apt-key add /tmp/gazebo.key \
-  && rm /tmp/gazebo.key \
-  && wget https://couchdb.apache.org/repo/bintray-pubkey.asc -P /tmp \
-  && apt-key add /tmp/bintray-pubkey.asc \
-  && rm /tmp/bintray-pubkey.asc
-
-# Install the main Toyota Motor Corporation ROS packages.
-ARG ros_tmc_version
-ENV ROS_TMC_VERSION=${ros_tmc_version}
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-melodic-tmc-desktop-full=${ROS_TMC_VERSION} \
-  && rm -rf /var/lib/apt/lists/*
-
-################################################################################
-
-# Install dependencies for the 'flexbe_app' ROS package.
-# https://github.com/FlexBE/flexbe_app
-
-# Gather the dependencies from the Ubuntu repositories.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  libcanberra-gtk3-module=0.30-5ubuntu1 \
-  libgconf2-dev=3.2.6-4ubuntu1 \
-  && rm -rf /var/lib/apt/lists/*
-
-################################################################################
-
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git=1:2.17.1-1ubuntu0.7 \
@@ -148,13 +101,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /root/
 
 # Copy the helper scripts to the working directory.
-COPY ./docker/hsr-devel/scripts/. /root/HSR/docker/hsr-devel/scripts/
-RUN chmod -R +x /root/HSR/docker/hsr-devel/scripts/*
+COPY ./docker/rulo-devel/scripts/. /root/RULO/docker/rulo-devel/scripts/
+RUN chmod -R +x /root/RULO/docker/rulo-devel/scripts/*
 
 # Setup the Bash shell environment with '/root/.bashrc'.
 # The value of 'TMP_HOSTNAME' is substituted by '../../RUN-DOCKER-CONTAINER.bash' when entering the container.
-RUN echo "HSRB_HOSTNAME=\"TMP_HOSTNAME\"" >> /root/.bashrc
-RUN echo "source /root/HSR/docker/hsr-devel/scripts/initialize-bash-shell.bash" >> /root/.bashrc
+RUN echo "RULO_HOSTNAME=\"TMP_HOSTNAME\"" >> /root/.bashrc
+RUN echo "source /root/RULO/docker/rulo-devel/scripts/initialize-bash-shell.bash" >> /root/.bashrc
 
 # Force color prompt in terminal.
 RUN sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc

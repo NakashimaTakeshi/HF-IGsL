@@ -1,4 +1,4 @@
 <launch>
-  <node name="sdewg_talker" pkg="sdewg_chatter" type="sdewg_talker" output="screen" />
-  <node name="sdewg_listener" pkg="sdewg_chatter" type="sdewg_listener" output="screen" />
+  <node name="rulo_talker" pkg="rulo_chatter" type="rulo_talker" output="screen" />
+  <node name="rulo_listener" pkg="rulo_chatter" type="rulo_listener" output="screen" />
 </launch>

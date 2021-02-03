@@ -11,7 +11,7 @@
 		<script type="text/javascript" type="text/javascript">
 			// Connect to ROS.
 			var ros = new ROSLIB.Ros({
-				url : 'ws://hsrb.local:9090'
+				url : 'ws://rulo.local:9090'
 				//url : 'ws://localhost:9090'
 				//url : 'ws://192.168.1.X:9090'
 			});
@@ -27,7 +27,7 @@
 			// Subscribe to topic.
 			var listener = new ROSLIB.Topic({
 				ros : ros,
-				name : '/sdewg_chatter',
+				name : '/rulo_chatter',
 				messageType : 'std_msgs/String'
 			});
 			listener.subscribe(function(message) {

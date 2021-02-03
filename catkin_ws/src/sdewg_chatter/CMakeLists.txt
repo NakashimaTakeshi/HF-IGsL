@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sdewg_chatter)
+project(rulo_chatter)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -16,8 +16,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(sdewg_talker src/sdewg_talker.cpp)
-add_executable(sdewg_listener src/sdewg_listener.cpp)
+add_executable(rulo_talker src/rulo_talker.cpp)
+add_executable(rulo_listener src/rulo_listener.cpp)
 
-target_link_libraries(sdewg_talker ${catkin_LIBRARIES})
-target_link_libraries(sdewg_listener ${catkin_LIBRARIES})
+target_link_libraries(rulo_talker ${catkin_LIBRARIES})
+target_link_libraries(rulo_listener ${catkin_LIBRARIES})

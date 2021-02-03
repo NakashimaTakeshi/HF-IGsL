@@ -10,9 +10,9 @@ void chatterCallback(const std_msgs::String::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "sdewg_listener");
+  ros::init(argc, argv, "rulo_listener");
   ros::NodeHandle n;
-  ros::Subscriber sub = n.subscribe("sdewg_chatter", 1000, chatterCallback);
+  ros::Subscriber sub = n.subscribe("rulo_chatter", 1000, chatterCallback);
   ros::spin();
   return 0;
 }

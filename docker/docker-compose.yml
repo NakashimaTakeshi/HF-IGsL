@@ -3,8 +3,8 @@ version: "2.4"
 ################################################################################
 
 services:
-  hsr:
-    hostname: hsr
+  rulo:
+    hostname: rulo
     runtime: ${DOCKER_RUNTIME}
     privileged: true
     environment:
@@ -18,19 +18,19 @@ services:
       - DOCKER_RUNTIME=${DOCKER_RUNTIME}
       # Configure the PulseAudio interface.
       - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
-    image: registry.hsr.io/sdewg/hsr/hsr-devel:latest
+    image: registry.rulo.io/sdewg/rulo/rulo-devel:latest
     build:
       context: ../
-      dockerfile: ./docker/hsr-devel/Dockerfile
+      dockerfile: ./docker/rulo-devel/Dockerfile
       args: 
         - DOCKERFILE_COMMIT_SHORT_SHA
     volumes:
       # Map repository root for convenient access.
-      - ../:/root/HSR/
+      - ../:/root/RULO/
       # Grant display access to X Server.
       - /tmp/.X11-unix:/tmp/.X11-unix
       # Grant audio access to PulseAudio.
       - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
     # Use 'network_mode: host' with the real robot or 'network_mode: bridge' for separated networks (multiple independent containers).
     network_mode: host
-    command: /root/HSR/docker/hsr-devel/scripts/initialize-docker-container.bash
+    command: /root/RULO/docker/rulo-devel/scripts/initialize-docker-container.bash

@@ -9,14 +9,14 @@
     [[[window0]]]
       parent = ""
       type = Window
-  [[hsr-term-11]]
+  [[rulo-term-11]]
     [[[child0]]]
       fullscreen = False
       last_active_window = True
       maximised = True
       order = 0
       parent = ""
-      title = HSR
+      title = RULO
       type = Window
     [[[child1]]]
       order = 0
@@ -93,7 +93,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} darknet_ros_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal13]]] #2
       order = 0
       parent = child12
@@ -164,261 +164,16 @@
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} sdewg_gazebo_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_chatter_default.launch
     [[[terminal7]]] #5
       order = 1
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} sdewg_rviz_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal9]]] #6
       order = 0
       parent = child8
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} flexbe_app_default.launch
-  [[hsr-term-22]]
-    [[[child0]]]
-      fullscreen = False
-      last_active_window = True
-      maximised = True
-      order = 0
-      parent = ""
-      title = HSR
-      type = Window
-    [[[child1]]]
-      order = 0
-      parent = child0
-      ratio = 0.5
-      type = HPaned
-    [[[child10]]]
-      order = 1
-      parent = child6
-      ratio = 0.5
-      type = VPaned
-    [[[child13]]]
-      order = 1
-      parent = child1
-      ratio = 0.5
-      type = VPaned
-    [[[child14]]]
-      order = 0
-      parent = child13
-      ratio = 0.5
-      type = HPaned
-    [[[child15]]]
-      order = 0
-      parent = child14
-      ratio = 0.5
-      type = VPaned
-    [[[child16]]]
-      order = 0
-      parent = child15
-      ratio = 0.5
-      type = VPaned
-    [[[child19]]]
-      order = 1
-      parent = child15
-      ratio = 0.5
-      type = VPaned
-    [[[child2]]]
-      order = 0
-      parent = child1
-      ratio = 0.5
-      type = VPaned
-    [[[child22]]]
-      order = 1
-      parent = child14
-      ratio = 0.5
-      type = VPaned
-    [[[child23]]]
-      order = 0
-      parent = child22
-      ratio = 0.5
-      type = VPaned
-    [[[child26]]]
-      order = 1
-      parent = child22
-      ratio = 0.5
-      type = VPaned
-    [[[child29]]]
-      order = 1
-      parent = child13
-      ratio = 0.5
-      type = HPaned
-    [[[child3]]]
-      order = 0
-      parent = child2
-      ratio = 0.5
-      type = HPaned
-    [[[child30]]]
-      order = 0
-      parent = child29
-      ratio = 0.5
-      type = VPaned
-    [[[child31]]]
-      order = 0
-      parent = child30
-      ratio = 0.5
-      type = VPaned
-    [[[child34]]]
-      order = 1
-      parent = child30
-      ratio = 0.5
-      type = VPaned
-    [[[child37]]]
-      order = 1
-      parent = child29
-      ratio = 0.5
-      type = VPaned
-    [[[child38]]]
-      order = 0
-      parent = child37
-      ratio = 0.5
-      type = VPaned
-    [[[child41]]]
-      order = 1
-      parent = child37
-      ratio = 0.5
-      type = VPaned
-    [[[child6]]]
-      order = 1
-      parent = child2
-      ratio = 0.5
-      type = HPaned
-    [[[child7]]]
-      order = 0
-      parent = child6
-      ratio = 0.5
-      type = VPaned
-    [[[terminal11]]] #5
-      order = 0
-      parent = child10
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal12]]] #6
-      order = 1
-      parent = child10
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal17]]] #7
-      order = 0
-      parent = child16
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal18]]] #8
-      order = 1
-      parent = child16
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal20]]] #9
-      order = 0
-      parent = child19
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal21]]] #10
-      order = 1
-      parent = child19
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal24]]] #11
-      order = 0
-      parent = child23
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal25]]] #12
-      order = 1
-      parent = child23
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal27]]] #13
-      order = 0
-      parent = child26
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal28]]] #14
-      order = 1
-      parent = child26
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal32]]] #15
-      order = 0
-      parent = child31
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal33]]] #16
-      order = 1
-      parent = child31
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal35]]] #17
-      order = 0
-      parent = child34
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal36]]] #18
-      order = 1
-      parent = child34
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal39]]] #19
-      order = 0
-      parent = child38
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal4]]] #1
-      order = 0
-      parent = child3
-      profile = default
-      type = Terminal
-    [[[terminal40]]] #20
-      order = 1
-      parent = child38
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal42]]] #21
-      order = 0
-      parent = child41
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal43]]] #22
-      order = 1
-      parent = child41
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal5]]] #2
-      order = 1
-      parent = child3
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal8]]] #3
-      order = 0
-      parent = child7
-      profile = default
-      type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
-    [[[terminal9]]] #4
-      order = 1
-      parent = child7
       profile = default
       type = Terminal
       command = bash ./RUN-DOCKER-CONTAINER.bash

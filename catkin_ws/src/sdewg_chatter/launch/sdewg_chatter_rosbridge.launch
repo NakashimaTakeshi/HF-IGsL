@@ -1,5 +1,5 @@
 <launch>
-  <include file="$(find sdewg_chatter)/launch/sdewg_chatter_default.launch" />
+  <include file="$(find rulo_chatter)/launch/rulo_chatter_default.launch" />
 
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="9090" />
