@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.1-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.6.0.64-1+cuda10.1
-ARG ros_desktop_version=1.4.1-0bionic.20201103.021523
+ARG ros_desktop_version=1.4.1-0bionic.20210120.181615
 
 ################################################################################
 
@@ -56,6 +56,7 @@ ENV LD_LIBRARY_PATH=
 
 # Install ROS Melodic Morenia.
 # http://wiki.ros.org/melodic/Installation/Ubuntu
+# http://packages.ros.org/ros/ubuntu/dists/bionic/main/binary-amd64/Packages
 
 # Update the package list.
 RUN echo "deb http://packages.ros.org/ros/ubuntu bionic main" > /etc/apt/sources.list.d/ros-latest.list
@@ -72,7 +73,7 @@ ENV ROS_DESKTOP_VERSION=${ros_desktop_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-desktop-full=${ROS_DESKTOP_VERSION} \
   python-catkin-tools=0.6.1-1 \
-  python-rosdep=0.19.0-1 \
+  python-rosdep=0.20.0-1 \
   && rm -rf /var/lib/apt/lists/*
 
 # Initialize 'rosdep'.
