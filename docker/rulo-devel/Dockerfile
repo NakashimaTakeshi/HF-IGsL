@@ -82,6 +82,34 @@ RUN rosdep init
 
 ################################################################################
 
+# Install the TurtleBot3 ROS dependencies.
+# https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/#pc-setup
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  ros-melodic-joy=1.14.0-1bionic.20210112.180610 \
+  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210112.180932 \
+  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210112.175758 \
+  ros-melodic-laser-proc=0.1.5-0bionic.20210112.181310 \
+  ros-melodic-rgbd-launch=2.2.2-0bionic.20210112.201433 \
+  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210112.181847 \
+  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210112.200455 \
+  ros-melodic-rosserial-python=0.8.0-0bionic.20210112.173857 \
+  ros-melodic-rosserial-server=0.8.0-0bionic.20210112.181141 \
+  ros-melodic-rosserial-client=0.8.0-0bionic.20210112.195855 \
+  ros-melodic-rosserial-msgs=0.8.0-0bionic.20201017.034136 \
+  ros-melodic-amcl=1.16.7-1bionic.20210112.184159 \
+  ros-melodic-map-server=1.16.7-1bionic.20210112.181127 \
+  ros-melodic-move-base=1.16.7-1bionic.20210112.195703 \
+  ros-melodic-urdf=1.13.2-1bionic.20201017.083057 \
+  ros-melodic-xacro=1.13.9-1bionic.20201017.081248 \
+  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210112.183412 \
+  ros-melodic-rqt-image-view=0.4.16-1bionic.20210112.182133 \
+  ros-melodic-gmapping=1.4.1-1bionic.20210112.191214 \
+  ros-melodic-navigation=1.16.7-1bionic.20210112.200640 \
+  ros-melodic-interactive-markers=1.11.5-1bionic.20210112.190840 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git=1:2.17.1-1ubuntu0.7 \

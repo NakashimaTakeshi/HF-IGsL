@@ -39,8 +39,8 @@ export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/r
 ################################################################################
 
 # Ask the user credentials to login into the GitLab Docker registry.
-echo "Login into 'registry.rulo.io'. Enter your GitLab credentials below:"
-docker login registry.rulo.io
+echo "Login into 'registry.gitlab.com'. Enter your GitLab credentials below:"
+docker login registry.gitlab.com
 
 # If the script runs in CI mode, build the image directly.
 # Otherwise, try to pull it from the registry. If it fails, build locally.

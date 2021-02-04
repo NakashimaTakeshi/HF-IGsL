@@ -67,7 +67,12 @@ case "$2" in
   ( "" )
   docker exec -i -t ${DOCKER_CONTAINER} bash
   ;;
-  ( "rulo_chatter_default.launch" )
+  ( "rulo_chatter_default.launch" | \
+    "turtlebot3_gazebo_default.launch" | \
+    "turtlebot3_navigation_default.launch" | \
+    "turtlebot3_rviz_default.launch" | \
+    "turtlebot3_slam_default.launch" | \
+    "turtlebot3_teleop_default.launch" )
   docker exec -i -t ${DOCKER_CONTAINER} bash -i -c "source ~/RULO/docker/rulo-devel/scripts/run-roslaunch-repeatedly.bash $2"
   ;;
   ( * )

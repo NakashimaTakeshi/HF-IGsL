@@ -18,7 +18,7 @@ services:
       - DOCKER_RUNTIME=${DOCKER_RUNTIME}
       # Configure the PulseAudio interface.
       - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
-    image: registry.rulo.io/sdewg/rulo/rulo-devel:latest
+    image: registry.gitlab.com/emlab/rulo/rulo-devel:latest
     build:
       context: ../
       dockerfile: ./docker/rulo-devel/Dockerfile
