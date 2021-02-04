@@ -99,7 +99,7 @@
       parent = child12
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_navigation_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_navigation_default.launch
     [[[terminal14]]] #3
       order = 1
       parent = child12

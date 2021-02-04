@@ -69,6 +69,7 @@ case "$2" in
   ;;
   ( "rulo_chatter_default.launch" | \
     "rulo_gazebo_default.launch" | \
+    "rulo_navigation_default.launch" | \
     "turtlebot3_gazebo_default.launch" | \
     "turtlebot3_navigation_default.launch" | \
     "turtlebot3_rviz_default.launch" | \

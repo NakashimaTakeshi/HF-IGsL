@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+    <arg name="map_file" value="$(find rulo_launch)/config/gazebo/maps/rgiro_mobile_demo/map.yaml"/>
+  </include>
+</launch>
