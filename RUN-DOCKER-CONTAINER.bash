@@ -68,6 +68,7 @@ case "$2" in
   docker exec -i -t ${DOCKER_CONTAINER} bash
   ;;
   ( "rulo_chatter_default.launch" | \
+    "rulo_gazebo_default.launch" | \
     "turtlebot3_gazebo_default.launch" | \
     "turtlebot3_navigation_default.launch" | \
     "turtlebot3_rviz_default.launch" | \

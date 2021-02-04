@@ -164,7 +164,7 @@
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_gazebo_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_gazebo_default.launch
     [[[terminal7]]] #5
       order = 1
       parent = child5
