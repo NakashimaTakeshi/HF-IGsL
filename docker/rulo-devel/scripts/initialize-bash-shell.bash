@@ -139,7 +139,7 @@ alias rulo_mode='export ROS_MASTER_URI=http://turtlebot3.local:11311; export PS1
 # Select the TurtleBot3 model name.
 # https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/#set-turtlebot3-model-name-1
 
-export TURTLEBOT3_MODEL=burger
+export TURTLEBOT3_MODEL=waffle_pi
 
 ################################################################################
 
