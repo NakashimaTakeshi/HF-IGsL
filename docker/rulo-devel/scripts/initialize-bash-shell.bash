@@ -49,6 +49,11 @@ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/root/RULO/catkin_ws/src/
 
 ################################################################################
 
+# Add the Gazebo models of the 'rgiro_gazebo_worlds' ROS package to the 'GAZEBO_MODEL_PATH'.
+export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/root/RULO/catkin_ws/src/rgiro_gazebo_worlds/models/
+
+################################################################################
+
 # Define Bash functions to conveniently execute the helper scripts in the current shell process.
 
 function rulo-fix-git-paths () {
@@ -104,7 +109,7 @@ function rulo-get-fully-started () {
 
 ################################################################################
 
-# Set RULO/ROS network interface.
+# Set the RULO/ROS network interface.
 
 # Look for the robot host name inside the local network and resolve it to get its IP address.
 # The value of 'RULO_HOSTNAME' should be initialized in '~/.bashrc' by './RUN-DOCKER-CONTAINER.bash' when entering the container.
@@ -127,7 +132,14 @@ echo "ROS_IP is set to '${ROS_IP}'."
 export ROS_HOME=~/.ros
 
 alias sim_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[44;1;37m\]<local>\[[0m\]\w$ "'
-alias rulo_mode='export ROS_MASTER_URI=http://rulo.local:11311; export PS1="\[[41;1;37m\]<rulo>\[[0m\]\w$ "'
+alias rulo_mode='export ROS_MASTER_URI=http://turtlebot3.local:11311; export PS1="\[[41;1;37m\]<rulo>\[[0m\]\w$ "'
+
+################################################################################
+
+# Select the TurtleBot3 model name.
+# https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/#set-turtlebot3-model-name-1
+
+export TURTLEBOT3_MODEL=burger
 
 ################################################################################
 
