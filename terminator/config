@@ -93,19 +93,19 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_chatter_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal13]]] #2
       order = 0
       parent = child12
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_navigation_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal14]]] #3
       order = 1
       parent = child12
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_slam_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal18]]] #8
       order = 0
       parent = child17
@@ -170,13 +170,13 @@
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_rviz_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_rviz_default.launch
     [[[terminal9]]] #6
       order = 0
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_teleop_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
 [plugins]
 [profiles]
   [[default]]

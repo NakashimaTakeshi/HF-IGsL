@@ -16,7 +16,7 @@ This project aims to develop a shared platform for collabrative resesearch and d
         *   [Custom Bash Functions](#custom-bash-functions)
         *   [Multiple Terminal Operation](#multiple-terminal-operation)
         *   [Configuration of the Docker Container](#configuration-of-the-docker-container)
-    *   [Step 6: Develop on the Simulator/Robot](#step-6-develop-on-the-simulator-robot)
+    *   [Step 6: Develop on the Simulator/Robot](#step-6-develop-on-the-simulatorrobot)
 *   [Robot Configuration](#robot-configuration)
 
 ## Contribution Guidelines
