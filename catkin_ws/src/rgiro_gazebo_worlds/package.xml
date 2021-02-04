@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+
+<package format="2">
+  <name>rgiro_gazebo_worlds</name>
+  <version>1.0.0</version>
+  <description>The 'rgiro_gazebo_worlds' ROS package provides a collection of Gazebo worlds and models to create realistic simulations.</description>
+
+  <maintainer email="lotfi.elhafi@gmail.com">Lotfi El Hafi</maintainer>
+  <license>MIT</license>
+  <url type="website">https://gitlab.com/emlab/RULO</url>
+  <author email="lotfi.elhafi@gmail.com">Lotfi El Hafi</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
