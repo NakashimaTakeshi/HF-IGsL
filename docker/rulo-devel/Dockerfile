@@ -84,6 +84,8 @@ RUN rosdep init
 
 # Install the TurtleBot3 ROS dependencies.
 # https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/#pc-setup
+
+# Gather the dependencies from the ROS repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-joy=1.14.0-1bionic.20210112.180610 \
   ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210112.180932 \
@@ -110,6 +112,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ################################################################################
 
+# Install dependencies for the 'flexbe_app' ROS package.
+# https://github.com/FlexBE/flexbe_app
+
+# Gather the dependencies from the Ubuntu repositories.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libcanberra-gtk3-module=0.30-5ubuntu1 \
+  libgconf2-dev=3.2.6-4ubuntu1 \
+  libxtst6=2:1.2.3-1 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git=1:2.17.1-1ubuntu0.7 \
@@ -120,6 +134,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   net-tools=1.60+git20161116.90da8a0-1ubuntu1 \
   openssh-client=1:7.6p1-4ubuntu0.3 \
   unzip=6.0-21ubuntu1 \
+  wget=1.19.4-1ubuntu2.2 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
