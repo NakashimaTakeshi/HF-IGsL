@@ -10,3 +10,7 @@
 	path = catkin_ws/src/turtlebot3_simulations
 	url = https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
 	branch = melodic-devel
+[submodule "darknet_ros"]
+	path = catkin_ws/src/darknet_ros
+	url = https://github.com/leggedrobotics/darknet_ros.git
+	branch = master
