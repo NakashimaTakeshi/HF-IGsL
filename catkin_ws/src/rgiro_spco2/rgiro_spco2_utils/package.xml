@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rgiro_spco2_utils</name>
+  <version>1.0.0</version>
+  <description>The 'rgiro_spco2_utils' package  package can launch the nodes of run_gmapping.sh ,map_saver.py and run_rosbug.py that SpCoSLAM2.0 requires.</description>
+
+   <maintainer email="nakashima.takeshi@em.ci.ritsumei.ac.jp">Takeshi Nakashima </maintainer>
+
+  <license>MIT</license>
+  <url type="website">http://em.ci.ritsumei.ac.jp/</url>
+  <author email="nakashima.takeshi@em.ci.ritsumei.ac.jp">Takeshi Nakashima </author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rgiro_gmapping</depend>
+
+ <!-- <depend>rospy</depend>
+  <depend>std_msgs</depend>-->
+
+</package>
