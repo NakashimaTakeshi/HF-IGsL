@@ -2,9 +2,12 @@
 
 <launch>
 
+  <!-- Launch gmapping. -->
+  <arg name="scan" default="scan"/>
+
   <node pkg="rgiro_gmapping" name="slam_gmapping" type="slam_gmapping">
     <param name="/use_sim_time" value="true"/>
-    <param name="scan" value="base_scan"/>
+    <param name="scan" value="$(arg scan)"/>
     <param name="particles" value="30"/>
     <param name="xmin" value="-30.0"/>
     <param name="ymin" value="-20.0"/>
@@ -14,4 +17,16 @@
     <param name="resampleThreshold" value="1.0"/>     
    </node>
 
+  <!-- Launch map_saver -->
+  <arg name="trial_name" default="test2"/>
+  <node pkg="rgiro_spco2_utils" name="map_savering" type="map_saver.py" output="screen">
+    <param name="trial_name" value="$(arg trial_name)"/>
+  </node>
+
+<!--
+   <arg name="map_file" default="$(find rulo_launch)/config/gazebo/maps/rgiro_mobile_demo/map.yaml"/>
+  <arg name="move_forward_only" default="false"/>
+
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+-->
 </launch>

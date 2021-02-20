@@ -1,6 +1,11 @@
+#!/usr/bin/env python
 #coding:utf-8
 #map saver for each m_count
 #Akira Taniguchi 2017/02/04-
+"""Takeshi Nakashima 2021/02/20 [Change]
+  - arguments are passed in by roslaunch manner
+  - add shebang
+"""
 import sys
 import os
 import signal
@@ -11,8 +16,11 @@ from std_msgs.msg import String
 #import map_store.srv as map_store_srvs
 from __init__ import *
 
-trialname = sys.argv[1]
+#trialname = sys.argv[1]
 #datasetNUM = sys.argv[2]
+
+rospy.init_node('map_savering')
+trialname = rospy.get_param('~trial_name') # 2021/02/16 [Change]
 
 mapsave = "rosrun map_server map_saver -f "
 clocktime = 0.0
@@ -55,7 +63,6 @@ def callback(message):
       
   
 time.sleep(2.0)
-rospy.init_node('map_savering')
 sub = rospy.Subscriber('clock', String, callback)
 #rosbagがpauseの間はずっと同じ時刻を受け取り続ける
 
