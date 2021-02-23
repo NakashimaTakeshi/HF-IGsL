@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 
 <launch>
+  <arg name="trial_name" default="test"/>
+  <arg name="dataset_Num" default="0"/>
 
   <!-- Launch gmapping. -->
   <arg name="scan" default="scan"/>
-
+  <param name="use_sim_time" value="true"/>
   <node pkg="rgiro_gmapping" name="slam_gmapping" type="slam_gmapping">
-    <param name="/use_sim_time" value="true"/>
+  <!--  <param name="use_sim_time" value="true"/> -->
     <param name="scan" value="$(arg scan)"/>
     <param name="particles" value="30"/>
     <param name="xmin" value="-30.0"/>
@@ -15,12 +17,19 @@
     <param name="ymax" value="20.0"/>
     <param name="ogain" value="5.0"/>
     <param name="resampleThreshold" value="1.0"/>     
-   </node>
+  </node>
 
   <!-- Launch map_saver -->
-  <arg name="trial_name" default="test2"/>
-  <node pkg="rgiro_spco2_utils" name="map_savering" type="map_saver.py" output="screen">
+
+  <node pkg="rgiro_spco2_utils" name="map_savering" type="map_saver.py">
     <param name="trial_name" value="$(arg trial_name)"/>
+  </node>
+
+  <!-- Launch run_rosbag -->
+
+  <node pkg="rgiro_spco2_utils" name="play_rosbag" type="run_rosbag.py" output="screen">
+    <param name="trial_name" value="$(arg trial_name)"/>
+    <param name="dataset_NUM" value="$(arg dataset_Num)"/>
   </node>
 
 <!--

@@ -6,7 +6,10 @@
 #include <fstream>
 #include <iomanip>
 #include <gmapping/utils/stat.h>
-#include "gmapping/gridfastslam/gridslamprocessor.h"
+#include <gmapping/gridfastslam/gridslamprocessor.h>
+
+#include <iostream>
+#include <sstream>
 
 //#define MAP_CONSISTENCY_CHECK
 //#define GENERATE_TRAJECTORIES
@@ -405,7 +408,7 @@ void GridSlamProcessor::setMotionModelParameters
       assert(reading.size()==m_beams);
       double * plainReading = new double[m_beams];
       for(unsigned int i=0; i<m_beams; i++){
-	plainReading[i]=reading[i];
+        plainReading[i]=reading[i];
       }
       m_infoStream << "m_count " << m_count << endl;
 
@@ -415,8 +418,115 @@ void GridSlamProcessor::setMotionModelParameters
                                static_cast<const RangeSensor*>(reading.getSensor()),
                                reading.getTime());
 
+      //s//akira/////////////////////////////////////////////
+      // The trial data file name is read from a file.
+      string trialname("test");
+      std::ifstream ifs("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/trialname.txt");
+      if(ifs.fail()){
+        m_infoStream << "READ ERROR. trialname" << endl;
+      }
+      //std::string str;
+      ifs>>trialname;
+      //std::cout<<str<<std::endl;
+
+      string filename("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/" );
+      string filename2;
+      string filename3;
+      string filename4;
+      stringstream ss;
+      int particle_index = 0;
+      //e//akira/////////////////////////////////////////////
       if (m_count>0){
-	scanMatch(plainReading);
+    scanMatch(plainReading);
+
+    //s//akira/////////////////////////////////////////////
+    ss << "/particle/" << m_count << ".csv";
+    filename2 = ss.str();
+    filename3 = filename + trialname + filename2;
+
+    std::ofstream ofs( filename3.c_str() );
+    m_infoStream << filename3.c_str() << endl;
+
+    particle_index = 0;
+    for (ParticleVector::const_iterator it=m_particles.begin(); it!=m_particles.end(); it++){
+      const OrientedPoint& pose=it->pose;
+      //m_outputStream << setiosflags(ios::fixed) << setprecision(3) <<  pose.x << " " << pose.y << " ";
+      //m_outputStream << setiosflags(ios::fixed) << setprecision(6) <<  pose.theta << " " << it-> weight << " ";
+      //m_infoStream << "Particle ID: " << particle_index << " " << it->previousIndex << endl;
+      //m_infoStream << setiosflags(ios::fixed) << setprecision(3) <<  pose.x << " " << pose.y << " ";
+      //m_infoStream << setiosflags(ios::fixed) << setprecision(6) <<  pose.theta << " " << it-> weight << " ";
+      //m_infoStream << endl;
+
+      ofs << particle_index << "," <<  pose.x << "," << pose.y << "," << pose.theta << "," << it-> weight << "," << it->previousIndex << std::endl;
+      particle_index++;
+
+    }
+    //m_outputStream << endl;
+
+    //string filename5("/teachingflag.txt");
+    string filename5("/gwaitflag.txt");
+    filename4 = filename + trialname + filename5;
+    string teachingflag;
+    //string one("1");
+
+    //Reading teaching flag
+    std::ifstream ifs2( filename4.c_str() );
+    if(ifs2.fail()){
+      m_infoStream << "READ ERROR. gwaitflag.txt" << endl;
+      m_infoStream << filename4.c_str() << endl;
+    }
+    ifs2>>teachingflag;
+
+    m_infoStream << "flag = " << teachingflag << endl;
+
+
+    std::stringstream ss3;
+    ss3 << m_count;
+    string m_count_str = ss3.str();
+
+    //sometime missing in this case. The problem of reading timing?
+    //if (teachingflag == one || atoi(teachingflag.c_str()) == atoi(one.c_str())){
+    if (teachingflag.c_str() == m_count_str || atoi(teachingflag.c_str()) == m_count){
+        //m_infoStream << "RUN SpCoSLAM!" << endl;
+
+        //read new weight.
+        m_infoStream << "READ weights from SpCoSLAM!" << endl;
+        string filename6;
+        stringstream ss2;
+        ss2 << "/weight/" << m_count-1 << ".csv";
+        //string filename7();
+        filename6 = filename + trialname + ss2.str();
+        m_infoStream << filename6.c_str() << endl;
+        std::ifstream ifs3( filename6.c_str() );
+        while(ifs3.fail()){ //if
+          m_infoStream << "READ ERROR. weight file." << endl;
+        }
+
+        string str3;
+        int index_particle = 0;
+        while(getline(ifs3,str3)){
+            string tmp3;
+            std::istringstream stream3(str3);
+            //ParticleVector::iterator it2=m_particles.begin();
+            while(getline(stream3,tmp3,',') || index_particle <= particle_index){ //|| it2!=m_particles.end()
+                for (ParticleVector::iterator it2=m_particles.begin(); it2!=m_particles.end(); it2++){
+                  const OrientedPoint& pose=it2->pose;
+                  if (it2->previousIndex == index_particle){
+                      it2-> weight += atof(tmp3.c_str());
+                      m_infoStream << index_particle << ", wt:" << it2-> weight << ", ws*wf:" << tmp3.c_str() << endl;
+                  }
+                }
+                //const OrientedPoint& pose=it2->pose;
+                //std::cout<< tmp << std::endl;
+
+                index_particle++;
+
+                //it2++;
+            }
+        }
+
+    }
+    //e//akira/////////////////////////////////////////////
 	if (m_outputStream.is_open()){
 	  m_outputStream << "LASER_READING "<< reading.size() << " ";
 	  m_outputStream << setiosflags(ios::fixed) << setprecision(2);
@@ -431,8 +541,11 @@ void GridSlamProcessor::setMotionModelParameters
 	    const OrientedPoint& pose=it->pose;
 	    m_outputStream << setiosflags(ios::fixed) << setprecision(3) <<  pose.x << " " << pose.y << " ";
 	    m_outputStream << setiosflags(ios::fixed) << setprecision(6) <<  pose.theta << " " << it-> weight << " ";
-	  }
+        //m_infoStream << setiosflags(ios::fixed) << setprecision(3) <<  pose.x << " " << pose.y << " ";
+        //m_infoStream << setiosflags(ios::fixed) << setprecision(6) <<  pose.theta << " " << it-> weight << " ";
+      }
 	  m_outputStream << endl;
+      //m_infoStream << endl;
 	}
 	onScanmatchUpdate();
 	
@@ -449,7 +562,17 @@ void GridSlamProcessor::setMotionModelParameters
 	
       } else {
 	m_infoStream << "Registering First Scan"<< endl;
-	for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){	
+    //s//akira/////////////////////////////////////////////
+    ss << "/particle/" << m_count << ".csv";
+    filename2 = ss.str();
+    filename3 = filename + trialname + filename2;
+
+    std::ofstream ofs( filename3.c_str() );
+    m_infoStream << filename3.c_str() << endl;
+
+    particle_index = 0;
+    //e//akira/////////////////////////////////////////////
+    for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
 	  m_matcher.invalidateActiveArea();
 	  m_matcher.computeActiveArea(it->map, it->pose, plainReading);
 	  m_matcher.registerScan(it->map, it->pose, plainReading);
@@ -459,7 +582,12 @@ void GridSlamProcessor::setMotionModelParameters
 	  //node->reading=0;
       node->reading = reading_copy;
 	  it->node=node;
-	  
+      //s//akira/////////////////////////////////////////////
+      const OrientedPoint& pose=it->pose;
+      ofs << particle_index << "," <<  pose.x << "," << pose.y << "," << pose.theta << "," << it-> weight << "," << it->previousIndex << std::endl;
+      particle_index++;
+      //e//akira/////////////////////////////////////////////
+
 	}
       }
       //		cerr  << "Tree: normalizing, resetting and propagating weights at the end..." ;

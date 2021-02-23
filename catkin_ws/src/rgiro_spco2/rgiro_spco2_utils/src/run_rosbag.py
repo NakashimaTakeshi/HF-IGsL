@@ -1,7 +1,12 @@
+#!/usr/bin/env python
 #coding:utf-8
 #rosbag play for learning and theaching
 #スペースキー情報を送ることで一時停止と再開を行う。
 #Akira Taniguchi 2017/02/03-
+"""Takeshi Nakashima 2021/02/20 [Change]
+  - arguments are passed in by roslaunch manner
+  - add shebang
+"""
 import sys
 import os
 import signal
@@ -11,8 +16,12 @@ import rospy
 from std_msgs.msg import String
 from __init__ import *
 
-trialname = sys.argv[1]
-datasetNUM = sys.argv[2]
+#trialname = sys.argv[1]
+#datasetNUM = sys.argv[2]
+
+rospy.init_node('play_rosbag')
+trialname = rospy.get_param('~trial_name') 
+datasetNUM = rospy.get_param('~dataset_NUM') 
 
 start_time = time.time()
 
@@ -86,6 +95,7 @@ def callback(endflag):
       time.sleep(5.0)
       t_count += 1
   elif(len(teachingtime) == t_count): #最終
+    print "bbbbbbbbbbbbbbbbbbbbbbbbbbbb" ,len(teachingtime),t_count,flag
     if (flag == 1): #and (int(endflag) == 1):  #rosbagを再開
       #flag = 0
       #fp = open( datafolder + trialname + "/teachingflag.txt", 'w')
@@ -108,7 +118,7 @@ def callback(endflag):
 time.sleep(2.0)
 p.stdin.write('%s\n' % " ")
 print "start." #,float(rospy.get_time()) #rosbagがstart直後のため時刻情報が取れない？
-rospy.init_node('play_rosbag')
+#rospy.init_node('play_rosbag')
 sub = rospy.Subscriber('clock', String, callback)
 #if (flag == 1):  #rosbagを再開
 #    flag = 0
