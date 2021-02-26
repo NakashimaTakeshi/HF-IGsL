@@ -95,7 +95,6 @@ def callback(endflag):
       time.sleep(5.0)
       t_count += 1
   elif(len(teachingtime) == t_count): #最終
-    print "bbbbbbbbbbbbbbbbbbbbbbbbbbbb" ,len(teachingtime),t_count,flag
     if (flag == 1): #and (int(endflag) == 1):  #rosbagを再開
       #flag = 0
       #fp = open( datafolder + trialname + "/teachingflag.txt", 'w')

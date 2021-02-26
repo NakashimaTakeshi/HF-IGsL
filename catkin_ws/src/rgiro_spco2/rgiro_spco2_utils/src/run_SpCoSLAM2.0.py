@@ -1,7 +1,12 @@
+#!/usr/bin/env python
 #coding:utf-8
 #rosbag play for learning and theaching
 #スペースキー情報を送ることで一時停止と再開を行う。
 #Akira Taniguchi 2017/02/03-
+"""Takeshi Nakashima 2021/02/20 [Change]
+  - arguments are passed in by roslaunch manner
+  - add shebang
+"""
 import sys
 import os
 import shutil
@@ -12,8 +17,12 @@ import rospy
 from std_msgs.msg import String
 from __init__ import *
 
-trialname = sys.argv[1]
-datasetNUM = sys.argv[2]
+#trialname = sys.argv[1]
+#datasetNUM = sys.argv[2]
+
+rospy.init_node('SpCoSLAM')
+trialname = rospy.get_param('~trial_name') 
+datasetNUM = rospy.get_param('~dataset_NUM') 
 
 #trialname = "test" #raw_input("trialname?(output_folder) >")
 #datasetNUM = 0 #raw_input("dataset_number?(0:albert,1:MIT) >")
@@ -25,14 +34,14 @@ gflag = 1
 #t_count = 0
 
 #init.pyをコピー
-shutil.copy("./__init__.py", datafolder + trialname )
+shutil.copy(os.path.dirname(__file__) + '/__init__.py', datafolder + trialname )
 
 #learn = "python ./learnSpCoSLAM2.py " + trialname + " " + str(datasetNUM)
 #p = os.popen( learn )
 #p.close()
 
-SpCoSLAM = "python ./learnSpCoSLAM2.0.py " + trialname + " " + str(datasetNUM)
-
+SpCoSLAM = "python " + os.path.dirname(__file__) + "/learnSpCoSLAM2.0.py " + trialname + " " + str(datasetNUM)
+print "SPCOSLAM",SpCoSLAM
 
 def callback(message):
   global gflag

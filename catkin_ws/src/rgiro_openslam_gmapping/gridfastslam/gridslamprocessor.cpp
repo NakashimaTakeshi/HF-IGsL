@@ -421,7 +421,7 @@ void GridSlamProcessor::setMotionModelParameters
       //s//akira/////////////////////////////////////////////
       // The trial data file name is read from a file.
       string trialname("test");
-      std::ifstream ifs("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/trialname.txt");
+      std::ifstream ifs("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/output/trialname.txt");
       if(ifs.fail()){
         m_infoStream << "READ ERROR. trialname" << endl;
       }
@@ -429,7 +429,7 @@ void GridSlamProcessor::setMotionModelParameters
       ifs>>trialname;
       //std::cout<<str<<std::endl;
 
-      string filename("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/" );
+      string filename("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/output/" );
       string filename2;
       string filename3;
       string filename4;
