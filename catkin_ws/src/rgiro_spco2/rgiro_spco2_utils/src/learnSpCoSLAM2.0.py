@@ -5,6 +5,7 @@
 # Fixed-lag Rejuvenation of Ct, it, and St
 # Re-segmentation of word sequences using NPYLM
 # Akira Taniguchi 2017/01/18-2017/02/02-2017/02/15-2017/02/21-2018/02/16-2018/12/22
+# Takeshi Nakashima 2021/03/06 
 ##############################################
 
 # 注意：gmappingと合わせてパーティクル番号の対応関係が合っているか要確認 (評価用の方と合わせて確認が必要)
@@ -98,6 +99,7 @@ from multiprocessing import Process
 import multiprocessing
 from __init__ import *
 from submodules import *
+import csv # Takeshi Nakashima 2021/03/06 
 
 
 # Reading data for image feature (NOT USE)
@@ -123,7 +125,9 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
   # Read image data at current time
   files = glob.glob(datasetfolder + datasetname + Descriptor + "/*.csv")
   files.sort()
+  #print "files:",files
   files2 = [files[i][len(datasetfolder)+len(datasetname)+len(Descriptor)+1:-4] for i in xrange(len(files))]
+  #print "files2:",files2
   #print files2
   #temptime = []
   #for f in files:
@@ -162,11 +166,13 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
 def ReadWordData(step, trialname, particle):
       N = 0
       Otb = []
-      WordSegList = []
+      #WordSegList = []
+      Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb.csv' #2021/03/06  
       ######################################################
       #固定ラグ活性化の場合の処理
       if (LMLAG != 0):
         tau = step - LMLAG
+        max_particle =1 #2021/03/06 
         if (tau >= 1):
           #最大重みのパーティクル番号を読み込む
           if (LMweight != "WS"):
@@ -182,8 +188,15 @@ def ReadWordData(step, trialname, particle):
               i += 1
           
           #テキストファイルを読み込み
-          for line in open( datafolder + trialname + "/" + str(tau) + '/out_gmm/' + str(max_particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-            itemList = line[:-1].split(' ')
+          #for line in open( Otb_FilePath, 'r'):   #2021/03/06 
+
+          #with open(Otb_FilePath, 'r') as f:
+          #  reader = csv.reader(f)
+          #  Otb = [row for row in reader]
+          #for line in open( datafolder + trialname + "/" + str(tau) + '/out_gmm/' + str(max_particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
+            #itemList = line[:-1].split(',')
+            #itemList = line[:-1].split(' ')
+          """
             if (line != "" and line != "\n"):
               WordSegList += [line[:-1]]
               
@@ -222,15 +235,22 @@ def ReadWordData(step, trialname, particle):
               N = N + 1  #count
               
               for j in xrange(len(itemList)):
-                print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+                #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+                print "%s " % (itemList[j]), #2021/03/06 
               print ""  #改行用
-      
+           """
       ######################################################
       
-      filename = datafolder + trialname + "/" + str(step)  ##FullPath of learning trial folder
+      #filename = datafolder + trialname + "/" + str(step)  ##FullPath of learning trial folder
       #テキストファイルを読み込み
-      for line in open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-        itemList = line[:-1].split(' ')
+      with open(Otb_FilePath, 'r') as f:
+            reader = csv.reader(f)
+            Otb = [row for row in reader]
+      """
+      for line in open( Otb_FilePath, 'r'):   #2021/03/06 
+      #for line in open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
+        itemList = line[:-1].split(',')
+        #itemList = line[:-1].split(' ')
         WordSegList += [line[:-1]]
         
         #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
@@ -266,40 +286,95 @@ def ReadWordData(step, trialname, particle):
         #Otb[sample] = Otb[sample] + [itemList]
         Otb = Otb + [itemList]
         N = N + 1  #count
-        
+
+        print 'Otb',Otb
+        print 'ItemList',itemList
+
         for j in xrange(len(itemList)):
-            print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+            #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+            print "%s " % (itemList[j]),
         print ""  #改行用
       #unicode(W_list[c], encoding='shift_jis')
-      
+      """
       ##場所の名前の多項分布のインデックス用
       W_list = []
-      for n in xrange(N):
+      for n in xrange(len(Otb)):
         for j in xrange(len(Otb[n])):
           if ( (Otb[n][j] in W_list) == False ):
             W_list.append(Otb[n][j])
             #print str(W_list),len(W_list)
       
       ##時刻tデータごとにBOW化(?)する、ベクトルとする
-      Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(N) ]
+      Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(len(Otb)) ]
       
-      for n in xrange(N):
+      for n in xrange(len(Otb)):
         for j in xrange(len(Otb[n])):
           for i in xrange(len(W_list)):
             if ( W_list[i] == Otb[n][j] ):
               Otb_BOW[n][i] = Otb_BOW[n][i] + 1
       
-      ######################################################
+      ###################################################### #2021/03/06 
       #固定ラグ活性化の場合の処理(samp.100を更新)
-      if (LMLAG != 0) and (tau >= 1):
-        fp = open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'w')
-        for n in xrange(N):
-          fp.write(str(WordSegList[n])+"\n")
-        #fp.write("\n")
-        fp.close()
+      #if (LMLAG != 0) and (tau >= 1):
+      #  fp = open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'w')
+      #  for n in xrange(N):
+      #    fp.write(str(WordSegList[n])+"\n")
+      #  #fp.write("\n")
+      #  fp.close()
         
       ######################################################
       
+      #Output W_list and Otb_BoW 2021/03/06 
+      if (particle == max_particle):
+        print "Otb:"
+        print(Otb)
+        print "Otb_BOW:"
+        print(Otb_BOW)
+        print "W_list:"
+        print(W_list)
+
+        ## save massage as a csv format
+        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.csv"
+        with open(FilePath, 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(Otb)
+
+        fOtb = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.txt" , "w" )
+        for i in range(len(Otb)):
+          for j in range(len(Otb[i])):
+            fOtb.write(str(Otb[i][j])+" ")
+          fOtb.write("\n")
+        fOtb.close()
+
+        #fOtb_BOW = open( datafolder + trialname + "/tmp/step"+ str(step) +"_particle"+ str(particle) +"_Otb_BOW.txt" , "w" )
+        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb_BOW.csv"
+        with open(FilePath, 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(Otb_BOW)
+
+        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_W_list.csv"
+        with open(FilePath, 'w') as f:
+            writer = csv.writer(f,lineterminator='\n')
+            writer.writerow(W_list)
+        '''
+        #fOtb_BOW = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb_BOW.txt" , "w" )
+        for i in range(len(Otb_BOW)):
+          for j in range(len(Otb_BOW[i])):
+            fOtb_BOW.write(str(Otb_BOW[i][j])+"\n")
+            fOtb_BOW.write(str(Otb_BOW[i][j]))
+          fOtb_BOW.write("\n")
+        fOtb_BOW.close()
+
+        #fW_list = open( datafolder + trialname + "/tmp/step"+ str(step) +"_particle"+ str(particle) +"_W_list.txt" , "w" )
+        fW_list = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_W_list.txt" , "w" )
+        for i in range(len(W_list)):
+          #for j in range(len(W_list[i])):
+          fW_list.write(str(W_list[i]))
+            #fW_list.write(str(W_list[i][j]))
+            #fW_list.write(unicode(W_list[i][j], encoding='shift_jis'))
+          fW_list.write("\n")
+        fW_list.close()
+        '''
       return W_list, Otb_BOW, Otb
 
 
@@ -1274,13 +1349,15 @@ if __name__ == '__main__':
     print "filename",filename
     print "trialname",trialname    
 
+   #Gazebo環境下での教示プログラムのために、音声認識（Julius）をtextインプットに変更　20210302中島
+    """
     Julius_lattice(step,filename,trialname)    ##音声認識、ラティス形式出力、opemFST形式へ変換###########
     while (os.path.exists(filename + "/fst_gmm/" + str(step-1).zfill(3) +".fst" ) != True):
         print filename + "/fst_gmm/" + str(step).zfill(3) + ".fst", "wait(30s)... or ERROR?"
         time.sleep(1.0) #sleep(秒指定)
         Julius_lattice(step,filename,trialname)
     print "Julius complete!"
-    
+    """
     p_weight_log = np.array([0.0 for i in xrange(R)])
     p_weight = np.array([0.0 for i in xrange(R)])
     p_WS_log = np.array([0.0 for i in xrange(R)]) ###
@@ -1291,11 +1368,11 @@ if __name__ == '__main__':
       FT = ReadImageData2(trialname, datasetname, step, clocktime)
     else:
       FT = [[0 for e in xrange(DimImg)] for s in xrange(step)]
-    
+    """    2021/03/06 
     p = Pool(multiCPU) #max(int(multiprocessing.cpu_count()/2)-1,2) )
     taple = [(filename,i) for i in xrange(R)]
     p.map(multiCPU_latticelm, taple)  #パーティクルごとに並列計算
-    
+    """    
     #パーティクルごとに計算
     for i in xrange(R):
       #print "--------------------------------------------------"
@@ -1332,6 +1409,41 @@ if __name__ == '__main__':
       print "Particle:",i ###############
       
       W_list[i], ST, ST_seq[i] = ReadWordData(step, trialname, i)
+      ''' 2021/03/06 
+      W_listFilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_W_list.txt' 
+      print(W_listFilePath)
+      with open(W_listFilePath, 'r') as f:
+        W_list = f.read().split("\n")
+        W_list = [s for s in  W_list if s != '']
+      print(W_list)
+      print(len(W_list))
+      f.close()
+
+      Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(N) ]
+      
+      for n in xrange(N):
+        for j in xrange(len(Otb[n])):
+          for i in xrange(len(W_list)):
+            if ( W_list[i] == Otb[n][j] ):
+              Otb_BOW[n][i] = Otb_BOW[n][i] + 1
+
+
+      Otb_BOW_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb_BOW.txt' 
+      print(Otb_BOW_FilePath)
+      with open(Otb_BOW_FilePath, 'r') as f:
+        for line in f:
+          line = line.strip() #前後空白削除
+          line = line.replace('\n','') #末尾の\nの削除
+          line = list(line) #分割
+          Otb_BOW.append(line)
+      ST = [int(s) for s in Otb_BOW]    
+      print(ST)
+      print(len(ST))
+      f.close()
+
+      #ST=
+
+      '''
       print "Read word data."
       #CT, IT = ReaditCtData(trialname, step, i)
       print "Read Ct,it data."
@@ -1466,8 +1578,8 @@ if __name__ == '__main__':
     ##########最大重みのパーティクルの単語集合についてNPYLMを実行##########
     
     #W_list_particle = W_list[MAX_LM_particle]
-    WordDictionaryUpdate(step, filename, W_list_particle)       ##単語辞書登録
-    print "Language Model update!"
+    #WordDictionaryUpdate(step, filename, W_list_particle)       ##単語辞書登録 
+    #print "Language Model update!"
     
     ##最大重みのパーティクルindexと重みを保存する
     fp = open(filename + "/weights.csv", 'w')

@@ -25,13 +25,14 @@
     <param name="trial_name" value="$(arg trial_name)"/>
   </node>
 
-  <!-- Launch run_rosbag -->
+  <!-- Launch run_rosbag  -->
 
 <!--  <node pkg="rgiro_spco2_utils" name="play_rosbag" type="run_rosbag.py" output="screen">-->
   <node pkg="rgiro_spco2_utils" name="play_rosbag" type="run_rosbag.py" output="screen">
     <param name="trial_name" value="$(arg trial_name)"/>
     <param name="dataset_NUM" value="$(arg dataset_Num)"/>
   </node>
+ 
 
   <!-- Launch SpCoSLAM -->
 
