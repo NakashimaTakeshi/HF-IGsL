@@ -1,4 +1,5 @@
-#coding:utf-8
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 ##############################################
 # SpCoSLAM 2.0 online learning program
@@ -100,6 +101,11 @@ import multiprocessing
 from __init__ import *
 from submodules import *
 import csv # Takeshi Nakashima 2021/03/06 
+import rospy
+from std_msgs.msg import String
+import std_msgs.msg
+
+
 
 
 # Reading data for image feature (NOT USE)
@@ -123,6 +129,7 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
     FT.append( [float(itemList[i]) for i in xrange(DimImg)] )
   
   # Read image data at current time
+  
   files = glob.glob(datasetfolder + datasetname + Descriptor + "/*.csv")
   files.sort()
   #print "files:",files
@@ -167,7 +174,8 @@ def ReadWordData(step, trialname, particle):
       N = 0
       Otb = []
       #WordSegList = []
-      Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb.csv' #2021/03/06  
+      #Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb.csv' #2021/03/06  
+      Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
       ######################################################
       #固定ラグ活性化の場合の処理
       if (LMLAG != 0):
@@ -356,25 +364,7 @@ def ReadWordData(step, trialname, particle):
         with open(FilePath, 'w') as f:
             writer = csv.writer(f,lineterminator='\n')
             writer.writerow(W_list)
-        '''
-        #fOtb_BOW = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb_BOW.txt" , "w" )
-        for i in range(len(Otb_BOW)):
-          for j in range(len(Otb_BOW[i])):
-            fOtb_BOW.write(str(Otb_BOW[i][j])+"\n")
-            fOtb_BOW.write(str(Otb_BOW[i][j]))
-          fOtb_BOW.write("\n")
-        fOtb_BOW.close()
 
-        #fW_list = open( datafolder + trialname + "/tmp/step"+ str(step) +"_particle"+ str(particle) +"_W_list.txt" , "w" )
-        fW_list = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_W_list.txt" , "w" )
-        for i in range(len(W_list)):
-          #for j in range(len(W_list[i])):
-          fW_list.write(str(W_list[i]))
-            #fW_list.write(str(W_list[i][j]))
-            #fW_list.write(unicode(W_list[i][j], encoding='shift_jis'))
-          fW_list.write("\n")
-        fW_list.close()
-        '''
       return W_list, Otb_BOW, Otb
 
 
@@ -1300,7 +1290,8 @@ def multiCPU_NPYLM(taple): ###未実装 (latticelmのまま)
 ##############################並列化##############################
 
 ########################################
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def callback(message): 
     import sys
     import os.path
     import time
@@ -1316,10 +1307,14 @@ if __name__ == '__main__':
     
     #trialname は上位プログラム (シェルスクリプト) から送られる
     #上位プログラムがファイル作成も行う (最初だけ) 
-    trialname = sys.argv[1]
+    #trialname = sys.argv[1]
+    #datasetNUM = sys.argv[2] #0
+
+    trialname = rospy.get_param('~trial_name') 
+    datasetNUM = rospy.get_param('~dataset_NUM') 
+    print"Start_Learning"
+
     print trialname
-    
-    datasetNUM = sys.argv[2] #0
     datasetname = datasets[int(datasetNUM)]
     print datasetname #datasetPATH
     #print trialname
@@ -1608,3 +1603,22 @@ if __name__ == '__main__':
     fp.write(str(step)+","+str(iteration_time)+"\n")
     fp.close()
 ########################################
+
+    ## Publish messeage for start SpCo leaning.
+    pub = rospy.Publisher('Start_visualization', std_msgs.msg.String, queue_size=10)
+    str_msg = 'Start_visualization'#std_msgs.msg.String(data= message.data )
+    print "Publish!"
+    rate = rospy.Rate(1)
+    rate.sleep()
+    #rospy.loginfo('%s publish %s'%(rospy.get_name(),str_msg.data))
+    pub.publish(str_msg)
+
+if __name__ == '__main__':
+  rospy.init_node('SpCoSLAM', anonymous=False)
+  print"ready to learning"
+  rospy.Subscriber('Start_Learning', String, callback)
+  #sub = rospy.Subscriber('Start_Learning', String, callback)
+  
+
+
+  rospy.spin()
