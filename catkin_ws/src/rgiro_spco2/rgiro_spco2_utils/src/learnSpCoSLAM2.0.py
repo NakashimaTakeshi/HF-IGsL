@@ -105,7 +105,9 @@ import rospy
 from std_msgs.msg import String
 import std_msgs.msg
 
-
+import sys
+import os.path
+import time
 
 
 # Reading data for image feature (NOT USE)
@@ -171,201 +173,201 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
 
 # Reading word data and Making word list
 def ReadWordData(step, trialname, particle):
-      N = 0
-      Otb = []
-      #WordSegList = []
-      #Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb.csv' #2021/03/06  
-      Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
-      ######################################################
-      #固定ラグ活性化の場合の処理
-      if (LMLAG != 0):
-        tau = step - LMLAG
-        max_particle =1 #2021/03/06 
-        if (tau >= 1):
-          #最大重みのパーティクル番号を読み込む
-          if (LMweight != "WS"):
-            omomi = '/weights.csv'
-          else: #if (LMweight == "WS"):
-            omomi = '/WS.csv'
-          
-          i = 0
-          for line in open(datafolder + trialname + '/'+ str(tau) + omomi, 'r'):   ##読み込む
-              #itemList = line[:-1].split(',')
-              if (i == 0):
-                max_particle = int(line)
-              i += 1
-          
-          #テキストファイルを読み込み
-          #for line in open( Otb_FilePath, 'r'):   #2021/03/06 
-
-          #with open(Otb_FilePath, 'r') as f:
-          #  reader = csv.reader(f)
-          #  Otb = [row for row in reader]
-          #for line in open( datafolder + trialname + "/" + str(tau) + '/out_gmm/' + str(max_particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-            #itemList = line[:-1].split(',')
-            #itemList = line[:-1].split(' ')
-          """
-            if (line != "" and line != "\n"):
-              WordSegList += [line[:-1]]
-              
-              #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
-              #for b in xrange(5):
-              while ("<s><s>" in itemList):
-                itemList.pop(itemList.index("<s><s>"))
-              while ("<s><sp>" in itemList):
-                itemList.pop(itemList.index("<s><sp>"))
-              while ("<s>" in itemList):
-                itemList.pop(itemList.index("<s>"))
-              while ("<sp>" in itemList):
-                itemList.pop(itemList.index("<sp>"))
-              while ("<sp><sp>" in itemList):
-                itemList.pop(itemList.index("<sp><sp>"))
-              while ("</s>" in itemList):
-                itemList.pop(itemList.index("</s>"))
-              while ("<sp></s>" in itemList):
-                itemList.pop(itemList.index("<sp></s>"))
-              while ("" in itemList):
-                itemList.pop(itemList.index(""))
-              #<s>,<sp>,</s>を除く処理：単語中に存在している場合
-              for j in xrange(len(itemList)):
-                itemList[j] = itemList[j].replace("<s><s>", "")
-                itemList[j] = itemList[j].replace("<s>", "")
-                itemList[j] = itemList[j].replace("<sp>", "") 
-                itemList[j] = itemList[j].replace("</s>", "")
-            
-              #for b in xrange(5):
-              # if ("" in itemList):
-              while ("" in itemList):
-                itemList.pop(itemList.index(""))  
-              
-              #Otb[sample] = Otb[sample] + [itemList]
-              Otb = Otb + [itemList]
-              N = N + 1  #count
-              
-              for j in xrange(len(itemList)):
-                #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
-                print "%s " % (itemList[j]), #2021/03/06 
-              print ""  #改行用
-           """
-      ######################################################
+  N = 0
+  Otb = []
+  #WordSegList = []
+  #Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb.csv' #2021/03/06  
+  Otb_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
+  ######################################################
+  #固定ラグ活性化の場合の処理
+  if (LMLAG != 0):
+    tau = step - LMLAG
+    max_particle =1 #2021/03/06 
+    if (tau >= 1):
+      #最大重みのパーティクル番号を読み込む
+      if (LMweight != "WS"):
+        omomi = '/weights.csv'
+      else: #if (LMweight == "WS"):
+        omomi = '/WS.csv'
       
-      #filename = datafolder + trialname + "/" + str(step)  ##FullPath of learning trial folder
+      i = 0
+      for line in open(datafolder + trialname + '/'+ str(tau) + omomi, 'r'):   ##読み込む
+          #itemList = line[:-1].split(',')
+          if (i == 0):
+            max_particle = int(line)
+          i += 1
+      
       #テキストファイルを読み込み
-      with open(Otb_FilePath, 'r') as f:
-            reader = csv.reader(f)
-            Otb = [row for row in reader]
-      """
-      for line in open( Otb_FilePath, 'r'):   #2021/03/06 
-      #for line in open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-        itemList = line[:-1].split(',')
+      #for line in open( Otb_FilePath, 'r'):   #2021/03/06 
+
+      #with open(Otb_FilePath, 'r') as f:
+      #  reader = csv.reader(f)
+      #  Otb = [row for row in reader]
+      #for line in open( datafolder + trialname + "/" + str(tau) + '/out_gmm/' + str(max_particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
+        #itemList = line[:-1].split(',')
         #itemList = line[:-1].split(' ')
-        WordSegList += [line[:-1]]
-        
-        #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
-        #for b in xrange(5):
-        while ("<s><s>" in itemList):
-            itemList.pop(itemList.index("<s><s>"))
-        while ("<s><sp>" in itemList):
-            itemList.pop(itemList.index("<s><sp>"))
-        while ("<s>" in itemList):
-            itemList.pop(itemList.index("<s>"))
-        while ("<sp>" in itemList):
-            itemList.pop(itemList.index("<sp>"))
-        while ("<sp><sp>" in itemList):
-            itemList.pop(itemList.index("<sp><sp>"))
-        while ("</s>" in itemList):
-            itemList.pop(itemList.index("</s>"))
-        while ("<sp></s>" in itemList):
-            itemList.pop(itemList.index("<sp></s>"))
-        while ("" in itemList):
-            itemList.pop(itemList.index(""))
-        #<s>,<sp>,</s>を除く処理：単語中に存在している場合
-        for j in xrange(len(itemList)):
-          itemList[j] = itemList[j].replace("<s><s>", "")
-          itemList[j] = itemList[j].replace("<s>", "")
-          itemList[j] = itemList[j].replace("<sp>", "")
-          itemList[j] = itemList[j].replace("</s>", "")
-        
-        #for b in xrange(5):
-          # if ("" in itemList):
-        while ("" in itemList):
-          itemList.pop(itemList.index(""))
-        
-        #Otb[sample] = Otb[sample] + [itemList]
-        Otb = Otb + [itemList]
-        N = N + 1  #count
-
-        print 'Otb',Otb
-        print 'ItemList',itemList
-
-        for j in xrange(len(itemList)):
-            #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
-            print "%s " % (itemList[j]),
-        print ""  #改行用
-      #unicode(W_list[c], encoding='shift_jis')
       """
-      ##場所の名前の多項分布のインデックス用
-      W_list = []
-      for n in xrange(len(Otb)):
-        for j in xrange(len(Otb[n])):
-          if ( (Otb[n][j] in W_list) == False ):
-            W_list.append(Otb[n][j])
-            #print str(W_list),len(W_list)
-      
-      ##時刻tデータごとにBOW化(?)する、ベクトルとする
-      Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(len(Otb)) ]
-      
-      for n in xrange(len(Otb)):
-        for j in xrange(len(Otb[n])):
-          for i in xrange(len(W_list)):
-            if ( W_list[i] == Otb[n][j] ):
-              Otb_BOW[n][i] = Otb_BOW[n][i] + 1
-      
-      ###################################################### #2021/03/06 
-      #固定ラグ活性化の場合の処理(samp.100を更新)
-      #if (LMLAG != 0) and (tau >= 1):
-      #  fp = open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'w')
-      #  for n in xrange(N):
-      #    fp.write(str(WordSegList[n])+"\n")
-      #  #fp.write("\n")
-      #  fp.close()
+        if (line != "" and line != "\n"):
+          WordSegList += [line[:-1]]
+          
+          #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
+          #for b in xrange(5):
+          while ("<s><s>" in itemList):
+            itemList.pop(itemList.index("<s><s>"))
+          while ("<s><sp>" in itemList):
+            itemList.pop(itemList.index("<s><sp>"))
+          while ("<s>" in itemList):
+            itemList.pop(itemList.index("<s>"))
+          while ("<sp>" in itemList):
+            itemList.pop(itemList.index("<sp>"))
+          while ("<sp><sp>" in itemList):
+            itemList.pop(itemList.index("<sp><sp>"))
+          while ("</s>" in itemList):
+            itemList.pop(itemList.index("</s>"))
+          while ("<sp></s>" in itemList):
+            itemList.pop(itemList.index("<sp></s>"))
+          while ("" in itemList):
+            itemList.pop(itemList.index(""))
+          #<s>,<sp>,</s>を除く処理：単語中に存在している場合
+          for j in xrange(len(itemList)):
+            itemList[j] = itemList[j].replace("<s><s>", "")
+            itemList[j] = itemList[j].replace("<s>", "")
+            itemList[j] = itemList[j].replace("<sp>", "") 
+            itemList[j] = itemList[j].replace("</s>", "")
         
-      ######################################################
-      
-      #Output W_list and Otb_BoW 2021/03/06 
-      if (particle == max_particle):
-        print "Otb:"
-        print(Otb)
-        print "Otb_BOW:"
-        print(Otb_BOW)
-        print "W_list:"
-        print(W_list)
+          #for b in xrange(5):
+          # if ("" in itemList):
+          while ("" in itemList):
+            itemList.pop(itemList.index(""))  
+          
+          #Otb[sample] = Otb[sample] + [itemList]
+          Otb = Otb + [itemList]
+          N = N + 1  #count
+          
+          for j in xrange(len(itemList)):
+            #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+            print "%s " % (itemList[j]), #2021/03/06 
+          print ""  #改行用
+        """
+  ######################################################
+  
+  #filename = datafolder + trialname + "/" + str(step)  ##FullPath of learning trial folder
+  #テキストファイルを読み込み
+  with open(Otb_FilePath, 'r') as f:
+        reader = csv.reader(f)
+        Otb = [row for row in reader]
+  """
+  for line in open( Otb_FilePath, 'r'):   #2021/03/06 
+  #for line in open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
+    itemList = line[:-1].split(',')
+    #itemList = line[:-1].split(' ')
+    WordSegList += [line[:-1]]
+    
+    #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
+    #for b in xrange(5):
+    while ("<s><s>" in itemList):
+        itemList.pop(itemList.index("<s><s>"))
+    while ("<s><sp>" in itemList):
+        itemList.pop(itemList.index("<s><sp>"))
+    while ("<s>" in itemList):
+        itemList.pop(itemList.index("<s>"))
+    while ("<sp>" in itemList):
+        itemList.pop(itemList.index("<sp>"))
+    while ("<sp><sp>" in itemList):
+        itemList.pop(itemList.index("<sp><sp>"))
+    while ("</s>" in itemList):
+        itemList.pop(itemList.index("</s>"))
+    while ("<sp></s>" in itemList):
+        itemList.pop(itemList.index("<sp></s>"))
+    while ("" in itemList):
+        itemList.pop(itemList.index(""))
+    #<s>,<sp>,</s>を除く処理：単語中に存在している場合
+    for j in xrange(len(itemList)):
+      itemList[j] = itemList[j].replace("<s><s>", "")
+      itemList[j] = itemList[j].replace("<s>", "")
+      itemList[j] = itemList[j].replace("<sp>", "")
+      itemList[j] = itemList[j].replace("</s>", "")
+    
+    #for b in xrange(5):
+      # if ("" in itemList):
+    while ("" in itemList):
+      itemList.pop(itemList.index(""))
+    
+    #Otb[sample] = Otb[sample] + [itemList]
+    Otb = Otb + [itemList]
+    N = N + 1  #count
 
-        ## save massage as a csv format
-        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.csv"
-        with open(FilePath, 'w') as f:
-            writer = csv.writer(f)
-            writer.writerows(Otb)
+    print 'Otb',Otb
+    print 'ItemList',itemList
 
-        fOtb = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.txt" , "w" )
-        for i in range(len(Otb)):
-          for j in range(len(Otb[i])):
-            fOtb.write(str(Otb[i][j])+" ")
-          fOtb.write("\n")
-        fOtb.close()
+    for j in xrange(len(itemList)):
+        #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
+        print "%s " % (itemList[j]),
+    print ""  #改行用
+  #unicode(W_list[c], encoding='shift_jis')
+  """
+  ##場所の名前の多項分布のインデックス用
+  W_list = []
+  for n in xrange(len(Otb)):
+    for j in xrange(len(Otb[n])):
+      if ( (Otb[n][j] in W_list) == False ):
+        W_list.append(Otb[n][j])
+        #print str(W_list),len(W_list)
+  
+  ##時刻tデータごとにBOW化(?)する、ベクトルとする
+  Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(len(Otb)) ]
+  
+  for n in xrange(len(Otb)):
+    for j in xrange(len(Otb[n])):
+      for i in xrange(len(W_list)):
+        if ( W_list[i] == Otb[n][j] ):
+          Otb_BOW[n][i] = Otb_BOW[n][i] + 1
+  
+  ###################################################### #2021/03/06 
+  #固定ラグ活性化の場合の処理(samp.100を更新)
+  #if (LMLAG != 0) and (tau >= 1):
+  #  fp = open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'w')
+  #  for n in xrange(N):
+  #    fp.write(str(WordSegList[n])+"\n")
+  #  #fp.write("\n")
+  #  fp.close()
+    
+  ######################################################
+  
+  #Output W_list and Otb_BoW 2021/03/06 
+  if (particle == max_particle):
+    print "Otb:"
+    print(Otb)
+    print "Otb_BOW:"
+    print(Otb_BOW)
+    print "W_list:"
+    print(W_list)
 
-        #fOtb_BOW = open( datafolder + trialname + "/tmp/step"+ str(step) +"_particle"+ str(particle) +"_Otb_BOW.txt" , "w" )
-        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb_BOW.csv"
-        with open(FilePath, 'w') as f:
-            writer = csv.writer(f)
-            writer.writerows(Otb_BOW)
+    ## save massage as a csv format
+    FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.csv"
+    with open(FilePath, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(Otb)
 
-        FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_W_list.csv"
-        with open(FilePath, 'w') as f:
-            writer = csv.writer(f,lineterminator='\n')
-            writer.writerow(W_list)
+    fOtb = open( datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb.txt" , "w" )
+    for i in range(len(Otb)):
+      for j in range(len(Otb[i])):
+        fOtb.write(str(Otb[i][j])+" ")
+      fOtb.write("\n")
+    fOtb.close()
 
-      return W_list, Otb_BOW, Otb
+    #fOtb_BOW = open( datafolder + trialname + "/tmp/step"+ str(step) +"_particle"+ str(particle) +"_Otb_BOW.txt" , "w" )
+    FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_Otb_BOW.csv"
+    with open(FilePath, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(Otb_BOW)
+
+    FilePath= datafolder + trialname + "/tmp/step"+ str(step)  +"_W_list.csv"
+    with open(FilePath, 'w') as f:
+        writer = csv.writer(f,lineterminator='\n')
+        writer.writerow(W_list)
+
+  return W_list, Otb_BOW, Otb
 
 
 #itとCtのデータを読み込む (教示した時刻のみ) 
@@ -579,136 +581,6 @@ def SaveParameters(filename, particle, phi, pi, W, theta, mu, sig):
         #fp6.write('\n')
       fp6.write('\n')
   fp6.close()
-
-
-###↓###単語辞書読み込み書き込み追加############################################
-#MAX_Samp : 重みが最大のパーティクル
-def WordDictionaryUpdate(step, filename, W_list):
-  LIST = []
-  LIST_plus = []
-  #i_best = len(W_list[MAX_Samp])    ##相互情報量上位の単語をどれだけ使うか (len(W_list)：すべて) 
-  i_best = len(W_list)
-  #W_list = W_list[MAX_Samp]
-  hatsuon = [ "" for i in xrange(i_best) ]
-  TANGO = []
-  ##単語辞書の読み込み
-  for line in open('./lang_m/' + lang_init, 'r'):
-      itemList = line[:-1].split('	')
-      LIST = LIST + [line]
-      for j in xrange(len(itemList)):
-          itemList[j] = itemList[j].replace("[", "")
-          itemList[j] = itemList[j].replace("]", "")
-      
-      TANGO = TANGO + [[itemList[1],itemList[2]]]
-      
-  #print TANGO
-  if (UseLM == 1):
-    ##W_listの単語を順番に処理していく
-    for c in xrange(i_best):    # i_best = len(W_list)
-          #W_list_sj = unicode(MI_best[c][i], encoding='shift_jis')
-          W_list_sj = unicode(W_list[c], encoding='shift_jis')
-          if len(W_list_sj) != 1:  ##１文字は除外
-            #for moji in xrange(len(W_list_sj)):
-            moji = 0
-            while (moji < len(W_list_sj)):
-              flag_moji = 0
-              #print len(W_list_sj),str(W_list_sj),moji,W_list_sj[moji]#,len(unicode(W_list[i], encoding='shift_jis'))
-              
-              for j in xrange(len(TANGO)):
-                if (len(W_list_sj)-2 > moji) and (flag_moji == 0): 
-                  #print TANGO[j],j
-                  #print moji
-                  if (unicode(TANGO[j][0], encoding='shift_jis') == W_list_sj[moji]+"_"+W_list_sj[moji+2]) and (W_list_sj[moji+1] == "_"): 
-                    ###print moji,j,TANGO[j][0]
-                    hatsuon[c] = hatsuon[c] + TANGO[j][1]
-                    moji = moji + 3
-                    flag_moji = 1
-                    
-              for j in xrange(len(TANGO)):
-                if (len(W_list_sj)-1 > moji) and (flag_moji == 0): 
-                  #print TANGO[j],j
-                  #print moji
-                  if (unicode(TANGO[j][0], encoding='shift_jis') == W_list_sj[moji]+W_list_sj[moji+1]):
-                    ###print moji,j,TANGO[j][0]
-                    hatsuon[c] = hatsuon[c] + TANGO[j][1]
-                    moji = moji + 2
-                    flag_moji = 1
-                    
-                #print len(W_list_sj),moji
-              for j in xrange(len(TANGO)):
-                if (len(W_list_sj) > moji) and (flag_moji == 0):
-                  if (unicode(TANGO[j][0], encoding='shift_jis') == W_list_sj[moji]):
-                      ###print moji,j,TANGO[j][0]
-                      hatsuon[c] = hatsuon[c] + TANGO[j][1]
-                      moji = moji + 1
-                      flag_moji = 1
-            print W_list_sj,hatsuon[c]
-          else:
-            print W_list_sj,W_list[c] + " (one name)"
-            
-    print JuliusVer,HMMtype
-    if (JuliusVer == "v4.4" and HMMtype == "DNN" and WDs != "S"):
-      #hatsuonのすべての単語の音素表記を"*_I"にする
-      for i in range(len(hatsuon)):
-        hatsuon[i] = hatsuon[i].replace("_S","_I")
-        hatsuon[i] = hatsuon[i].replace("_B","_I")
-        hatsuon[i] = hatsuon[i].replace("_E","_I")
-      
-      #hatsuonの単語の先頭の音素を"*_B"にする
-      for i in range(len(hatsuon)):
-        #onsohyoki_index = onsohyoki.find(target)
-        hatsuon[i] = hatsuon[i].replace("_I","_B", 1)
-        
-        #hatsuonの単語の最後の音素を"*_E"にする
-        hatsuon[i] = hatsuon[i][0:-2] + "E "
-        
-        #hatsuonの単語の音素の例外処理 (N,q) 
-        hatsuon[i] = hatsuon[i].replace("q_S","q_I")
-        hatsuon[i] = hatsuon[i].replace("q_B","q_I")
-        hatsuon[i] = hatsuon[i].replace("N_S","N_I")
-        #print type(hatsuon),hatsuon,type("N_S"),"N_S"
-    elif (JuliusVer == "v4.4" and HMMtype == "DNN" and WDs == "S"):
-      #hatsuonのすべての単語の音素表記を"*_S"にする
-      for i in range(len(hatsuon)):
-        hatsuon[i] = hatsuon[i].replace("_I","_S")
-        hatsuon[i] = hatsuon[i].replace("_B","_S")
-        hatsuon[i] = hatsuon[i].replace("_E","_S")
-      
-      for i in range(len(hatsuon)):
-        #hatsuonの単語の音素の例外処理 (N,q) 
-        hatsuon[i] = hatsuon[i].replace("q_S","q_I")
-        #hatsuon[i] = hatsuon[i].replace("q_B","q_I")
-        hatsuon[i] = hatsuon[i].replace("N_S","N_I")
-        #print type(hatsuon),hatsuon,type("N_S"),"N_S"
-  
-  ##各場所の名前の単語ごとに
-  meishi = u'名詞'
-  meishi = meishi.encode('shift-jis')
-  
-  ##単語辞書ファイル生成
-  fp = open( filename + '/WD.htkdic', 'w')
-  for list in xrange(len(LIST)):
-        fp.write(LIST[list])
-  if (UseLM == 1):
-    ##新しい単語を追加
-    c = 0
-    for mi in xrange(i_best):    # i_best = len(W_list)
-        if hatsuon[mi] != "":
-            if ((W_list[mi] in LIST_plus) == False):  #同一単語を除外
-              flag_tango = 0
-              for j in xrange(len(TANGO)):
-                if(W_list[mi] == TANGO[j][0]):
-                  flag_tango = -1
-              if flag_tango == 0:
-                LIST_plus = LIST_plus + [W_list[mi]]
-                
-                fp.write(LIST_plus[c] + "+" + meishi +"	[" + LIST_plus[c] + "]	" + hatsuon[mi])
-                fp.write('\n')
-                c = c+1
-  
-  fp.close()
-  ###↑###単語辞書読み込み書き込み追加############################################
-
 
 # Online Learning for Spatial Concepts of one particle
 def Learning(step, filename, particle, XT, ST, W_list, CT, IT, FT):
@@ -1292,24 +1164,7 @@ def multiCPU_NPYLM(taple): ###未実装 (latticelmのまま)
 ########################################
 #if __name__ == '__main__':
 def callback(message): 
-    import sys
-    import os.path
-    import time
-    import random
-    #import rospy
-    #from std_msgs.msg import String
-    from __init__ import *
-    from JuliusLattice_dec import *
     
-    #pub = rospy.Publisher('chatter', String, queue_size=10)
-    #rospy.init_node('learn_SpCoSLAM')
-    #clocktime = float(rospy.get_time()) ##rosbagがpause中のためとってこれない
-    
-    #trialname は上位プログラム (シェルスクリプト) から送られる
-    #上位プログラムがファイル作成も行う (最初だけ) 
-    #trialname = sys.argv[1]
-    #datasetNUM = sys.argv[2] #0
-
     trialname = rospy.get_param('~trial_name') 
     datasetNUM = rospy.get_param('~dataset_NUM') 
     print"Start_Learning"
@@ -1344,15 +1199,6 @@ def callback(message):
     print "filename",filename
     print "trialname",trialname    
 
-   #Gazebo環境下での教示プログラムのために、音声認識（Julius）をtextインプットに変更　20210302中島
-    """
-    Julius_lattice(step,filename,trialname)    ##音声認識、ラティス形式出力、opemFST形式へ変換###########
-    while (os.path.exists(filename + "/fst_gmm/" + str(step-1).zfill(3) +".fst" ) != True):
-        print filename + "/fst_gmm/" + str(step).zfill(3) + ".fst", "wait(30s)... or ERROR?"
-        time.sleep(1.0) #sleep(秒指定)
-        Julius_lattice(step,filename,trialname)
-    print "Julius complete!"
-    """
     p_weight_log = np.array([0.0 for i in xrange(R)])
     p_weight = np.array([0.0 for i in xrange(R)])
     p_WS_log = np.array([0.0 for i in xrange(R)]) ###
@@ -1605,8 +1451,8 @@ def callback(message):
 ########################################
 
     ## Publish messeage for start SpCo leaning.
-    pub = rospy.Publisher('Start_visualization', std_msgs.msg.String, queue_size=10)
-    str_msg = 'Start_visualization'#std_msgs.msg.String(data= message.data )
+    pub = rospy.Publisher('start_visualization', std_msgs.msg.String, queue_size=10)
+    str_msg = 'start_visualization'#std_msgs.msg.String(data= message.data )
     print "Publish!"
     rate = rospy.Rate(1)
     rate.sleep()
@@ -1616,9 +1462,5 @@ def callback(message):
 if __name__ == '__main__':
   rospy.init_node('SpCoSLAM', anonymous=False)
   print"ready to learning"
-  rospy.Subscriber('Start_Learning', String, callback)
-  #sub = rospy.Subscriber('Start_Learning', String, callback)
-  
-
-
+  rospy.Subscriber('start_learning', String, callback)
   rospy.spin()
