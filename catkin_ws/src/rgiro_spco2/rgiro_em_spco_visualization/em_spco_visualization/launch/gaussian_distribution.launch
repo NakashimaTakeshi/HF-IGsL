@@ -13,4 +13,7 @@
     <remap from="gaussian_out" to="/em/spcot/gaussian_distributions" />
     <remap from="gaussian_srv" to="/em/spcot/gaussian_request" />
   </node>
+
+  <node name="gaussian_distribution_chatter" pkg="em_spco_visualization" type="gaussian_distribution_chatter.py" output="screen"/>
+
 </launch>

@@ -33,21 +33,29 @@
 #
 # Revision $Id$
 
-## Simple listener that listens to std_msgs/Strings 'speech_to_text' topic and output csv
+# Simple listener that listens to std_msgs/Strings 'speech_to_text' topic and output csv
 
 import rospy
 from std_msgs.msg import String
+import std_msgs.msg
 import csv
 
 def callback(message):
-    rospy.loginfo(rospy.get_caller_id() + 'I heard %s', message.data)
+    rospy.loginfo(rospy.get_caller_id() + ' I heard %s', message.data)
     OutputString = message.data.split()
 
-    ## save massage as a csv format
-    FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
+    # save massage as a csv format
+    FilePath = '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
     with open(FilePath, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(OutputString)
+    
+    ## Publish messeage for start SpCo leaning.
+    pub = rospy.Publisher('start_learning', std_msgs.msg.String, queue_size=10)
+    str_msg = std_msgs.msg.String(data= message.data )
+    rospy.loginfo('%s publish %s'%(rospy.get_name(),str_msg.data))
+    pub.publish(str_msg)
+
     
 def listener():
 

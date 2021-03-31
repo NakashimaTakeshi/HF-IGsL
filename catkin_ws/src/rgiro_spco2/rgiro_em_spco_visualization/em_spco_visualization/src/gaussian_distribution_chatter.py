@@ -102,7 +102,8 @@ class EmSpcotRviz(object):
         #    sigma.append(array)
         print "sigma",sigma
 
-        color = np.loadtxt("./color.csv", delimiter=",")
+        #color = np.loadtxt("./color.csv", delimiter=",")
+        color = np.loadtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_em_spco_visualization/em_spco_visualization/src/color.csv", delimiter=",")
         print "color",color
         #word_index_dic = {}
         if mu.ndim == 1:
@@ -283,7 +284,7 @@ if __name__ == "__main__":
     rospy.init_node("spcot_rviz", anonymous=False)
     print "start visualization"
     #rate = rospy.Rate(1) # 1 Hz
-    rospy.Subscriber('Start_visualization', String, callback)
+    rospy.Subscriber('start_visualization', String, callback)
     #rospy.Subscriber('speech_to_text', String, callback)
 
     rospy.spin()
