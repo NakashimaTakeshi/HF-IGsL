@@ -51,7 +51,7 @@ def callback(message):
         writer.writerow(OutputString)
     
     ## Publish messeage for start SpCo leaning.
-    pub = rospy.Publisher('start_learning', std_msgs.msg.String, queue_size=10)
+    pub = rospy.Publisher('start_learning', std_msgs.msg.String, queue_size=10, latch=True)
     str_msg = std_msgs.msg.String(data= message.data )
     rospy.loginfo('%s publish %s'%(rospy.get_name(),str_msg.data))
     pub.publish(str_msg)
