@@ -38,7 +38,12 @@
 import rospy
 from std_msgs.msg import String
 import std_msgs.msg
+import std_srvs.srv
 import csv
+import time
+
+from rgiro_spco2_utils.srv import spco_data_image
+
 
 def callback(message):
     rospy.loginfo(rospy.get_caller_id() + ' I heard %s', message.data)
@@ -49,7 +54,19 @@ def callback(message):
     with open(FilePath, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(OutputString)
-    
+
+    # request image feature
+    service_result = False
+    step = sum([1 for _ in open(FilePath)])
+    print "step=",step
+
+    rospy.wait_for_service('em_spco_data/image')
+    srv = rospy.ServiceProxy('em_spco_data/image', spco_data_image)
+    try:
+        service_result = srv("new", step)
+    except rospy.ServiceException as exc:
+        print("Service did not process request: " + str(exc))
+
     ## Publish messeage for start SpCo leaning.
     pub = rospy.Publisher('start_learning', std_msgs.msg.String, queue_size=10, latch=True)
     str_msg = std_msgs.msg.String(data= message.data )

@@ -140,5 +140,4 @@ class Particle:
     self.theta = theta
     self.weight = weight
     self.pid = pid
-    #self.Ct = -1
-    #self.it = -1
+

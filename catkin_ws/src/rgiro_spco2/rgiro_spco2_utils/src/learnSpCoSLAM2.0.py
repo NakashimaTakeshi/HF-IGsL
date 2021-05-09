@@ -114,7 +114,8 @@ import time
 def ReadImageData(trialname, datasetname, step):
   FT = []
   for s in xrange(step):
-    for line in open( datasetfolder + datasetname + 'img/ft' + str(s+1) + '.csv', 'r'):
+    for line in open( datafolder + trialname + '/img/ft' + str(s+1) + '.csv', 'r'):
+    #for line in open( datasetfolder + datasetname + 'img/ft' + str(s+1) + '.csv', 'r'):
       itemList = line[:].split(',')
     FT.append( [float(itemList[i]) for i in xrange(DimImg)] )
   return FT
@@ -122,12 +123,22 @@ def ReadImageData(trialname, datasetname, step):
 # Reading data for image feature
 #時刻情報を取得して、一番近い画像特徴ファイルを読み込むようにする
 def ReadImageData2(trialname, datasetname, step, clocktime):
+  '''
+   return Image Feature list at all teaching step
+  '''
   clocktime = int(clocktime)
   
+  print "step=",step
+  #time.sleep(5)
   FT = []
   for s in xrange(step-1):
+    savefilepath = datafolder + trialname + '/img/ft' + str(s+1) + '.csv'
+    print savefilepath
     for line in open( datafolder + trialname + '/img/ft' + str(s+1) + '.csv', 'r'):
       itemList = line[:].split(',')
+      print "itemList=",itemList
+      print "s=",s
+      #time.sleep(5)
     FT.append( [float(itemList[i]) for i in xrange(DimImg)] )
   
   # Read image data at current time
@@ -137,12 +148,18 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
   #print "files:",files
   files2 = [files[i][len(datasetfolder)+len(datasetname)+len(Descriptor)+1:-4] for i in xrange(len(files))]
   #print "files2:",files2
+  #print "files2:"
+  #time.sleep(5)
   #print files2
   #temptime = []
   #for f in files:
   #  m = re.match('[^\d]*(\d+).*$', f)
   #  temptime.append(int(m.groups[0]))
   temptime = [int(re.match('[^\d]*(\d+).*$', f).groups()[0]) for f in files2]
+  #print "temptime:",temptime
+  #print "temptime:"
+  #print "clocktime:",clocktime
+  #time.sleep(5)
   if (clocktime in temptime):
     f_temp = files[temptime.index(clocktime)]
   else:
@@ -153,7 +170,8 @@ def ReadImageData2(trialname, datasetname, step, clocktime):
     else:
       print "FT read error.",clocktime,temptime
       f_temp = files[-1]
-  
+  print "f_temp:",f_temp
+  #time.sleep(5)
   for line in open( f_temp, 'r'):
       itemList = line[:].split(',')
   FT.append( [float(itemList[i]) for i in xrange(DimImg)] )
@@ -196,116 +214,13 @@ def ReadWordData(step, trialname, particle):
           if (i == 0):
             max_particle = int(line)
           i += 1
-      
-      #テキストファイルを読み込み
-      #for line in open( Otb_FilePath, 'r'):   #2021/03/06 
-
-      #with open(Otb_FilePath, 'r') as f:
-      #  reader = csv.reader(f)
-      #  Otb = [row for row in reader]
-      #for line in open( datafolder + trialname + "/" + str(tau) + '/out_gmm/' + str(max_particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-        #itemList = line[:-1].split(',')
-        #itemList = line[:-1].split(' ')
-      """
-        if (line != "" and line != "\n"):
-          WordSegList += [line[:-1]]
-          
-          #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
-          #for b in xrange(5):
-          while ("<s><s>" in itemList):
-            itemList.pop(itemList.index("<s><s>"))
-          while ("<s><sp>" in itemList):
-            itemList.pop(itemList.index("<s><sp>"))
-          while ("<s>" in itemList):
-            itemList.pop(itemList.index("<s>"))
-          while ("<sp>" in itemList):
-            itemList.pop(itemList.index("<sp>"))
-          while ("<sp><sp>" in itemList):
-            itemList.pop(itemList.index("<sp><sp>"))
-          while ("</s>" in itemList):
-            itemList.pop(itemList.index("</s>"))
-          while ("<sp></s>" in itemList):
-            itemList.pop(itemList.index("<sp></s>"))
-          while ("" in itemList):
-            itemList.pop(itemList.index(""))
-          #<s>,<sp>,</s>を除く処理：単語中に存在している場合
-          for j in xrange(len(itemList)):
-            itemList[j] = itemList[j].replace("<s><s>", "")
-            itemList[j] = itemList[j].replace("<s>", "")
-            itemList[j] = itemList[j].replace("<sp>", "") 
-            itemList[j] = itemList[j].replace("</s>", "")
-        
-          #for b in xrange(5):
-          # if ("" in itemList):
-          while ("" in itemList):
-            itemList.pop(itemList.index(""))  
-          
-          #Otb[sample] = Otb[sample] + [itemList]
-          Otb = Otb + [itemList]
-          N = N + 1  #count
-          
-          for j in xrange(len(itemList)):
-            #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
-            print "%s " % (itemList[j]), #2021/03/06 
-          print ""  #改行用
-        """
   ######################################################
   
-  #filename = datafolder + trialname + "/" + str(step)  ##FullPath of learning trial folder
   #テキストファイルを読み込み
   with open(Otb_FilePath, 'r') as f:
         reader = csv.reader(f)
         Otb = [row for row in reader]
-  """
-  for line in open( Otb_FilePath, 'r'):   #2021/03/06 
-  #for line in open( filename + '/out_gmm/' + str(particle) + '_samp.'+str(samps), 'r'):   ##*_samp.*を読み込む
-    itemList = line[:-1].split(',')
-    #itemList = line[:-1].split(' ')
-    WordSegList += [line[:-1]]
-    
-    #<s>,<sp>,</s>を除く処理：単語に区切られていた場合
-    #for b in xrange(5):
-    while ("<s><s>" in itemList):
-        itemList.pop(itemList.index("<s><s>"))
-    while ("<s><sp>" in itemList):
-        itemList.pop(itemList.index("<s><sp>"))
-    while ("<s>" in itemList):
-        itemList.pop(itemList.index("<s>"))
-    while ("<sp>" in itemList):
-        itemList.pop(itemList.index("<sp>"))
-    while ("<sp><sp>" in itemList):
-        itemList.pop(itemList.index("<sp><sp>"))
-    while ("</s>" in itemList):
-        itemList.pop(itemList.index("</s>"))
-    while ("<sp></s>" in itemList):
-        itemList.pop(itemList.index("<sp></s>"))
-    while ("" in itemList):
-        itemList.pop(itemList.index(""))
-    #<s>,<sp>,</s>を除く処理：単語中に存在している場合
-    for j in xrange(len(itemList)):
-      itemList[j] = itemList[j].replace("<s><s>", "")
-      itemList[j] = itemList[j].replace("<s>", "")
-      itemList[j] = itemList[j].replace("<sp>", "")
-      itemList[j] = itemList[j].replace("</s>", "")
-    
-    #for b in xrange(5):
-      # if ("" in itemList):
-    while ("" in itemList):
-      itemList.pop(itemList.index(""))
-    
-    #Otb[sample] = Otb[sample] + [itemList]
-    Otb = Otb + [itemList]
-    N = N + 1  #count
 
-    print 'Otb',Otb
-    print 'ItemList',itemList
-
-    for j in xrange(len(itemList)):
-        #print "%s " % (unicode(itemList[j], encoding='shift_jis')),
-        print "%s " % (itemList[j]),
-    print ""  #改行用
-  #unicode(W_list[c], encoding='shift_jis')
-  """
   ##場所の名前の多項分布のインデックス用
   W_list = []
   for n in xrange(len(Otb)):
@@ -392,16 +307,16 @@ def ReadParticleData(m_count, trialname):
 # パーティクルIDの対応付け処理(Ct,itの対応付けも)
 def ParticleSearcher(trialname):
   m_count = 0  #m_countの数
-  #m_countのindexは1から始まる
+  #Count m_count that is number of gmapping output steps
   while (os.path.exists( datafolder + trialname + "/particle/" + str(m_count+1) + ".csv" ) == True):
     m_count += 1
   
-  if (m_count == 0):  #エラー処理
-    #m_countのindexは1から始まる
-    while (os.path.exists( datafolder + trialname + "/particle/" + str(m_count+1) + ".csv" ) == True):
-      m_count += 1
+  #if (m_count == 0):  #エラー処理
+  #  #m_countのindexは1から始まる
+  #  while (os.path.exists( datafolder + trialname + "/particle/" + str(m_count+1) + ".csv" ) == True):
+  #   m_count += 1
   
-  if (m_count == 0):  #エラー処理
+  if (m_count == 0):  #エラー処理:Set teachingflag zero and exit learnSpCoSLAM2.0.py process.
     print "m_count",m_count
     flag = 0
     fp = open( datafolder + trialname + "/teachingflag.txt", 'w')
@@ -417,11 +332,13 @@ def ParticleSearcher(trialname):
   #C[1:t-1],I[1:t-1]のパーティクルID(step-1時点)と現在のparticleIDの対応付け
   CTtemp = [[] for r in xrange(R)]
   ITtemp = [[] for r in xrange(R)]
+  #Read spatial_concept_index(Ct) and position_distributions_index(It) results of the privious teaching step
   for particle in xrange(R):
     CTtemp[particle],ITtemp[particle] = ReaditCtData(trialname, step, particle)
   #print "CTtemp,ITtemp:",CTtemp,ITtemp
   
   p = [[Particle( int(0), float(1), float(2), float(3), float(4), int(5) ) for i in xrange(R)] for c in xrange(m_count)]
+  #Read trajectory infomation (ID,x,y,theta,weight,previousID) of all gmapping step
   for c in xrange(m_count):
     p[c] = ReadParticleData(c+1, trialname)        #m_countのindexは1から始まる   
     ######非効率なので、前回のパーティクル情報を使う (未実装) 
@@ -584,6 +501,10 @@ def SaveParameters(filename, particle, phi, pi, W, theta, mu, sig):
 
 # Online Learning for Spatial Concepts of one particle
 def Learning(step, filename, particle, XT, ST, W_list, CT, IT, FT):
+    #Update ct, it, weight_log, WS_log
+    #  St:Bag of word representation of every teaching sentence.
+    #  W_list[i]:word dictionary for particle(i).
+    #  ST_seq[i]:plain text of every teaching sentence
     XT_list = [ np.array([XT[s].x, XT[s].y]) for s in range(step) ]
     np.random.seed()
     ########################################################################
@@ -616,7 +537,10 @@ def Learning(step, filename, particle, XT, ST, W_list, CT, IT, FT):
       Nle_c = [ sum( [np.array(FT[0])] ) ]
       #thetac_temp = [(np.array(Nle_c[0]) + chi0 ) / (sum(Nle_c[0]) + E*chi0)]
       theta = [(np.array(Nle_c[0]) + chi0 ) / (sum(Nle_c[0]) + E*chi0)] #[thetac_temp[0]]
-      
+      print "theta=",theta
+      print "theta(arg)",(np.array(Nle_c[0]) + chi0 ) / (sum(Nle_c[0]) + E*chi0)
+      #time.sleep(30)
+
       #nk = 1
       kN,mN,nN,VN = PosteriorParameterGIW2(1,1,1,[0],XT_list[0],0)
       """
@@ -1125,40 +1049,7 @@ def multiCPU_latticelm(taple):
                 time.sleep(1.0) #sleep(秒指定)
       #p.close()###########################
       print "Particle:",i," latticelm complete!"
-"""
-def multiCPU_NPYLM(taple): ###未実装 (latticelmのまま) 
-      from __init__ import *
-      i = int(taple[1])
-      filename = taple[0]
-      #パーティクルごとに計算
-      #for i in xrange(R):
-      print "--------------------------------------------------"
-      print "Particle:",i
-      
-      if (ramdoman != 0):
-        annealsteps  += random.randint(-1*annealsteps+1,ramdoman)
-        anneallength += random.randint(-1*anneallength+1,ramdoman)
-      
-      #print "latticelm run. sample_num:" + str(sample)
-      latticelm_CMD = "latticelm -input fst -filelist "+ filename + "/fst_gmm/fstlist.txt -prefix " + filename + "/out_gmm/" + str(i) + "_ -symbolfile " + filename + "/fst_gmm/isyms.txt -burnin " + str(burnin) + " -samps " + str(samps) + " -samprate " + str(samprate) + " -knownn " + str(knownn) + " -unkn " + str(unkn) + " -annealsteps " + str(annealsteps) + " -anneallength " + str(anneallength)
-      
-      p = os.popen( latticelm_CMD )   ##latticelm ###################
-      #time.sleep(1.0) #sleep(秒指定)###################
-      p.close()###########################
-      latticelm_count = 0
-      while (os.path.exists(filename + "/out_gmm/" + str(i) + "_samp."+str(samps) ) != True):
-              print filename + "/out_gmm/" + str(i) + "_samp."+str(samps),"wait(10s)... or ERROR?"
-              #p.close()
-              latticelm_count += 1
-              if (latticelm_count > 10):
-                print "run latticelm again."
-                p = os.popen( latticelm_CMD )   ##latticelm 
-                p.close()
-                latticelm_count = 0
-                time.sleep(1.0) #sleep(秒指定)
-      #p.close()###########################
-      print "Particle:",i," latticelm complete!"
-"""
+
 ##############################並列化##############################
 
 ########################################
@@ -1168,21 +1059,31 @@ def callback(message):
     trialname = rospy.get_param('~trial_name') 
     datasetNUM = rospy.get_param('~dataset_NUM') 
     print"Start_Learning"
+    #time.sleep(5)
 
     print trialname
     datasetname = datasets[int(datasetNUM)]
     print datasetname #datasetPATH
     #print trialname
     start_iter_time = time.time()
-    
+    #Read following 
+    #Xp:particle history(ID,x,y,theta,weight,previousID) at all gmapping step."
+    #step:counter of teaching
+    #m_count:counter of gmapping step
+    #Ct:spatial_concept_index of privious teaching
+    #It:position_distributions_index of privious teaching
     Xp,step,m_count,CT,IT = ParticleSearcher(trialname)
-    for i in xrange(R):
+    for i in xrange(R): #この例外処理はなんのためにある？
       while (0 in CT[i]) or (0 in IT[i]):
         print "Error! 0 in CT,IT",CT,IT
         Xp,step,m_count,CT,IT = ParticleSearcher(trialname)
     
-    print "step", step, "m_count", m_count
-   # print "Xp", Xp, "Ct", CT,"It",IT
+    print "step", step
+    print "m_count", m_count
+    print "Xp:particle_trajectory_and_weight_transition", Xp
+    print "Ct:spatial_concept_index", CT
+    print "It:position_distributions_index",IT
+    #time.sleep(30)
 
     teachingtime = []
     for line in open( datasetfolder + datasetname + 'teaching.csv', 'r'):
@@ -1206,7 +1107,8 @@ def callback(message):
     ST_seq   = [[] for i in xrange(R)]
     
     if (UseFT == 1):
-      FT = ReadImageData2(trialname, datasetname, step, clocktime)
+      #FT = ReadImageData2(trialname, datasetname, step, clocktime)
+      FT = ReadImageData(trialname, datasetname, step)
     else:
       FT = [[0 for e in xrange(DimImg)] for s in xrange(step)]
     """    2021/03/06 
@@ -1216,78 +1118,20 @@ def callback(message):
     """    
     #パーティクルごとに計算
     for i in xrange(R):
-      #print "--------------------------------------------------"
-      #print "Particle:",i
-      
-      """
-      if (ramdoman != 0):
-        annealsteps  += random.randint(-1*annealsteps+1,ramdoman)
-        anneallength += random.randint(-1*anneallength+1,ramdoman)
-      
-      #print "latticelm run. sample_num:" + str(sample)
-      latticelm_CMD = "latticelm -input fst -filelist "+ filename + "/fst_gmm/fstlist.txt -prefix " + filename + "/out_gmm/" + str(i) + "_ -symbolfile " + filename + "/fst_gmm/isyms.txt -burnin " + str(burnin) + " -samps " + str(samps) + " -samprate " + str(samprate) + " -knownn " + str(knownn) + " -unkn " + str(unkn) + " -annealsteps " + str(annealsteps) + " -anneallength " + str(anneallength)
-      
-      p = os.popen( latticelm_CMD )   ##latticelm ###################
-      #time.sleep(1.0) #sleep(秒指定)###################
-      p.close()###########################
-      latticelm_count = 0
-      while (os.path.exists(filename + "/out_gmm/" + str(i) + "_samp."+str(samps) ) != True):
-              print filename + "/out_gmm/" + str(i) + "_samp."+str(samps),"wait(10s)... or ERROR?"
-              #p.close()
-              latticelm_count += 1
-              if (latticelm_count > 10):
-                print "run latticelm again."
-                p = os.popen( latticelm_CMD )   ##latticelm 
-                p.close()
-                latticelm_count = 0
-              time.sleep(1.0) #sleep(秒指定)
-      #p.close()###########################
-      print "Particle:",i," latticelm complete!"
-      """
       
       #for i in xrange(R): ###############
       print "--------------------------------------------------" ###############
       print "Particle:",i ###############
       
+      #Read teaching infomation
+      #  St:Bag of word representation of every teaching sentence.
+      #  W_list[i]:word dictionary for particle(i).
+      #  ST_seq[i]:plain text of every teaching sentence
       W_list[i], ST, ST_seq[i] = ReadWordData(step, trialname, i)
-      ''' 2021/03/06 
-      W_listFilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_W_list.txt' 
-      print(W_listFilePath)
-      with open(W_listFilePath, 'r') as f:
-        W_list = f.read().split("\n")
-        W_list = [s for s in  W_list if s != '']
-      print(W_list)
-      print(len(W_list))
-      f.close()
 
-      Otb_BOW = [ [0 for i in xrange(len(W_list))] for n in xrange(N) ]
-      
-      for n in xrange(N):
-        for j in xrange(len(Otb[n])):
-          for i in xrange(len(W_list)):
-            if ( W_list[i] == Otb[n][j] ):
-              Otb_BOW[n][i] = Otb_BOW[n][i] + 1
-
-
-      Otb_BOW_FilePath= '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/step' + str(step) + '_Otb_BOW.txt' 
-      print(Otb_BOW_FilePath)
-      with open(Otb_BOW_FilePath, 'r') as f:
-        for line in f:
-          line = line.strip() #前後空白削除
-          line = line.replace('\n','') #末尾の\nの削除
-          line = list(line) #分割
-          Otb_BOW.append(line)
-      ST = [int(s) for s in Otb_BOW]    
-      print(ST)
-      print(len(ST))
-      f.close()
-
-      #ST=
-
-      '''
       print "Read word data."
       #CT, IT = ReaditCtData(trialname, step, i)
-      print "Read Ct,it data."
+      print "Read Ct,It data."
       print "CT",CT[i]
       print "IT",IT[i]
       ct, it, p_weight_log[i],p_WS_log[i] = Learning(step, filename, i, Xp[i], ST, W_list[i], CT[i], IT[i], FT)     ## Learning of spatial concepts
@@ -1450,17 +1294,14 @@ def callback(message):
     fp.close()
 ########################################
 
-    ## Publish messeage for start SpCo leaning.
-    pub = rospy.Publisher('start_visualization', std_msgs.msg.String, queue_size=10)
+    ## Publish messeage for start_visualization
     str_msg = 'start_visualization'#std_msgs.msg.String(data= message.data )
     print "Publish!"
-    rate = rospy.Rate(1)
-    rate.sleep()
-    #rospy.loginfo('%s publish %s'%(rospy.get_name(),str_msg.data))
     pub.publish(str_msg)
 
 if __name__ == '__main__':
   rospy.init_node('SpCoSLAM', anonymous=False)
   print"ready to learning"
-  rospy.Subscriber('start_learning', String, callback)
+  sub = rospy.Subscriber('start_learning', String, callback)
+  pub = rospy.Publisher('start_visualization', std_msgs.msg.String, queue_size=10,latch=True)
   rospy.spin()

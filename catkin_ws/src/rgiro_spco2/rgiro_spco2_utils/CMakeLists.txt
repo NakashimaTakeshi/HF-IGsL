@@ -5,6 +5,17 @@ find_package(catkin REQUIRED COMPONENTS
   rgiro_gmapping
   rospy
   std_msgs
+  message_generation
+)
+
+add_service_files(
+  FILES
+  spco_data_image.srv
+ )
+
+ generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 catkin_package(
