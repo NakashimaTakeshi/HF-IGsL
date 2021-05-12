@@ -11,12 +11,10 @@ import os
 import numpy as np
 import cv2
 from PIL import Image
+import os.path
 
 features_blobs = []  # add by nakashima2021050
-
 # hacky way to deal with the Pytorch 1.0 update
-
-
 def recursion_change_bn(module):
     if isinstance(module, torch.nn.BatchNorm2d):
         module.track_running_stats = 1
@@ -25,14 +23,13 @@ def recursion_change_bn(module):
             module1 = recursion_change_bn(module1)
     return module
 
-
 def load_labels():
     # prepare all the labels
     # scene category relevant
-    file_name_category = 'categories_places365.txt'
+    file_name_category = os.path.dirname(os.path.abspath(__file__)) + '/categories_places365.txt'
     if not os.access(file_name_category, os.W_OK):
         synset_url = 'https://raw.githubusercontent.com/csailvision/places365/master/categories_places365.txt'
-        os.system('wget ' + synset_url)
+        os.system('wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' ' + synset_url)
     classes = list()
     with open(file_name_category) as class_file:
         for line in class_file:
@@ -40,10 +37,10 @@ def load_labels():
     classes = tuple(classes)
 
     # indoor and outdoor relevant
-    file_name_IO = 'IO_places365.txt'
+    file_name_IO = os.path.dirname(os.path.abspath(__file__)) + '/IO_places365.txt'
     if not os.access(file_name_IO, os.W_OK):
         synset_url = 'https://raw.githubusercontent.com/csailvision/places365/master/IO_places365.txt'
-        os.system('wget ' + synset_url)
+        os.system('wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' ' + synset_url)
     with open(file_name_IO) as f:
         lines = f.readlines()
         labels_IO = []
@@ -53,25 +50,23 @@ def load_labels():
     labels_IO = np.array(labels_IO)
 
     # scene attribute relevant
-    file_name_attribute = 'labels_sunattribute.txt'
+    file_name_attribute = os.path.dirname(os.path.abspath(__file__)) + '/labels_sunattribute.txt'
     if not os.access(file_name_attribute, os.W_OK):
         synset_url = 'https://raw.githubusercontent.com/csailvision/places365/master/labels_sunattribute.txt'
-        os.system('wget ' + synset_url)
+        os.system('wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' '  + synset_url)
     with open(file_name_attribute) as f:
         lines = f.readlines()
         labels_attribute = [item.rstrip() for item in lines]
-    file_name_W = 'W_sceneattribute_wideresnet18.npy'
+    file_name_W = os.path.dirname(os.path.abspath(__file__)) + '/W_sceneattribute_wideresnet18.npy'
     if not os.access(file_name_W, os.W_OK):
         synset_url = 'http://places2.csail.mit.edu/models_places365/W_sceneattribute_wideresnet18.npy'
-        os.system('wget ' + synset_url)
+        os.system('wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' '  + synset_url)
     W_attribute = np.load(file_name_W)
 
     return classes, labels_IO, labels_attribute, W_attribute
 
-
 def hook_feature(module, input, output):
     features_blobs.append(np.squeeze(output.data.cpu().numpy()))
-
 
 def returnCAM(feature_conv, weight_softmax, class_idx):
     # generate the class activation maps upsample to 256x256
@@ -100,18 +95,18 @@ def returnTF():
 
 def load_model():
     # this model has a last conv feature map as 14x14
-
+    print "start"
     model_file = 'wideresnet18_places365.pth.tar'
-    if not os.access(model_file, os.W_OK):
+    if not os.access(os.path.dirname(os.path.abspath(__file__)) + '/' + model_file, os.W_OK):
         os.system(
-            'wget http://places2.csail.mit.edu/models_places365/' + model_file)
+            'wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' http://places2.csail.mit.edu/models_places365/' + model_file)
         os.system(
-            'wget https://raw.githubusercontent.com/csailvision/places365/master/wideresnet.py')
+            'wget -P '+ os.path.dirname(os.path.abspath(__file__)) + ' https://raw.githubusercontent.com/csailvision/places365/master/wideresnet.py')
 
     import wideresnet
     model = wideresnet.resnet18(num_classes=365)
     checkpoint = torch.load(
-        model_file, map_location=lambda storage, loc: storage)
+        os.path.dirname(os.path.abspath(__file__)) + '/' + model_file, map_location=lambda storage, loc: storage)
     state_dict = {str.replace(k, 'module.', ''): v for k,
                   v in checkpoint['state_dict'].items()}
     model.load_state_dict(state_dict)
