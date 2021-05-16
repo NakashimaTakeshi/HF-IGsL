@@ -25,11 +25,9 @@ def CallService():
     print('name is ' + name)
 '''
 def StartPublish(): 
-    ## publisher
     ## node initialization
     rospy.init_node('talker_node', anonymous=False)
-    ## queue size is not important for sending just one messeage.
-    pub = rospy.Publisher('speech_to_text', std_msgs.msg.String, queue_size=10)
+    pub = rospy.Publisher('speech_to_text', std_msgs.msg.String, queue_size=10) ## queue size is not important for sending just one messeage.
     rate = rospy.Rate(1) # 1 Hz
     while not rospy.is_shutdown():
         TeachingText = raw_input('Enter teaching text: ')

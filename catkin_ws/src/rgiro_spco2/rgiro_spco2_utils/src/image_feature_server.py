@@ -44,12 +44,12 @@ class ImageFeatureServer():
             rospy.loginfo("[Service spco_data/image] save new image as %s", image_name)
 
         # save and publish activation image
-        print "h_x",h_x
+        #print "h_x",h_x
         probs, idx = h_x.sort(0, True)
         probs = probs.numpy()
         idx = idx.numpy()
         # generate class activation mapping
-        print('Class activation map is saved as cam.jpg')
+        #print('Class activation map is saved as cam.jpg')
         #CAMs = places365.returnCAM(features_blobs[0], weight_softmax, [idx[0]])
 
         # render the CAM and output

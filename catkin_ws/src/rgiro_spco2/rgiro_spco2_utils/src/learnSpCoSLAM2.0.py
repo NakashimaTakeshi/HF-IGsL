@@ -111,7 +111,7 @@ import time
 
 
 # Reading data for image feature (NOT USE)
-def ReadImageData(trialname, datasetname, step):
+def ReadImageData(trialname, step):
   FT = []
   for s in xrange(step):
     for line in open( datafolder + trialname + '/img/ft' + str(s+1) + '.csv', 'r'):
@@ -1085,12 +1085,12 @@ def callback(message):
     print "It:position_distributions_index",IT
     #time.sleep(30)
 
-    teachingtime = []
-    for line in open( datasetfolder + datasetname + 'teaching.csv', 'r'):
+    #teachingtime = []
+    #for line in open( datasetfolder + datasetname + 'teaching.csv', 'r'):
       #itemList = line[:].split(',')
-      teachingtime.append(float(line))
+    #  teachingtime.append(float(line))
     
-    clocktime = float(teachingtime[step-1]) ##
+    #clocktime = float(teachingtime[step-1]) ##
     
     # Request output file name
     #filename = raw_input("trialname?(folder) >")
@@ -1108,7 +1108,7 @@ def callback(message):
     
     if (UseFT == 1):
       #FT = ReadImageData2(trialname, datasetname, step, clocktime)
-      FT = ReadImageData(trialname, datasetname, step)
+      FT = ReadImageData(trialname, step)
     else:
       FT = [[0 for e in xrange(DimImg)] for s in xrange(step)]
     """    2021/03/06 
