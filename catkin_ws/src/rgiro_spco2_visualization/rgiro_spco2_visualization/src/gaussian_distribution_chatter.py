@@ -8,8 +8,8 @@ import rospy
 import numpy as np
 import time
 
-from em_spco_visualization_msgs.msg import GaussianDistributions, GaussianDistribution
-from em_spco_visualization_msgs.srv import GaussianService, GaussianServiceRequest
+from rgiro_spco2_visualization_msgs.msg import GaussianDistributions, GaussianDistribution
+from rgiro_spco2_visualization_msgs.srv import GaussianService, GaussianServiceRequest
 from visualization_msgs.msg import Marker, MarkerArray
 from std_msgs.msg import String
 import std_msgs.msg
@@ -105,7 +105,9 @@ class EmSpcotRviz(object):
         print "sigma",sigma
 
         #color = np.loadtxt("./color.csv", delimiter=",")
-        color = np.loadtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_em_spco_visualization/em_spco_visualization/src/color.csv", delimiter=",")
+        script_dir_abspath = os.path.dirname(os.path.abspath(__file__))
+        color = np.loadtxt(script_dir_abspath + "/color.csv", delimiter=",")
+        #color = np.loadtxt(script_dir_abspath + "/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_rgiro_spco2_visualization/rgiro_spco2_visualization/src/color.csv", delimiter=",")
         #print "color",color
         #word_index_dic = {}
         if mu.ndim == 1:

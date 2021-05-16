@@ -6,8 +6,8 @@
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/ColorRGBA.h>
 #include <sensor_msgs/PointCloud2.h>
-#include <em_spco_visualization_msgs/GaussianDistributions.h>
-#include <em_spco_visualization_msgs/GaussianService.h>
+#include <rgiro_spco2_visualization_msgs/GaussianDistributions.h>
+#include <rgiro_spco2_visualization_msgs/GaussianService.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <ros/ros.h>
 #include <pcl/point_types.h>
@@ -27,7 +27,7 @@ namespace gaussian_distribution {
 
             Animation(std::string &frame, double threshold, double resolution, double radius);
 
-            void animation(const em_spco_visualization_msgs::GaussianDistributions &msg, double cycle_time, int frame_rate);
+            void animation(const rgiro_spco2_visualization_msgs::GaussianDistributions &msg, double cycle_time, int frame_rate);
 
         protected:
             ros::NodeHandle m_nh;
@@ -38,14 +38,14 @@ namespace gaussian_distribution {
             double m_resolution;
             double m_radius;
 
-            em_spco_visualization_msgs::GaussianDistributions m_before_msg;
+            rgiro_spco2_visualization_msgs::GaussianDistributions m_before_msg;
 
-            void generate_distribution(const std::vector<std::pair<em_spco_visualization_msgs::GaussianDistribution,
-                    em_spco_visualization_msgs::GaussianDistribution>> &distributions, int i, int loop);
+            void generate_distribution(const std::vector<std::pair<rgiro_spco2_visualization_msgs::GaussianDistribution,
+                    rgiro_spco2_visualization_msgs::GaussianDistribution>> &distributions, int i, int loop);
 
             void create_pair(
-                    std::vector<std::pair<em_spco_visualization_msgs::GaussianDistribution, em_spco_visualization_msgs::GaussianDistribution>> &distributions,
-                    const em_spco_visualization_msgs::GaussianDistributions &before_msg, const em_spco_visualization_msgs::GaussianDistributions &msg);
+                    std::vector<std::pair<rgiro_spco2_visualization_msgs::GaussianDistribution, rgiro_spco2_visualization_msgs::GaussianDistribution>> &distributions,
+                    const rgiro_spco2_visualization_msgs::GaussianDistributions &before_msg, const rgiro_spco2_visualization_msgs::GaussianDistributions &msg);
 
             void
             create_marker(pcl::PointCloud<pcl::PointXYZRGBA> &cloud, double mu_x, double mu_y, double sigma_x, double sigma_y, double sigma_xy,

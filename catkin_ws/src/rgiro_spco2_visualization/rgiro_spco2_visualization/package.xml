@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 
 <package format="2">
-  <name>em_spco_visualization</name>
+  <name>rgiro_spco2_visualization</name>
   <version>1.0.0</version>
-  <description>The 'em_spco_visualization' package provides the nodes for visualization of Spatial Concepts in Rviz.</description>
+  <description>The 'rgiro_spco2_visualization' package provides the nodes for visualization of Spatial Concepts in Rviz.</description>
 
   <maintainer email="kanechika.akinori@em.ci.ritsumei.ac.jp">Akinori Kanechika</maintainer>
   <license>MIT</license>
@@ -19,5 +19,5 @@
   <depend>sensor_msgs</depend>
   <depend>pcl_ros</depend>
   <depend>pcl_conversions</depend>
-  <depend>em_spco_visualization_msgs</depend>
+  <depend>rgiro_spco2_visualization_msgs</depend>
 </package>

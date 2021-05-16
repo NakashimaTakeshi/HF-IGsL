@@ -6,8 +6,8 @@
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/ColorRGBA.h>
 #include <sensor_msgs/PointCloud2.h>
-#include <em_spco_visualization_msgs/GaussianDistributions.h>
-#include <em_spco_visualization_msgs/GaussianService.h>
+#include <rgiro_spco2_visualization_msgs/GaussianDistributions.h>
+#include <rgiro_spco2_visualization_msgs/GaussianService.h>
 #include <visualization_msgs/MarkerArray.h>
 #include <ros/ros.h>
 #include <pcl/point_types.h>
@@ -41,16 +41,16 @@ namespace gaussian_distribution {
             double m_radius;
             double m_cycle_time;
 
-            void call_back(const em_spco_visualization_msgs::GaussianDistributions::ConstPtr &msg);
+            void call_back(const rgiro_spco2_visualization_msgs::GaussianDistributions::ConstPtr &msg);
 
             void create_marker(pcl::PointCloud<pcl::PointXYZRGBA> &cloud, double mu_x, double mu_y, double sigma_x, double sigma_y,
                                double sigma_xy, double probability, int r, int g, int b);
 
-            void generate_distribution(const em_spco_visualization_msgs::GaussianDistributions &msg);
+            void generate_distribution(const rgiro_spco2_visualization_msgs::GaussianDistributions &msg);
 
             bool
-            service_call_back(em_spco_visualization_msgs::GaussianService::Request &request,
-                              em_spco_visualization_msgs::GaussianService::Response &response);
+            service_call_back(rgiro_spco2_visualization_msgs::GaussianService::Request &request,
+                              rgiro_spco2_visualization_msgs::GaussianService::Response &response);
 
     };
 }

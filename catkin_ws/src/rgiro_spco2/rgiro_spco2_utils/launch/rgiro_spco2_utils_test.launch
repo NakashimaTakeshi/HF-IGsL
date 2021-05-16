@@ -38,7 +38,7 @@
   </node>
 
   <!-- includeing launch files -->
-  <include file="$(find em_spco_visualization)/launch/gaussian_distribution.launch"/>
+  <include file="$(find rgiro_spco2_visualization)/launch/gaussian_distribution.launch"/>
 
 
   <!-- Launch talker & listener -->

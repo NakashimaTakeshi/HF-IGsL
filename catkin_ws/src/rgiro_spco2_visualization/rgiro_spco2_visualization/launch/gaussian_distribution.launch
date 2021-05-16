@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <launch>
-  <node name="gaussian_distribution_node" pkg="em_spco_visualization" type="gaussian_distribution_node" output="screen">
+  <node name="gaussian_distribution_node" pkg="rgiro_spco2_visualization" type="gaussian_distribution_node" output="screen">
     <param name="threshold" value="0.001" />
     <param name="radius" value="4.0" />
     <param name="resolution" value="0.015" />
@@ -14,6 +14,6 @@
     <remap from="gaussian_srv" to="/em/spcot/gaussian_request" />
   </node>
 
-  <node name="gaussian_distribution_chatter" pkg="em_spco_visualization" type="gaussian_distribution_chatter.py" output="screen"/>
+  <node name="gaussian_distribution_chatter" pkg="rgiro_spco2_visualization" type="gaussian_distribution_chatter.py" output="screen"/>
 
 </launch>

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(em_spco_visualization_msgs)
+project(rgiro_spco2_visualization_msgs)
 
 add_definitions(-std=c++11)
 

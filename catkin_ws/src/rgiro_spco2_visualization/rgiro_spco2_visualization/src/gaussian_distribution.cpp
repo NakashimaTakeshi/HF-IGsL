@@ -22,24 +22,24 @@ namespace gaussian_distribution {
         m_animation = Animation(m_frame, m_threshold, m_resolution, m_radius);
 
         ros::NodeHandle nh = ros::NodeHandle("~");
-        m_sub = m_nh.subscribe<em_spco_visualization_msgs::GaussianDistributions>("gaussian_in", 10, &GaussianDistribution::call_back, this);
+        m_sub = m_nh.subscribe<rgiro_spco2_visualization_msgs::GaussianDistributions>("gaussian_in", 10, &GaussianDistribution::call_back, this);
 
         m_service = m_nh.advertiseService("gaussian_srv", &GaussianDistribution::service_call_back, this);
         m_pub = m_nh.advertise<sensor_msgs::PointCloud2>("gaussian_out", 1, true);
         ros::Duration(0.1).sleep();
     }
 
-    bool GaussianDistribution::service_call_back(em_spco_visualization_msgs::GaussianService::Request &request,
-                                                 em_spco_visualization_msgs::GaussianService::Response &response) {
+    bool GaussianDistribution::service_call_back(rgiro_spco2_visualization_msgs::GaussianService::Request &request,
+                                                 rgiro_spco2_visualization_msgs::GaussianService::Response &response) {
         m_animation.animation(request.distributions, m_cycle_time, m_frame_rate);
         return true;
     }
 
-    void GaussianDistribution::call_back(const em_spco_visualization_msgs::GaussianDistributions::ConstPtr &msg) {
+    void GaussianDistribution::call_back(const rgiro_spco2_visualization_msgs::GaussianDistributions::ConstPtr &msg) {
         generate_distribution(*msg);
     }
 
-    void GaussianDistribution::generate_distribution(const em_spco_visualization_msgs::GaussianDistributions &msg) {
+    void GaussianDistribution::generate_distribution(const rgiro_spco2_visualization_msgs::GaussianDistributions &msg) {
         clock_t start = clock();
         auto distributions = msg.distributions;
         PointCloud<PointXYZRGBA> cloud;

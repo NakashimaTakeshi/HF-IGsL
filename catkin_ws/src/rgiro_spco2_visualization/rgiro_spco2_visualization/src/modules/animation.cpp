@@ -7,8 +7,8 @@ namespace gaussian_distribution {
 
     using pcl::PointCloud;
     using pcl::PointXYZRGBA;
-    using em_spco_visualization_msgs::GaussianDistribution;
-    using em_spco_visualization_msgs::GaussianDistributions;
+    using rgiro_spco2_visualization_msgs::GaussianDistribution;
+    using rgiro_spco2_visualization_msgs::GaussianDistributions;
 
     Animation::Animation() : m_threshold(0), m_resolution(0), m_radius(0) {
     }

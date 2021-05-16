@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(em_spco_visualization)
+project(rgiro_spco2_visualization)
 
 add_definitions(-std=c++11)
 
@@ -12,7 +12,7 @@ find_package(catkin REQUIRED
   sensor_msgs
   pcl_ros
   pcl_conversions
-  em_spco_visualization_msgs
+  rgiro_spco2_visualization_msgs
 )
 find_package(OpenCV REQUIRED)
 
@@ -33,7 +33,7 @@ catkin_package(
   sensor_msgs
   pcl_ros
   pcl_conversions
-  em_spco_visualization_msgs
+  rgiro_spco2_visualization_msgs
 )
 
 add_library(${PROJECT_NAME} src/gaussian_distribution.cpp src/modules/animation.cpp)
