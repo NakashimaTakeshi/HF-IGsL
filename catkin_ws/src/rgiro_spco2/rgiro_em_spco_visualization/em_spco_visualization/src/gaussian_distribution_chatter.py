@@ -6,6 +6,7 @@ import re
 import csv
 import rospy
 import numpy as np
+import time
 
 from em_spco_visualization_msgs.msg import GaussianDistributions, GaussianDistribution
 from em_spco_visualization_msgs.srv import GaussianService, GaussianServiceRequest
@@ -35,7 +36,8 @@ class EmSpcotRviz(object):
         #pub = rospy.Publisher("gaussian_in",GaussianDistributions, queue_size=10)
         pub = rospy.Publisher("transfer_learning/gaussian_distribution",GaussianDistributions, queue_size=10)
         rospy.sleep(0.5)
-        rospy.loginfo("[Service spcot/rviz] Ready em_spco_transfer/rviz")
+        rospy.loginfo("start visualization!!")
+        #time.sleep(1)
 
    #def call_back(self, msg):
         # type: (String) -> None
@@ -104,7 +106,7 @@ class EmSpcotRviz(object):
 
         #color = np.loadtxt("./color.csv", delimiter=",")
         color = np.loadtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_em_spco_visualization/em_spco_visualization/src/color.csv", delimiter=",")
-        print "color",color
+        #print "color",color
         #word_index_dic = {}
         if mu.ndim == 1:
             region_num=1
@@ -225,8 +227,8 @@ class EmSpcotRviz(object):
         # print()
         print("R = ", region_num)
         for i in range(region_num):
-                print "mu",mu
-                print "sigma",sigma
+                #print "mu",mu
+                #print "sigma",sigma
             #if Ct[i] > 0:
                 #w = self._word_list[np.argsort(word[pi_max[i]])[::-1][0]]
                 # if w not in self._visualize_concepts:
@@ -246,11 +248,21 @@ class EmSpcotRviz(object):
                     distribution.variance_x = np.sqrt(sigma[0])
                     distribution.variance_y = np.sqrt(sigma[3])
                     distribution.covariance = sigma[1]#[0]
+                    correlation_coefficient = (sigma[1])**2 / (sigma[0] * sigma[3])
+                    print(np.pi)
+                    print(correlation_coefficient)
+                    print(sigma[0])
+                    print(sigma[1])
+                    print(sigma[2])
+                    print(sigma[3])
+                    distribution.probability = 1.0 / (2.0 * np.pi * np.sqrt(sigma[0] * sigma[3] * (1.0 - correlation_coefficient))) #word[pi_max[i]][np.argsort(word[pi_max[i]])[::-1][0]]
                 else:
                     distribution.variance_x = np.sqrt(sigma[i][0])
                     distribution.variance_y = np.sqrt(sigma[i][3])
                     distribution.covariance = sigma[i][1]#[0]
-                distribution.probability = 1 #word[pi_max[i]][np.argsort(word[pi_max[i]])[::-1][0]]
+                    correlation_coefficient = (sigma[i][1])**2 / (sigma[i][0] * sigma[i][3])
+                    distribution.probability = 1.0 / (2.0 * np.pi * np.sqrt(sigma[i][0] * sigma[i][3] * (1.0 - correlation_coefficient))) #word[pi_max[i]][np.argsort(word[pi_max[i]])[::-1][0]]
+                print(distribution.probability)
                 distribution.r = int(color[word_index][0])
                 distribution.g = int(color[word_index][1])
                 distribution.b = int(color[word_index][2])
@@ -259,7 +271,7 @@ class EmSpcotRviz(object):
 
         # self.gaussian_pub.publish(distributions)
         rate = rospy.Rate(1) # 1 Hz
-        rospy.loginfo('%s publish %s'%(rospy.get_name(),distributions))
+        #rospy.loginfo('%s publish %s'%(rospy.get_name(),distributions))
         pub.publish(distributions)
         rate.sleep()
  
@@ -275,9 +287,9 @@ class EmSpcotRviz(object):
 
         #return spcot_rvizResponse(True)
 def callback(message):
-    print "start visualization!"
-    while not rospy.is_shutdown():
-        EmSpcotRviz()
+    #print "start visualization!"
+    #while not rospy.is_shutdown():
+    EmSpcotRviz()
 
 
 if __name__ == "__main__":
