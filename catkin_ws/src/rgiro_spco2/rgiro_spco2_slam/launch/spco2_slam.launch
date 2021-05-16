@@ -19,20 +19,20 @@
   </node>
 
   <!-- Launch map_saver -->
-  <node pkg="rgiro_spco2_utils" name="map_savering" type="map_saver.py" output="screen">
+  <node pkg="rgiro_spco2_slam" name="spco2_map_savering" type="spco2_map_saver.py" output="screen">
     <param name="trial_name" value="$(arg trial_name)"/>
   </node>
 
   <!-- Launch run_rosbag 
 
-  <node pkg="rgiro_spco2_utils" name="play_rosbag" type="run_rosbag.py" output="screen">
+  <node pkg="rgiro_spco2_slam" name="play_rosbag" type="run_rosbag.py" output="screen">
     <param name="trial_name" value="$(arg trial_name)"/>
     <param name="dataset_NUM" value="$(arg dataset_Num)"/>
   </node>
   -->
 
   <!-- Launch SpCoSLAM -->
-  <node pkg="rgiro_spco2_utils" name="SpCoSLAM" type="learnSpCoSLAM2.0.py" output="screen">
+  <node pkg="rgiro_spco2_slam" name="SpCoSLAM" type="spco2_learn_concepts.py" output="screen">
     <param name="trial_name" value="$(arg trial_name)"/>
     <param name="dataset_NUM" value="$(arg dataset_Num)"/>
   </node>
@@ -41,9 +41,9 @@
   <include file="$(find rgiro_spco2_visualization)/launch/gaussian_distribution.launch"/>
 
 
-  <!-- Launch talker & listener -->
-  <node pkg="rgiro_spco2_utils" name="listener" type="listener.py" output="screen"/>
-  <node pkg="rgiro_spco2_utils" name="talker" type="talker.py" output="screen"/>
-  <node pkg="rgiro_spco2_utils" name="image_feature_server" type="image_feature_server.py" output="screen"/>
+  <!-- Launch spco2_word_data & spco2_word_features -->
+  <node pkg="rgiro_spco2_slam" name="spco2_word_features" type="spco2_word_features.py" output="screen"/>
+  <!-- <node pkg="rgiro_spco2_slam" name="spco2_word_data" type="spco2_word_data.py" output="screen"/> -->
+  <node pkg="rgiro_spco2_slam" name="spco2_image_features" type="spco2_image_features.py" output="screen"/>
 
 </launch>

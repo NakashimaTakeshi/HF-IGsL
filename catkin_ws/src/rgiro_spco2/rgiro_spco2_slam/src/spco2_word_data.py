@@ -26,7 +26,7 @@ def CallService():
 '''
 def StartPublish(): 
     ## node initialization
-    rospy.init_node('talker_node', anonymous=False)
+    rospy.init_node('spco2_word_data_node', anonymous=False)
     pub = rospy.Publisher('speech_to_text', std_msgs.msg.String, queue_size=10) ## queue size is not important for sending just one messeage.
     rate = rospy.Rate(1) # 1 Hz
     while not rospy.is_shutdown():

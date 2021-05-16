@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rgiro_spco2_utils)
+project(rgiro_spco2_slam)
 
 find_package(catkin REQUIRED COMPONENTS
   rgiro_gmapping

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>rgiro_spco2_utils</name>
+  <name>rgiro_spco2_slam</name>
   <version>1.0.0</version>
-  <description>The 'rgiro_spco2_utils' package  package can launch the nodes of run_gmapping.sh ,map_saver.py and run_rosbug.py that SpCoSLAM2.0 requires.</description>
+  <description>The 'rgiro_spco2_slam' package  package can launch the nodes of run_gmapping.sh ,spco2_map_saver.py and run_rosbug.py that SpCoSLAM2.0 requires.</description>
 
    <maintainer email="nakashima.takeshi@em.ci.ritsumei.ac.jp">Takeshi Nakashima </maintainer>
 

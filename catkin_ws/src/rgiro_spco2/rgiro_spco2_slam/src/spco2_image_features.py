@@ -7,9 +7,9 @@ import subprocess
 #from PIL import Image # PIL
 
 from __init__ import *
-from rgiro_spco2_utils.srv import spco_data_image,spco_data_imageResponse
+from rgiro_spco2_slam.srv import spco_data_image,spco_data_imageResponse
 #from spco_data_image import *
-import run_placesCNN_unified as places365
+from scripts import spco2_placescnn as places365
 
 class ImageFeatureServer():
 
@@ -99,10 +99,10 @@ class ImageFeatureServer():
         self.DATA_FOLDER = datafolder + TRIALNAME
         self.frame = []
         
-        s = rospy.Service('em_spco_data/image', spco_data_image, self.image_server)
+        s = rospy.Service('rgiro_spco2_data/image', spco_data_image, self.image_server)
         rospy.loginfo("[Service spco_data/image] Ready")
 
 if __name__ == "__main__":
-    rospy.init_node('image_feature_server',anonymous=False)
+    rospy.init_node('spco2_image_features',anonymous=False)
     srv = ImageFeatureServer()
     rospy.spin()

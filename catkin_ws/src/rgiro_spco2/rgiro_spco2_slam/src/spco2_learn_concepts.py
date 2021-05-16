@@ -99,7 +99,8 @@ from multiprocessing import Pool
 from multiprocessing import Process
 import multiprocessing
 from __init__ import *
-from submodules import *
+#from spco2_math import *
+from scripts.spco2_math import *
 import csv # Takeshi Nakashima 2021/03/06 
 import rospy
 from std_msgs.msg import String
@@ -316,7 +317,7 @@ def ParticleSearcher(trialname):
   #  while (os.path.exists( datafolder + trialname + "/particle/" + str(m_count+1) + ".csv" ) == True):
   #   m_count += 1
   
-  if (m_count == 0):  #エラー処理:Set teachingflag zero and exit learnSpCoSLAM2.0.py process.
+  if (m_count == 0):  #エラー処理:Set teachingflag zero and exit spco2_learn_concepts.py process.
     print "m_count",m_count
     flag = 0
     fp = open( datafolder + trialname + "/teachingflag.txt", 'w')

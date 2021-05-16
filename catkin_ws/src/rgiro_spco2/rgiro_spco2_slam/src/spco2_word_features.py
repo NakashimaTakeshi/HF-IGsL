@@ -42,7 +42,7 @@ import std_srvs.srv
 import csv
 import time
 
-from rgiro_spco2_utils.srv import spco_data_image
+from rgiro_spco2_slam.srv import spco_data_image
 
 
 def callback(message):
@@ -60,8 +60,8 @@ def callback(message):
     step = sum([1 for _ in open(FilePath)])
     print "step=",step
 
-    rospy.wait_for_service('em_spco_data/image')
-    srv = rospy.ServiceProxy('em_spco_data/image', spco_data_image)
+    rospy.wait_for_service('rgiro_spco2_data/image')
+    srv = rospy.ServiceProxy('rgiro_spco2_data/image', spco_data_image)
     try:
         service_result = srv("new", step)
     except rospy.ServiceException as exc:
