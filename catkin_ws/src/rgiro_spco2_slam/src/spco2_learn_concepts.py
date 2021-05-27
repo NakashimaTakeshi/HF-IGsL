@@ -99,8 +99,7 @@ from multiprocessing import Pool
 from multiprocessing import Process
 import multiprocessing
 from __init__ import *
-#from spco2_math import *
-from scripts.spco2_math import *
+from spco2_math import *
 import csv # Takeshi Nakashima 2021/03/06 
 import rospy
 from std_msgs.msg import String
