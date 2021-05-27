@@ -50,7 +50,7 @@ def callback(message):
     OutputString = message.data.split()
 
     # save massage as a csv format
-    FilePath = '/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/test/tmp/Otb.csv'
+    FilePath = '/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/output/test/tmp/Otb.csv'
     with open(FilePath, 'a') as f:
         writer = csv.writer(f)
         writer.writerow(OutputString)
@@ -60,8 +60,8 @@ def callback(message):
     step = sum([1 for _ in open(FilePath)])
     print "step=",step
 
-    rospy.wait_for_service('rgiro_spco2_data/image')
-    srv = rospy.ServiceProxy('rgiro_spco2_data/image', spco_data_image)
+    rospy.wait_for_service('rgiro_spco2_slam/image')
+    srv = rospy.ServiceProxy('rgiro_spco2_slam/image', spco_data_image)
     try:
         service_result = srv("new", step)
     except rospy.ServiceException as exc:

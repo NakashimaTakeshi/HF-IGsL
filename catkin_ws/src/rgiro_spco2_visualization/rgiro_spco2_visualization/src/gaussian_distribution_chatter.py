@@ -80,8 +80,8 @@ class EmSpcotRviz(object):
         print"max_particle:",max_particle
         print "filename:",filename 
         mu = np.genfromtxt(filename,delimiter=',')
-        #mu = np.genfromtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/mu29.csv",delimiter=',')
-        #mu = np.loadtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/mu29.csv",delimiter=',')
+        #mu = np.genfromtxt("/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/teachingtext/mu29.csv",delimiter=',')
+        #mu = np.loadtxt("/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/teachingtext/mu29.csv",delimiter=',')
         print "mu",mu
         #word = np.loadtxt(result_path + "/phi_n.csv")
         #pi = np.loadtxt(result_path + "/pi.csv")
@@ -93,7 +93,7 @@ class EmSpcotRviz(object):
         filename = datafolder + trialname + '/' + str(step) + '/sig'+ str(max_particle) +'.csv'
         #filename = datafolder + trialname + '/' + str(step) + '/sig0.csv'
         sigma = np.genfromtxt(filename,delimiter=',' )
-        #sigma = np.genfromtxt("/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/teachingtext/sig29.csv",delimiter=',' )
+        #sigma = np.genfromtxt("/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/teachingtext/sig29.csv",delimiter=',' )
         #print temp
         #files = glob.glob(result_path + "/sigma/*.csv")
         #convert = lambda text: int(text) if text.isdigit() else text

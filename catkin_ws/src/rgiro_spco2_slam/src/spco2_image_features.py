@@ -98,7 +98,7 @@ class ImageFeatureServer():
         self.DATA_FOLDER = datafolder + TRIALNAME
         self.frame = []
         
-        s = rospy.Service('rgiro_spco2_data/image', spco_data_image, self.image_server)
+        s = rospy.Service('rgiro_spco2_slam/image', spco_data_image, self.image_server)
         rospy.loginfo("[Service spco_data/image] Ready")
 
 if __name__ == "__main__":

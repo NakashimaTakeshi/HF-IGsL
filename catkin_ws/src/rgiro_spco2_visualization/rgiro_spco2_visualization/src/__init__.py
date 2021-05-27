@@ -98,8 +98,8 @@ NbestNum = 10 #The number of N of N-best (n<=10)
 #Setting of PATH for output folder
 #パスはUbuntu使用時とWin使用時で変更する必要がある。特にUbuntuで動かすときは絶対パスになっているか要確認。
 #win:相対パス、ubuntu:絶対パス
-datafolder   = "/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/output/"        #PATH of data out put folder
-#datafolder   = "/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/output/"        #PATH of data out put folder
+datafolder   = "/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/output/"        #PATH of data out put folder
+#datafolder   = "/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/output/"        #PATH of data out put folder
 #"/home/akira/Dropbox/SpCoSLAM/data/" #"./../datadump/" 
 # "/mnt/hgfs/D/akira/Dropbox/SpCoSLAM/data/" 
 
@@ -108,9 +108,9 @@ speech_folder_go = "/home/akira/Dropbox/Julius/directory/SpCoSLAMgo/*.wav" #*.wa
 lmfolder = "/home/akira/Dropbox/SpCoSLAM/learning/lang_m/"
 
 #Folder of training data set (rosbag file)
-#datasetfolder = "/home/nakashima-takeshi/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/rosbag/"   #training data set folder
-datasetfolder = "/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_learning/data/rosbag/"   #training data set folder
-#datasetfolder = "/root/RULO/catkin_ws/src/rgiro_spco2/rgiro_spco2_data/rosbag/"   #training data set folder
+#datasetfolder = "/home/nakashima-takeshi/RULO/catkin_ws/src/rgiro_spco2_slam/data/rosbag/"   #training data set folder
+datasetfolder = "/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/rosbag/"   #training data set folder
+#datasetfolder = "/root/RULO/catkin_ws/src/rgiro_spco2_slam/data/rosbag/"   #training data set folder
 dataset1      = "albert-b-laser-vision/albert-B-laser-vision-dataset/"
 bag1          = "albertBimg.bag"  #Name of rosbag file
 datasets      = [dataset1] #[dataset1,dataset2]

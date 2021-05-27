@@ -1,6 +1,2 @@
-# data files.
-rgiro_spco2_data/
-rgiro_spco2_learning/data/
-
-# files used in rosbag replay mode.
-#run_rosbag.py
+# Data files.
+data/
