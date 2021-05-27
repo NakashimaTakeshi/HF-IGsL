@@ -2,19 +2,15 @@
 
 This page provides general guidelines to contribute efficiently to the project RULO project.
 
-**Content:**
+## Content
 
-*   [Project Language](#project-language)
-*   [User Configuration](#user-configuration)
-*   [Git Workflow](#git-workflow)
-*   [Protected Branches](#protected-branches)
-*   [Branch Names](#branch-names)
-*   [Commit Messages](#commit-messages)
-*   [File Names](#file-names)
+[[_TOC_]]
 
 ## Project Language
 
-Commit messages should be written in English. Elsewhere, English is desired and Japanese is tolerated. However, messages in other languages will be ignored and/or removed.
+Commit messages should be written in English.
+Elsewhere, English is desired and Japanese is tolerated.
+However, messages in other languages will be ignored and/or removed.
 
 ## User Configuration
 
@@ -37,14 +33,17 @@ cd ~/RULO/ && git config user.email "address@example.com"
 
 ## Protected Branches
 
-*   `devel`: Default repository branch used for main development. Only Maintainers can push and merge code.
-*   `master`: Branch used for deployment and release of stable versions. No one can push code and only Maintainers can merge.
+*   `devel`: Default repository branch used for main development.
+    Only Maintainers can push and merge code.
+*   `master`: Branch used for deployment and release of stable versions.
+    No one can push code and only Maintainers can merge.
 
 ## Branch Names
 
 *   Do not use any capital letter or punctuation.
 *   Always use hyphens `-` instead of underscores `_`.
-*   Always try to start with either `add-`, `set-`, `fix-`, or `try-`. If not possible, use another verb in imperative mood.
+*   Always try to start with either `add-`, `set-`, `fix-`, or `try-`.
+    If not possible, use another verb in imperative mood.
 
 ## Commit Messages
 
@@ -60,4 +59,6 @@ Please read the famous post *"[How to Write a Git Commit Message](https://chris.
 ## File Names
 
 *   Always prefer hyphens `-` to underscores `_` except when required by convention, such as in ROS.
-*   Use prefixes to distinguish first-party resources from third-party ones. For example, add the prefix `rulo_` to the names of the RULO-related packages, nodes, topics, and services. Other prefixes currently in use are: `rgiro_` (Ritsumeikan Global Innovation Research Organization) and `turtlebot3_` (Robotis TurtleBot3).
+*   Use prefixes to distinguish first-party resources from third-party ones.
+    For example, add the prefix `rulo_` to the names of the RULO-related packages, nodes, topics, and services.
+    Other prefixes currently in use are: `rgiro_` (Ritsumeikan Global Innovation Research Organization) and `turtlebot3_` (Robotis TurtleBot3).
