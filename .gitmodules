@@ -38,3 +38,7 @@
 	path = catkin_ws/src/rgiro_gazebo_worlds
 	url = https://gitlab.com/emlab/packages/rgiro_gazebo_worlds.git
 	branch = devel
+[submodule "rgiro_chatter_ros"]
+	path = catkin_ws/src/rgiro_chatter_ros
+	url = https://gitlab.com/emlab/packages/rgiro_chatter_ros.git
+	branch = devel
