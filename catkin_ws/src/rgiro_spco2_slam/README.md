@@ -1,9 +1,9 @@
-# rgiro_spco2_utilites
+# rgiro_spco2_slam
 
-The `rgiro_spco2_utilites` package can launch the nodes of run_gmapping.sh ,spco2_map_saver.py and run_rosbug.py that SpCoSLAM2.0 requires.
+The `rgiro_spco2_slam` package is the ROS implementation of SpCoSLAM 2.0: [https://github.com/a-taniguchi/SpCoSLAM2](https://github.com/a-taniguchi/SpCoSLAM2).
 
 *   Maintainer: Takeshi Nakashima ([nakashima.takeshi@em.ci.ritsumei.ac.jp](mailto:nakashima.takeshi@em.ci.ritsumei.ac.jp)).
-*   Author: Takeshi Nakashima ([nakashima.takeshi@em.ci.ritsumei.ac.jp](mailto:nakashima.takeshi@em.ci.ritsumei.ac.jp)).
+*   Author: Akira Taniguchi ([a.taniguchi@em.ci.ritsumei.ac.jp](mailto:a.taniguchi@em.ci.ritsumei.ac.jp)), Takeshi Nakashima ([nakashima.takeshi@em.ci.ritsumei.ac.jp](mailto:nakashima.takeshi@em.ci.ritsumei.ac.jp)).
 
 ## Content
 
@@ -11,4 +11,5 @@ The `rgiro_spco2_utilites` package can launch the nodes of run_gmapping.sh ,spco
 
 ## Launch
 
-*   `rgiro_spco2_utilites_test.launch`: Test the `rgiro_spco2_utilites` package with a clustering demo.
+*   `todo.launch`: This is a TODO description.
+*   `todo.launch`: This is a TODO description.

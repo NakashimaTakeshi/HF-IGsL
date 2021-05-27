@@ -5,9 +5,9 @@
   <version>1.0.0</version>
   <description>The 'rgiro_spco2_visualization' package provides the nodes for visualization of Spatial Concepts in Rviz.</description>
 
-  <maintainer email="kanechika.akinori@em.ci.ritsumei.ac.jp">Akinori Kanechika</maintainer>
+  <maintainer email="nakashima.takeshi@em.ci.ritsumei.ac.jp">Takeshi Nakashima</maintainer>
   <license>MIT</license>
-  <url type="website">http://em.ci.ritsumei.ac.jp/</url>
+  <url type="website">https://gitlab.com/emlab/RULO</url>
   <author email="kanechika.akinori@em.ci.ritsumei.ac.jp">Akinori Kanechika</author>
 
   <buildtool_depend>catkin</buildtool_depend>

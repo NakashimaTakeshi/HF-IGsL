@@ -2,7 +2,7 @@
 
 The `rgiro_spco2_visualization` meta-package contains two packages that together enable visualization of Spatial Concepts in Rviz.
 
-*   Maintainer: Akinori Kanechika ([kanechika.akinori@em.ci.ritsumei.ac.jp](mailto:kanechika.akinori@em.ci.ritsumei.ac.jp)).
+*   Maintainer: Takeshi Nakashima ([nakashima.takeshi@em.ci.ritsumei.ac.jp](mailto:nakashima.takeshi@em.ci.ritsumei.ac.jp)).
 *   Author: Akinori Kanechika ([kanechika.akinori@em.ci.ritsumei.ac.jp](mailto:kanechika.akinori@em.ci.ritsumei.ac.jp)).
 
 ## Content
