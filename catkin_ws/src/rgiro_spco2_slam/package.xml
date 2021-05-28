@@ -16,8 +16,7 @@
   <depend>message_generation</depend>
   <depend>message_runtime</depend>
 
-  <depend>slam_gmapping</depend>
-
+  <depend>rgiro_slam_gmapping</depend>
   <depend>rgiro_openslam_gmapping</depend>
 
 </package>

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(rgiro_spco2_slam)
 
 find_package(catkin REQUIRED COMPONENTS
-  rgiro_gmapping
   rospy
   std_msgs
   message_generation
@@ -20,7 +19,6 @@ add_service_files(
 
 catkin_package(
   CATKIN_DEPENDS
-  rgiro_gmapping
   rospy
   std_msgs
 )
