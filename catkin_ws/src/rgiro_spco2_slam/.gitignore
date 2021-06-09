@@ -1,2 +1,7 @@
 # Data files.
 data/output/
+data/rosbag/
+src/*.txt
+src/*.tar
+src/*.npy
+src/wideresnet.py
