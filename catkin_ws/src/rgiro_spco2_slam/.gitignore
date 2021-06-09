@@ -1,6 +1,5 @@
 # Data files.
-data/output/
-data/rosbag/
+data/
 src/*.txt
 src/*.tar
 src/*.npy
