@@ -8,7 +8,7 @@ import subprocess
 
 from __init__ import *
 from rgiro_spco2_slam.srv import spco_data_image,spco_data_imageResponse
-from spco_data_image import *
+import spco2_placescnn as places365
 
 class ImageFeatureServer():
 
