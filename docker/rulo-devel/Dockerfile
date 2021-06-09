@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.1-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.6.0.64-1+cuda10.1
-ARG ros_desktop_version=1.4.1-0bionic.20210120.181615
+ARG ros_desktop_version=1.4.1-0bionic.20210505.055738
 
 ################################################################################
 
@@ -73,7 +73,7 @@ ENV ROS_DESKTOP_VERSION=${ros_desktop_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-desktop-full=${ROS_DESKTOP_VERSION} \
   python-catkin-tools=0.6.1-1 \
-  python-rosdep=0.20.0-1 \
+  python-rosdep=0.20.1-1 \
   && rm -rf /var/lib/apt/lists/*
 
 # Initialize 'rosdep'.
@@ -87,27 +87,27 @@ RUN rosdep init
 
 # Gather the dependencies from the ROS repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-melodic-joy=1.14.0-1bionic.20210112.180610 \
-  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210112.180932 \
-  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210112.175758 \
-  ros-melodic-laser-proc=0.1.5-0bionic.20210112.181310 \
-  ros-melodic-rgbd-launch=2.2.2-0bionic.20210112.201433 \
-  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210112.181847 \
-  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210112.200455 \
-  ros-melodic-rosserial-python=0.8.0-0bionic.20210112.173857 \
-  ros-melodic-rosserial-server=0.8.0-0bionic.20210112.181141 \
-  ros-melodic-rosserial-client=0.8.0-0bionic.20210112.195855 \
-  ros-melodic-rosserial-msgs=0.8.0-0bionic.20201017.034136 \
-  ros-melodic-amcl=1.16.7-1bionic.20210112.184159 \
-  ros-melodic-map-server=1.16.7-1bionic.20210112.181127 \
-  ros-melodic-move-base=1.16.7-1bionic.20210112.195703 \
-  ros-melodic-urdf=1.13.2-1bionic.20201017.083057 \
-  ros-melodic-xacro=1.13.9-1bionic.20201017.081248 \
-  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210112.183412 \
-  ros-melodic-rqt-image-view=0.4.16-1bionic.20210112.182133 \
-  ros-melodic-gmapping=1.4.1-1bionic.20210112.191214 \
-  ros-melodic-navigation=1.16.7-1bionic.20210112.200640 \
-  ros-melodic-interactive-markers=1.11.5-1bionic.20210112.190840 \
+  ros-melodic-joy=1.14.0-1bionic.20210505.032331 \
+  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210505.032634 \
+  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210505.021637 \
+  ros-melodic-laser-proc=0.1.5-0bionic.20210505.032503 \
+  ros-melodic-rgbd-launch=2.2.2-0bionic.20210505.045145 \
+  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210505.035508 \
+  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210505.042242 \
+  ros-melodic-rosserial-python=0.8.0-0bionic.20210505.021418 \
+  ros-melodic-rosserial-server=0.8.0-0bionic.20210505.024652 \
+  ros-melodic-rosserial-client=0.8.0-0bionic.20210505.041920 \
+  ros-melodic-rosserial-msgs=0.8.0-0bionic.20210505.005832 \
+  ros-melodic-amcl=1.16.7-1bionic.20210505.031700 \
+  ros-melodic-map-server=1.16.7-1bionic.20210505.023750 \
+  ros-melodic-move-base=1.16.7-1bionic.20210505.042506 \
+  ros-melodic-urdf=1.13.2-1bionic.20210505.022444 \
+  ros-melodic-xacro=1.13.10-1bionic.20210505.023805 \
+  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210505.043912 \
+  ros-melodic-rqt-image-view=0.4.16-1bionic.20210505.032821 \
+  ros-melodic-gmapping=1.4.1-1bionic.20210505.034751 \
+  ros-melodic-navigation=1.16.7-1bionic.20210505.043011 \
+  ros-melodic-interactive-markers=1.11.5-1bionic.20210505.040626 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
@@ -126,7 +126,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  git=1:2.17.1-1ubuntu0.7 \
+  git=1:2.17.1-1ubuntu0.8 \
   inetutils-ping=2:1.9.4-3 \
   iproute2=4.15.0-2ubuntu1.1 \
   mesa-utils=8.4.0-1 \
