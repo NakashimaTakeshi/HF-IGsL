@@ -4,9 +4,10 @@
 ################################################################################
 
 # Pin the versions of the core tools and packages using global arguments for improved stability.
-ARG nvidia_cudagl_version=10.1-devel-ubuntu18.04
-ARG nvidia_cudnn_version=7.6.0.64-1+cuda10.1
+ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
+ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
 ARG ros_desktop_version=1.4.1-0bionic.20210505.055738
+ARG python_pip_version=20.3.4
 
 ################################################################################
 
@@ -121,6 +122,38 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libgconf2-dev=3.2.6-4ubuntu1 \
   libxtst6=2:1.2.3-1 \
   && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
+# Install common Python 2 packages/tools.
+
+# Install Pip 2 from the Ubuntu repositories.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  python-pip=9.0.1-2.3~ubuntu1.18.04.5 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Gather the dependencies from the Pip repositories.
+ARG python_pip_version
+ENV PYTHON_PIP_VERSION=${python_pip_version}
+RUN pip2 install --upgrade pip==${PYTHON_PIP_VERSION}
+RUN pip2 install \
+  scipy==1.2.3 \
+  future==0.18.2
+
+################################################################################
+
+# Install PyTorch with GPU support.
+# https://pytorch.org/get-started/locally/#linux-python
+
+# Gather the dependencies from the Pip repositories.
+ARG python_pip_version
+ENV PYTHON_PIP_VERSION=${python_pip_version}
+RUN pip2 install --upgrade pip==${PYTHON_PIP_VERSION}
+RUN pip2 install \
+  torch==1.4.0+cu100 \
+  torchvision==0.5.0+cu100 \
+  -f https://download.pytorch.org/whl/cu100/torch_stable.html
+# TODO: CUDA 10.0 is the highest version supported in PyTorch for Python 2.
 
 ################################################################################
 
