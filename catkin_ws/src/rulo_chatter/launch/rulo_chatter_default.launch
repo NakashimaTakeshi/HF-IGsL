@@ -1,4 +1,0 @@
-<launch>
-  <node name="rulo_talker" pkg="rulo_chatter" type="rulo_talker" output="screen" />
-  <node name="rulo_listener" pkg="rulo_chatter" type="rulo_listener" output="screen" />
-</launch>

@@ -1,4 +1,4 @@
-# 'rulo_launch' Package
+# rulo_launch
 
 The `rulo_launch` package coordinates the robot tasks and behaviors across all packages using shared launch files.
 

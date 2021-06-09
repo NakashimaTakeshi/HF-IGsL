@@ -3,10 +3,11 @@
 ################################################################################
 
 # Pin the versions of the core tools and packages for improved stability.
-DOCKER_VERSION="5:18.09.3~3-0~ubuntu-$(lsb_release -cs)"
-DOCKER_COMPOSE_VERSION="1.23.2"
-NVIDIA_DOCKER_VERSION="2.0.3+docker18.09.3-1"
-NVIDIA_RUNTIME_VERSION="2.0.0+docker18.09.3-1"
+CONTAINERD_VERSION="1.4.6-1"
+DOCKER_CE_VERSION="5:20.10.3~3-0~ubuntu-$(lsb_release -cs)"
+DOCKER_COMPOSE_VERSION="1.28.2"
+NVIDIA_DOCKER_VERSION="2.5.0-1"
+NVIDIA_RUNTIME_VERSION="3.4.1-1"
 
 ################################################################################
 
@@ -18,7 +19,7 @@ fi
 ################################################################################
 
 # Install Docker Community Edition.
-# https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
+# https://docs.docker.com/engine/install/ubuntu/
 
 # Remove the older versions of Docker if any.
 apt-get remove \
@@ -43,12 +44,12 @@ apt-key fingerprint 0EBFCD88
 # Add the Docker repository.
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
-# Install Docker version 'DOCKER_VERSION'.
+# Install Docker version 'DOCKER_CE_VERSION'.
 # Any existing installation will be replaced.
 apt-get update && apt-get install -y \
-  docker-ce=${DOCKER_VERSION} --allow-downgrades \
-  docker-ce-cli=${DOCKER_VERSION} \
-  containerd.io
+  docker-ce=${DOCKER_CE_VERSION} --allow-downgrades \
+  docker-ce-cli=${DOCKER_CE_VERSION} \
+  containerd.io=${CONTAINERD_VERSION}
 
 # Test the Docker installation after making sure that the service is running.
 service docker stop
@@ -84,7 +85,7 @@ fi
 ################################################################################
 
 # Install Docker Compose.
-# https://docs.docker.com/compose/install/#install-compose
+# https://docs.docker.com/compose/install/
 # https://github.com/docker/compose/releases
 
 # Install Docker Compose version 'DOCKER_COMPOSE_VERSION'.
@@ -95,14 +96,13 @@ chmod +x /usr/local/bin/docker-compose
 curl -L https://raw.githubusercontent.com/docker/compose/${DOCKER_COMPOSE_VERSION}/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
 # Test the Docker Compose installation.
-docker-compose version
+docker-compose --version
 
 ################################################################################
 
 # Install Nvidia Docker 2.
-# https://github.com/NVIDIA/nvidia-docker
-# https://github.com/NVIDIA/nvidia-docker/wiki/Usage
-# https://github.com/nvidia/nvidia-container-runtime#environment-variables-oci-spec
+# https://github.com/NVIDIA/nvidia-docker/wiki/Installation-(version-2.0)
+# https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker
 
 # Remove 'nvidia-docker' and all existing GPU containers.
 docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
@@ -110,8 +110,8 @@ apt-get purge -y nvidia-docker
 
 # Add the Nvidia Docker package repositories.
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+LINUX_DISTRIBUTION=$(. /etc/os-release; echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/${LINUX_DISTRIBUTION}/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
 
 # Install 'nvidia-docker2' version 'NVIDIA_DOCKER_VERSION' and reload the Docker daemon configuration.
 apt-get update && apt-get install -y \
@@ -125,7 +125,7 @@ while ! pgrep dockerd > /dev/null; do
   sleep 1
 done
 if [ -e /proc/driver/nvidia/version ]; then
-  docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi
+  docker run --runtime=nvidia --rm nvidia/cuda:10.1-base-ubuntu18.04 nvidia-smi
 fi
 
 ################################################################################

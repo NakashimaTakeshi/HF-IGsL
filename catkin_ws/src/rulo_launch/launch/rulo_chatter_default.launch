@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <launch>
-  <include file="$(find rulo_chatter)/launch/rulo_chatter_rqt.launch"/>
+  <include file="$(find rgiro_chatter_ros)/launch/rgiro_chatter_rqt.launch"/>
 </launch>
