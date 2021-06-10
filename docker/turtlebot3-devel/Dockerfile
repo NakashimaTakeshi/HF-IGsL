@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
-ARG ros_desktop_version=1.4.1-0bionic.20210505.055738
+ARG ros_desktop_version=1.4.1-0bionic.20210601.163047
 
 ################################################################################
 
@@ -102,7 +102,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-map-server=1.16.7-1bionic.20210505.023750 \
   ros-melodic-move-base=1.16.7-1bionic.20210505.042506 \
   ros-melodic-urdf=1.13.2-1bionic.20210505.022444 \
-  ros-melodic-xacro=1.13.10-1bionic.20210505.023805 \
+  ros-melodic-xacro=1.13.11-1bionic.20210601.153908 \
   ros-melodic-compressed-image-transport=1.9.5-0bionic.20210505.043912 \
   ros-melodic-rqt-image-view=0.4.16-1bionic.20210505.032821 \
   ros-melodic-gmapping=1.4.1-1bionic.20210505.034751 \
