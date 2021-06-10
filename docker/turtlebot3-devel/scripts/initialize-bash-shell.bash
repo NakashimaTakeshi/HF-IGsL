@@ -49,11 +49,6 @@ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/root/TurtleBot3/catkin_ws/src/
 
 ################################################################################
 
-# Add the Gazebo models of the 'rgiro_gazebo_worlds' ROS package to the 'GAZEBO_MODEL_PATH'.
-export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:/root/TurtleBot3/catkin_ws/src/rgiro_gazebo_worlds/models/
-
-################################################################################
-
 # Define Bash functions to conveniently execute the helper scripts in the current shell process.
 
 function turtlebot3-fix-git-paths () {
@@ -131,7 +126,7 @@ echo "ROS_IP is set to '${ROS_IP}'."
 
 export ROS_HOME=~/.ros
 
-alias sim_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[44;1;37m\]<local>\[[0m\]\w$ "'
+alias simulation_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[44;1;37m\]<local>\[[0m\]\w$ "'
 alias robot_mode='export ROS_MASTER_URI=http://turtlebot3.local:11311; export PS1="\[[41;1;37m\]<turtlebot3>\[[0m\]\w$ "'
 
 ################################################################################

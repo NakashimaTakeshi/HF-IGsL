@@ -21,7 +21,7 @@ while true; do
   if [ "${input}" = "r" ]; then
     robot_mode;
   elif [ "${input}" = "s" ]; then
-    sim_mode;
+    simulation_mode;
   elif [ "${input}" = "q" ]; then
     break;
   elif [ "${input}" = "c" ]; then
@@ -29,7 +29,7 @@ while true; do
 
 Starting a new shell process.
 You will return to the above prompt when you exit from this shell.
-Note: The new process does not inherit the mode ('robot_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
+Note: The new process does not inherit the mode ('robot_mode' or 'simulation_mode') from the previously executed 'roslaunch' process.
 
 EOF
     bash -i
@@ -45,7 +45,7 @@ done
 cat <<EOF
 
 Starting a new shell process.
-Note: The new process does not inherit the mode ('robot_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
+Note: The new process does not inherit the mode ('robot_mode' or 'simulation_mode') from the previously executed 'roslaunch' process.
 
 EOF
 

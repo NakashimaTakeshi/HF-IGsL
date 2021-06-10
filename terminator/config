@@ -176,7 +176,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} flexbe_app_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
 [plugins]
 [profiles]
   [[default]]

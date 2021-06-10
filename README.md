@@ -236,7 +236,7 @@ From here, you can continue with either one, or both, of the following options d
 2.   Connect to `roscore` that is running inside the Gazebo simulator with the following alias:
 
      ```shell
-     sim_mode
+     simulation_mode
      ```
 
      Or connect to `roscore` that is running inside the TurtleBot3 robot with the following alias:
