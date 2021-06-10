@@ -21,7 +21,7 @@ ARG nvidia_cudagl_version
 ENV NVIDIA_CUDAGL_VERSION=${nvidia_cudagl_version}
 
 # Install the Nvidia cuDNN library missing in the parent image.
-# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.1/devel/cudnn7/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.0/devel/cudnn7/Dockerfile
 ARG nvidia_cudnn_version
 ENV NVIDIA_CUDNN_VERSION=${nvidia_cudnn_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \

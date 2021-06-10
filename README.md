@@ -46,7 +46,7 @@ Follow this step-by-step guide to perform the initial setup of the TurtleBot3 pr
 
 *   A [Robotis TurtleBot3](https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/) robot for full operability.
     If not, the TurtleBot3 simulator provides support for basic operations.
-*   A Nvidia GPU capable of running CUDA 10.1 (compute capability >= 3.0), or newer, to accelerate 3D graphics and deep learning computing.
+*   A Nvidia GPU capable of running CUDA 10.0 (compute capability >= 3.0), or newer, to accelerate 3D graphics and deep learning computing.
 *   A properly configured gitlab.com account linked with your personal SSH key to push contributions to the project repository: https://docs.gitlab.com/ee/ssh/.
 
 ### Step 1: Set up the Development Environment

@@ -125,7 +125,7 @@ while ! pgrep dockerd > /dev/null; do
   sleep 1
 done
 if [ -e /proc/driver/nvidia/version ]; then
-  docker run --runtime=nvidia --rm nvidia/cuda:10.1-base-ubuntu18.04 nvidia-smi
+  docker run --runtime=nvidia --rm nvidia/cuda:10.0-base-ubuntu18.04 nvidia-smi
 fi
 
 ################################################################################
