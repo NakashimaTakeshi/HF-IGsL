@@ -7,7 +7,6 @@
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
 ARG ros_desktop_version=1.4.1-0bionic.20210505.055738
-ARG python_pip_version=20.3.4
 
 ################################################################################
 
@@ -110,50 +109,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-navigation=1.16.7-1bionic.20210505.043011 \
   ros-melodic-interactive-markers=1.11.5-1bionic.20210505.040626 \
   && rm -rf /var/lib/apt/lists/*
-
-################################################################################
-
-# Install dependencies for the 'flexbe_app' ROS package.
-# https://github.com/FlexBE/flexbe_app
-
-# Gather the dependencies from the Ubuntu repositories.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  libcanberra-gtk3-module=0.30-5ubuntu1 \
-  libgconf2-dev=3.2.6-4ubuntu1 \
-  libxtst6=2:1.2.3-1 \
-  && rm -rf /var/lib/apt/lists/*
-
-################################################################################
-
-# Install common Python 2 packages/tools.
-
-# Install Pip 2 from the Ubuntu repositories.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-  python-pip=9.0.1-2.3~ubuntu1.18.04.5 \
-  && rm -rf /var/lib/apt/lists/*
-
-# Gather the dependencies from the Pip repositories.
-ARG python_pip_version
-ENV PYTHON_PIP_VERSION=${python_pip_version}
-RUN pip2 install --upgrade pip==${PYTHON_PIP_VERSION}
-RUN pip2 install \
-  scipy==1.2.3 \
-  future==0.18.2
-
-################################################################################
-
-# Install PyTorch with GPU support.
-# https://pytorch.org/get-started/locally/#linux-python
-
-# Gather the dependencies from the Pip repositories.
-ARG python_pip_version
-ENV PYTHON_PIP_VERSION=${python_pip_version}
-RUN pip2 install --upgrade pip==${PYTHON_PIP_VERSION}
-RUN pip2 install \
-  torch==1.4.0+cu100 \
-  torchvision==0.5.0+cu100 \
-  -f https://download.pytorch.org/whl/cu100/torch_stable.html
-# TODO: CUDA 10.0 is the highest version supported in PyTorch for Python 2.
 
 ################################################################################
 
