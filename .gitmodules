@@ -10,39 +10,7 @@
 	path = catkin_ws/src/turtlebot3_simulations
 	url = https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
 	branch = melodic-devel
-[submodule "darknet_ros"]
-	path = catkin_ws/src/darknet_ros
-	url = https://github.com/leggedrobotics/darknet_ros.git
-	branch = master
-[submodule "flexbe_behavior_engine"]
-	path = catkin_ws/src/flexbe_behavior_engine
-	url = https://github.com/team-vigir/flexbe_behavior_engine.git
-	branch = master
-[submodule "flexbe_app"]
-	path = catkin_ws/src/flexbe_app
-	url = https://github.com/FlexBE/flexbe_app.git
-	branch = master
-[submodule "generic_flexbe_states"]
-	path = catkin_ws/src/flexbe_generic_states
-	url = https://github.com/FlexBE/generic_flexbe_states.git
-	branch = master
-[submodule "rgiro_openslam_gmapping"]
-	path = catkin_ws/src/rgiro_openslam_gmapping
-	url = https://gitlab.com/emlab/packages/rgiro_openslam_gmapping.git
-	branch = rgiro-melodic-devel
-[submodule "rgiro_sweethome3d_worlds"]
-	path = catkin_ws/src/rgiro_sweethome3d_worlds
-	url = https://gitlab.com/emlab/packages/rgiro_sweethome3d_worlds.git
-	branch = devel
-[submodule "rgiro_gazebo_worlds"]
-	path = catkin_ws/src/rgiro_gazebo_worlds
-	url = https://gitlab.com/emlab/packages/rgiro_gazebo_worlds.git
-	branch = devel
 [submodule "rgiro_chatter_ros"]
 	path = catkin_ws/src/rgiro_chatter_ros
 	url = https://gitlab.com/emlab/packages/rgiro_chatter_ros.git
 	branch = devel
-[submodule "rgiro_slam_gmapping"]
-	path = catkin_ws/src/rgiro_slam_gmapping
-	url = https://gitlab.com/emlab/packages/rgiro_slam_gmapping.git
-	branch = rgiro-melodic-devel
