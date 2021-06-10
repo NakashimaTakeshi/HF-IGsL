@@ -18,3 +18,7 @@
 	path = catkin_ws/src/darknet_ros
 	url = https://github.com/leggedrobotics/darknet_ros.git
 	branch = master
+[submodule "aws_robomaker_small_house_world"]
+	path = catkin_ws/src/aws_robomaker_small_house_world
+	url = https://github.com/aws-robotics/aws-robomaker-small-house-world.git
+	branch = ros1
