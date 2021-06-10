@@ -19,7 +19,7 @@ PROMPT="${PROMPT_START}Run '${LAUNCH}'? Press:"$'\n'"'${KEY_START}r${KEY_END}' t
 while true; do
   read -n 1 -s -p "${PROMPT}" input;
   if [ "${input}" = "r" ]; then
-    rulo_mode;
+    robot_mode;
   elif [ "${input}" = "s" ]; then
     sim_mode;
   elif [ "${input}" = "q" ]; then
@@ -29,7 +29,7 @@ while true; do
 
 Starting a new shell process.
 You will return to the above prompt when you exit from this shell.
-Note: The new process does not inherit the mode ('rulo_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
+Note: The new process does not inherit the mode ('robot_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
 
 EOF
     bash -i
@@ -38,14 +38,14 @@ EOF
     continue;
   fi;
   echo "ROS_MASTER_URI: ${ROS_MASTER_URI}";
-  roslaunch rulo_launch ${LAUNCH};
+  roslaunch rgiro_launch ${LAUNCH};
   echo "" # Display an empty line.
 done
 
 cat <<EOF
 
 Starting a new shell process.
-Note: The new process does not inherit the mode ('rulo_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
+Note: The new process does not inherit the mode ('robot_mode' or 'sim_mode') from the previously executed 'roslaunch' process.
 
 EOF
 

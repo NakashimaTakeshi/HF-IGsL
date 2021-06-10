@@ -178,13 +178,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /root/
 
 # Copy the helper scripts to the working directory.
-COPY ./docker/rulo-devel/scripts/. /root/RULO/docker/rulo-devel/scripts/
-RUN chmod -R +x /root/RULO/docker/rulo-devel/scripts/*
+COPY ./docker/turtlebot3-devel/scripts/. /root/TurtleBot3/docker/turtlebot3-devel/scripts/
+RUN chmod -R +x /root/TurtleBot3/docker/turtlebot3-devel/scripts/*
 
 # Setup the Bash shell environment with '/root/.bashrc'.
 # The value of 'TMP_HOSTNAME' is substituted by '../../RUN-DOCKER-CONTAINER.bash' when entering the container.
-RUN echo "RULO_HOSTNAME=\"TMP_HOSTNAME\"" >> /root/.bashrc
-RUN echo "source /root/RULO/docker/rulo-devel/scripts/initialize-bash-shell.bash" >> /root/.bashrc
+RUN echo "TURTLEBOT3_HOSTNAME=\"TMP_HOSTNAME\"" >> /root/.bashrc
+RUN echo "source /root/TurtleBot3/docker/turtlebot3-devel/scripts/initialize-bash-shell.bash" >> /root/.bashrc
 
 # Force color prompt in terminal.
 RUN sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc

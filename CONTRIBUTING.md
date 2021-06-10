@@ -1,6 +1,6 @@
 # Contribution Guidelines
 
-This page provides general guidelines to contribute efficiently to the project RULO project.
+This page provides general guidelines to contribute efficiently to the project TurtleBot3 project.
 
 ## Content
 
@@ -19,8 +19,8 @@ Make sure to use your own Git settings before committing or pushing for the firs
 ```shell
 git config --global --unset user.name
 git config --global --unset user.email
-cd ~/RULO/ && git config user.name "Firstname Lastname"
-cd ~/RULO/ && git config user.email "address@example.com"
+cd ~/TurtleBot3/ && git config user.name "Firstname Lastname"
+cd ~/TurtleBot3/ && git config user.email "address@example.com"
 ```
 
 ## Git Workflow
@@ -60,5 +60,5 @@ Please read the famous post *"[How to Write a Git Commit Message](https://chris.
 
 *   Always prefer hyphens `-` to underscores `_` except when required by convention, such as in ROS.
 *   Use prefixes to distinguish first-party resources from third-party ones.
-    For example, add the prefix `rulo_` to the names of the RULO-related packages, nodes, topics, and services.
-    Other prefixes currently in use are: `rgiro_` (Ritsumeikan Global Innovation Research Organization) and `turtlebot3_` (Robotis TurtleBot3).
+    For example, add the prefix `turtlebot3_` to the names of the TurtleBot3-related packages, nodes, topics, and services.
+    The prefixes currently in use include: `rgiro_` (Ritsumeikan Global Innovation Research Organization) and `turtlebot3_` (Robotis TurtleBot3).

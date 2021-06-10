@@ -30,4 +30,4 @@ catkin_ws/install/
 *.bag
 
 # 'darknet_ros' YOLO models.
-catkin_ws/src/rulo_launch/config/darknet_ros/weights/
+catkin_ws/src/rgiro_launch/config/darknet_ros/weights/

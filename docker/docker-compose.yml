@@ -3,8 +3,8 @@ version: "2.4"
 ################################################################################
 
 services:
-  rulo:
-    hostname: rulo
+  turtlebot3:
+    hostname: turtlebot3
     runtime: ${DOCKER_RUNTIME}
     privileged: true
     environment:
@@ -18,19 +18,19 @@ services:
       - DOCKER_RUNTIME=${DOCKER_RUNTIME}
       # Configure the PulseAudio interface.
       - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
-    image: registry.gitlab.com/emlab/rulo/rulo-devel:latest
+    image: registry.gitlab.com/emlab/turtlebot3/turtlebot3-devel:latest
     build:
       context: ../
-      dockerfile: ./docker/rulo-devel/Dockerfile
+      dockerfile: ./docker/turtlebot3-devel/Dockerfile
       args: 
         - DOCKERFILE_COMMIT_SHORT_SHA
     volumes:
       # Map repository root for convenient access.
-      - ../:/root/RULO/
+      - ../:/root/TurtleBot3/
       # Grant display access to X Server.
       - /tmp/.X11-unix:/tmp/.X11-unix
       # Grant audio access to PulseAudio.
       - ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native
     # Use 'network_mode: host' with the real robot or 'network_mode: bridge' for separated networks (multiple independent containers).
     network_mode: host
-    command: /root/RULO/docker/rulo-devel/scripts/initialize-docker-container.bash
+    command: /root/TurtleBot3/docker/turtlebot3-devel/scripts/initialize-docker-container.bash

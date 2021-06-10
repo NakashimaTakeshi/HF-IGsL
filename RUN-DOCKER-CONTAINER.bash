@@ -24,7 +24,7 @@ DOCKER_PROJECT=$1
 if [ -z "${DOCKER_PROJECT}" ]; then
   DOCKER_PROJECT=${USER}
 fi
-DOCKER_CONTAINER="${DOCKER_PROJECT}_rulo_1"
+DOCKER_CONTAINER="${DOCKER_PROJECT}_turtlebot3_1"
 echo "$0: DOCKER_PROJECT=${DOCKER_PROJECT}"
 echo "$0: DOCKER_CONTAINER=${DOCKER_CONTAINER}"
 
@@ -35,24 +35,24 @@ docker-compose -p ${DOCKER_PROJECT} -f ./docker/docker-compose.yml up -d
 ################################################################################
 
 # Configure the known host names with '/etc/hosts' in the Docker container.
-RULO_HOSTNAME=turtlebot3.local
-echo "Now resolving local host name '${RULO_HOSTNAME}'..."
-RULO_IP=`avahi-resolve -4 --name ${RULO_HOSTNAME} | cut -f 2`
+TURTLEBOT3_HOSTNAME=turtlebot3.local
+echo "Now resolving local host name '${TURTLEBOT3_HOSTNAME}'..."
+TURTLEBOT3_IP=`avahi-resolve -4 --name ${TURTLEBOT3_HOSTNAME} | cut -f 2`
 if [ "$?" != "0" ]; then
   echo "Failed to execute 'avahi-resolve'. You may need to install 'avahi-utils'."
   docker exec -i ${DOCKER_CONTAINER} bash <<EOF
-sed -i 's/TMP_HOSTNAME/${RULO_HOSTNAME}/' ~/.bashrc
+sed -i 's/TMP_HOSTNAME/${TURTLEBOT3_HOSTNAME}/' ~/.bashrc
 EOF
-elif [ ! -z "${RULO_IP}" ]; then
-  echo "Successfully resolved host name '${RULO_HOSTNAME}' as '${RULO_IP}': '/etc/hosts' in the container is automatically updated."
+elif [ ! -z "${TURTLEBOT3_IP}" ]; then
+  echo "Successfully resolved host name '${TURTLEBOT3_HOSTNAME}' as '${TURTLEBOT3_IP}': '/etc/hosts' in the container is automatically updated."
   docker exec -i ${DOCKER_CONTAINER} bash <<EOF
-sed -i 's/TMP_HOSTNAME/${RULO_HOSTNAME}/' ~/.bashrc
-sed -n -e '/^[^#[:space:]]*[[:space:]]\+${RULO_HOSTNAME}\$/!p' /etc/hosts > /etc/hosts.tmp;
-echo '${RULO_IP} ${RULO_HOSTNAME}' >> /etc/hosts.tmp
+sed -i 's/TMP_HOSTNAME/${TURTLEBOT3_HOSTNAME}/' ~/.bashrc
+sed -n -e '/^[^#[:space:]]*[[:space:]]\+${TURTLEBOT3_HOSTNAME}\$/!p' /etc/hosts > /etc/hosts.tmp;
+echo '${TURTLEBOT3_IP} ${TURTLEBOT3_HOSTNAME}' >> /etc/hosts.tmp
 cp /etc/hosts.tmp /etc/hosts;
 EOF
 else
-  echo "Failed to resolve host name '${RULO_HOSTNAME}': '/etc/hosts' in the container was not automatically updated."
+  echo "Failed to resolve host name '${TURTLEBOT3_HOSTNAME}': '/etc/hosts' in the container was not automatically updated."
 fi
 
 ################################################################################
@@ -68,16 +68,15 @@ case "$2" in
   docker exec -i -t ${DOCKER_CONTAINER} bash
   ;;
   ( "darknet_ros_default.launch" | \
-    "flexbe_app_default.launch" | \
-    "rulo_chatter_default.launch" | \
-    "rulo_gazebo_default.launch" | \
-    "rulo_rviz_default.launch" | \
+    "rgiro_chatter_default.launch" | \
+    "rgiro_gazebo_default.launch" | \
+    "rgiro_rviz_default.launch" | \
     "turtlebot3_gazebo_default.launch" | \
     "turtlebot3_navigation_default.launch" | \
     "turtlebot3_rviz_default.launch" | \
     "turtlebot3_slam_default.launch" | \
     "turtlebot3_teleop_default.launch" )
-  docker exec -i -t ${DOCKER_CONTAINER} bash -i -c "source ~/RULO/docker/rulo-devel/scripts/run-roslaunch-repeatedly.bash $2"
+  docker exec -i -t ${DOCKER_CONTAINER} bash -i -c "source ~/TurtleBot3/docker/turtlebot3-devel/scripts/run-roslaunch-repeatedly.bash $2"
   ;;
   ( * )
   echo "Failed to enter the Docker container '${DOCKER_CONTAINER}': '$2' is not a valid argument value."

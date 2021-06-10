@@ -9,14 +9,14 @@
     [[[window0]]]
       parent = ""
       type = Window
-  [[rulo-term-11]]
+  [[turtlebot3-term-11]]
     [[[child0]]]
       fullscreen = False
       last_active_window = True
       maximised = True
       order = 0
       parent = ""
-      title = RULO
+      title = TurtleBot3
       type = Window
     [[[child1]]]
       order = 0
@@ -164,13 +164,13 @@
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_gazebo_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_gazebo_default.launch
     [[[terminal7]]] #5
       order = 1
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rulo_rviz_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_rviz_default.launch
     [[[terminal9]]] #6
       order = 0
       parent = child8

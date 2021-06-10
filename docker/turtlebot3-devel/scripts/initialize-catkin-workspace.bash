@@ -15,7 +15,7 @@ source /opt/ros/melodic/setup.bash
 ################################################################################
 
 # Initialize and build the Catkin workspace.
-cd /root/RULO/catkin_ws/ && catkin_init_workspace && catkin build
+cd /root/TurtleBot3/catkin_ws/ && catkin_init_workspace && catkin build
 
 # Source the Catkin workspace.
-source /root/RULO/catkin_ws/devel/setup.bash
+source /root/TurtleBot3/catkin_ws/devel/setup.bash

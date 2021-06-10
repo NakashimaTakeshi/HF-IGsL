@@ -16,7 +16,7 @@ DOCKER_PROJECT=$1
 if [ -z "${DOCKER_PROJECT}" ]; then
   DOCKER_PROJECT=${USER}
 fi
-DOCKER_CONTAINER="${DOCKER_PROJECT}_rulo_1"
+DOCKER_CONTAINER="${DOCKER_PROJECT}_turtlebot3_1"
 echo "$0: DOCKER_PROJECT=${DOCKER_PROJECT}"
 echo "$0: DOCKER_CONTAINER=${DOCKER_CONTAINER}"
 
@@ -34,7 +34,7 @@ fi
 ################################################################################
 
 # Inject the 'Dockerfile' commit hash into the Docker container implicitly via a build argument in 'docker-compose.yml'.
-export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/rulo-devel/Dockerfile)"
+export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/turtlebot3-devel/Dockerfile)"
 
 ################################################################################
 
