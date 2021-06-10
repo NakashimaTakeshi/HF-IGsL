@@ -38,7 +38,7 @@ Follow this step-by-step guide to perform the initial setup of the TurtleBot3 pr
 
 **Mandatory:**
 
-*   A development machine running Ubuntu 18.04 LTS (Bionic Beaver) based on the AMD64 architecture.
+*   A development machine running Ubuntu 20.04 LTS (Focal Fossa, recommended) or 18.04 LTS (Bionic Beaver) based on the AMD64 architecture.
 *   Access to administrator privileges (`sudo`) on the Ubuntu machine.
 *   Access to developer privileges on the GitLab project at [https://gitlab.com/emlab/TurtleBot3](https://gitlab.com/emlab/TurtleBot3).
 
