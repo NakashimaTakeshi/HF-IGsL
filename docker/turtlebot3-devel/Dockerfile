@@ -112,6 +112,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ################################################################################
 
+# Upgrade Gazebo 9 to fix errors when loading the AWS worlds.
+# http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0
+
+# Install prerequisite packages/tools.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  wget=1.19.4-1ubuntu2.2 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Update the package lists.
+RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable bionic main" > /etc/apt/sources.list.d/gazebo-stable.list
+
+# Add the package keys.
+RUN wget https://packages.osrfoundation.org/gazebo.key -P /tmp \
+  && apt-key add /tmp/gazebo.key \
+  && rm /tmp/gazebo.key
+
+# Upgrade Gazebo 9.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  gazebo9=9.18.0-1~bionic \
+  && rm -rf /var/lib/apt/lists/*
+
+# Upgrade 'libignition' to avoid symbol errors after upgrading Gazebo 9.
+# https://qiita.com/seigot/items/b7ba0f41656f07eeeea0
+# TODO: Find and pin 'libignition-math2' version.
+RUN apt-get update && apt-get upgrade -y \
+  libignition-math2 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git=1:2.17.1-1ubuntu0.8 \
