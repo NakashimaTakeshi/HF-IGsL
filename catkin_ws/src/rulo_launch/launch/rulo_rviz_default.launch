@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<launch>
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rulo_launch)/config/rviz/rulo_rviz_default.rviz"/>
-</launch>

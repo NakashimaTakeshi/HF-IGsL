@@ -5,10 +5,10 @@
   <arg name="launch_prefix" default=""/>
 
   <!-- Configuration parameters. -->
-  <arg name="yolo_weights_path" default="$(find rulo_launch)/config/darknet_ros/weights"/>
-  <arg name="yolo_config_path" default="$(find rulo_launch)/config/darknet_ros/cfg"/>
-  <arg name="ros_param_file" default="$(find rulo_launch)/config/darknet_ros/yaml/ros.yaml"/>
-  <arg name="network_param_file" default="$(find rulo_launch)/config/darknet_ros/yaml/yolov3.yaml"/>
+  <arg name="yolo_weights_path" default="$(find rgiro_launch)/config/darknet_ros/weights"/>
+  <arg name="yolo_config_path" default="$(find rgiro_launch)/config/darknet_ros/cfg"/>
+  <arg name="ros_param_file" default="$(find rgiro_launch)/config/darknet_ros/yaml/ros.yaml"/>
+  <arg name="network_param_file" default="$(find rgiro_launch)/config/darknet_ros/yaml/yolov3.yaml"/>
 
   <!-- Load parameters. -->
   <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/>

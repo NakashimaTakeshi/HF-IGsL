@@ -30,7 +30,7 @@
 
   <!-- Launch Navigation. -->
   
-  <arg name="map_file" default="$(find rulo_launch)/config/gazebo/maps/rgiro_mobile_demo/map.yaml"/>
+  <arg name="map_file" default="$(find rgiro_launch)/config/gazebo/maps/rgiro_mobile_demo/map.yaml"/>
   <arg name="move_forward_only" default="false"/>
 
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
