@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
-ARG ros_desktop_version=1.4.1-0bionic.20210505.055738
+ARG ros_desktop_version=1.4.1-0bionic.20210601.163047
 
 ################################################################################
 
@@ -102,12 +102,42 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-map-server=1.16.7-1bionic.20210505.023750 \
   ros-melodic-move-base=1.16.7-1bionic.20210505.042506 \
   ros-melodic-urdf=1.13.2-1bionic.20210505.022444 \
-  ros-melodic-xacro=1.13.10-1bionic.20210505.023805 \
+  ros-melodic-xacro=1.13.11-1bionic.20210601.153908 \
   ros-melodic-compressed-image-transport=1.9.5-0bionic.20210505.043912 \
   ros-melodic-rqt-image-view=0.4.16-1bionic.20210505.032821 \
   ros-melodic-gmapping=1.4.1-1bionic.20210505.034751 \
   ros-melodic-navigation=1.16.7-1bionic.20210505.043011 \
   ros-melodic-interactive-markers=1.11.5-1bionic.20210505.040626 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
+# Upgrade Gazebo 9 to fix errors when loading the AWS worlds.
+# http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0
+
+# Install prerequisite packages/tools.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  wget=1.19.4-1ubuntu2.2 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Update the package lists.
+RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable bionic main" > /etc/apt/sources.list.d/gazebo-stable.list
+
+# Add the package keys.
+RUN wget https://packages.osrfoundation.org/gazebo.key -P /tmp \
+  && apt-key add /tmp/gazebo.key \
+  && rm /tmp/gazebo.key
+
+# Upgrade Gazebo 9.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  gazebo9=9.18.0-1~bionic \
+  && rm -rf /var/lib/apt/lists/*
+
+# Upgrade 'libignition' to avoid symbol errors after upgrading Gazebo 9.
+# https://qiita.com/seigot/items/b7ba0f41656f07eeeea0
+# TODO: Find and pin 'libignition-math2' version.
+RUN apt-get update && apt-get upgrade -y \
+  libignition-math2 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################

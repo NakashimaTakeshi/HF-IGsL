@@ -2,6 +2,7 @@
 
 <launch>
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
-    <arg name="map_file" value="$(find rgiro_launch)/config/gazebo/maps/turtlebot3_house/map.yaml"/>
+    <arg name="map_file" default="$(find aws_robomaker_small_house_world)/maps/turtlebot3_waffle_pi/map.yaml"/>
+    <!-- <arg name="map_file" value="$(find rgiro_launch)/config/gazebo/maps/turtlebot3_house/map.yaml"/> -->
   </include>
 </launch>
