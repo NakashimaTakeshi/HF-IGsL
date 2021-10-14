@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
-ARG ros_desktop_version=1.4.1-0bionic.20210601.163047
+ARG ros_desktop_version=1.4.1-0bionic.20210921.232208
 
 ################################################################################
 
@@ -73,7 +73,7 @@ ENV ROS_DESKTOP_VERSION=${ros_desktop_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-desktop-full=${ROS_DESKTOP_VERSION} \
   python-catkin-tools=0.6.1-1 \
-  python-rosdep=0.20.1-1 \
+  python-rosdep=0.21.0-1 \
   && rm -rf /var/lib/apt/lists/*
 
 # Initialize 'rosdep'.
@@ -87,27 +87,27 @@ RUN rosdep init
 
 # Gather the dependencies from the ROS repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-melodic-joy=1.14.0-1bionic.20210505.032331 \
-  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210505.032634 \
-  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210505.021637 \
-  ros-melodic-laser-proc=0.1.5-0bionic.20210505.032503 \
-  ros-melodic-rgbd-launch=2.2.2-0bionic.20210505.045145 \
-  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210505.035508 \
-  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210505.042242 \
-  ros-melodic-rosserial-python=0.8.0-0bionic.20210505.021418 \
-  ros-melodic-rosserial-server=0.8.0-0bionic.20210505.024652 \
-  ros-melodic-rosserial-client=0.8.0-0bionic.20210505.041920 \
+  ros-melodic-joy=1.14.0-1bionic.20210921.205734 \
+  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210921.205848 \
+  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210921.203156 \
+  ros-melodic-laser-proc=0.1.5-0bionic.20210921.205540 \
+  ros-melodic-rgbd-launch=2.2.2-0bionic.20210921.215347 \
+  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210921.211409 \
+  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210921.220326 \
+  ros-melodic-rosserial-python=0.8.0-0bionic.20210921.203044 \
+  ros-melodic-rosserial-server=0.8.0-0bionic.20210921.204737 \
+  ros-melodic-rosserial-client=0.8.0-0bionic.20210921.215203 \
   ros-melodic-rosserial-msgs=0.8.0-0bionic.20210505.005832 \
-  ros-melodic-amcl=1.16.7-1bionic.20210505.031700 \
-  ros-melodic-map-server=1.16.7-1bionic.20210505.023750 \
-  ros-melodic-move-base=1.16.7-1bionic.20210505.042506 \
-  ros-melodic-urdf=1.13.2-1bionic.20210505.022444 \
-  ros-melodic-xacro=1.13.11-1bionic.20210601.153908 \
-  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210505.043912 \
-  ros-melodic-rqt-image-view=0.4.16-1bionic.20210505.032821 \
-  ros-melodic-gmapping=1.4.1-1bionic.20210505.034751 \
-  ros-melodic-navigation=1.16.7-1bionic.20210505.043011 \
-  ros-melodic-interactive-markers=1.11.5-1bionic.20210505.040626 \
+  ros-melodic-amcl=1.16.7-1bionic.20210921.224827 \
+  ros-melodic-map-server=1.16.7-1bionic.20210921.204207 \
+  ros-melodic-move-base=1.16.7-1bionic.20210921.225105 \
+  ros-melodic-urdf=1.13.2-1bionic.20210921.204047 \
+  ros-melodic-xacro=1.13.13-2bionic.20210921.204552 \
+  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210921.211930 \
+  ros-melodic-rqt-image-view=0.4.16-1bionic.20210921.210433 \
+  ros-melodic-gmapping=1.4.1-1bionic.20210921.212836 \
+  ros-melodic-navigation=1.16.7-1bionic.20210921.225633 \
+  ros-melodic-interactive-markers=1.11.5-1bionic.20210921.213358 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
@@ -130,7 +130,7 @@ RUN wget https://packages.osrfoundation.org/gazebo.key -P /tmp \
 
 # Upgrade Gazebo 9.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  gazebo9=9.18.0-1~bionic \
+  gazebo9=9.19.0-1~bionic \
   && rm -rf /var/lib/apt/lists/*
 
 # Upgrade 'libignition' to avoid symbol errors after upgrading Gazebo 9.
@@ -144,13 +144,13 @@ RUN apt-get update && apt-get upgrade -y \
 
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  git=1:2.17.1-1ubuntu0.8 \
+  git=1:2.17.1-1ubuntu0.9 \
   inetutils-ping=2:1.9.4-3 \
   iproute2=4.15.0-2ubuntu1.1 \
   mesa-utils=8.4.0-1 \
   nano=2.9.3-2 \
   net-tools=1.60+git20161116.90da8a0-1ubuntu1 \
-  openssh-client=1:7.6p1-4ubuntu0.3 \
+  openssh-client=1:7.6p1-4ubuntu0.5 \
   unzip=6.0-21ubuntu1 \
   wget=1.19.4-1ubuntu2.2 \
   && rm -rf /var/lib/apt/lists/*
