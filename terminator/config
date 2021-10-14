@@ -164,19 +164,19 @@
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_gazebo_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_gazebo_default.launch
     [[[terminal7]]] #5
       order = 1
       parent = child5
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_rviz_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_rviz_default.launch
     [[[terminal9]]] #6
       order = 0
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_chatter_default.launch
 [plugins]
 [profiles]
   [[default]]
