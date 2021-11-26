@@ -6,7 +6,8 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
-ARG ros_desktop_version=1.4.1-0bionic.20210921.232208
+ARG ros_desktop_version=1.4.1-0bionic.20211104.025752
+ARG python_pip_version=21.3.1
 
 ################################################################################
 
@@ -102,7 +103,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-map-server=1.16.7-1bionic.20210921.204207 \
   ros-melodic-move-base=1.16.7-1bionic.20210921.225105 \
   ros-melodic-urdf=1.13.2-1bionic.20210921.204047 \
-  ros-melodic-xacro=1.13.13-2bionic.20210921.204552 \
+  ros-melodic-xacro=1.13.14-1bionic.20211004.233303 \
   ros-melodic-compressed-image-transport=1.9.5-0bionic.20210921.211930 \
   ros-melodic-rqt-image-view=0.4.16-1bionic.20210921.210433 \
   ros-melodic-gmapping=1.4.1-1bionic.20210921.212836 \
@@ -154,6 +155,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   unzip=6.0-21ubuntu1 \
   wget=1.19.4-1ubuntu2.2 \
   && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
+# Install common Python 3 packages/tools.
+
+# Install Pip 3 from the Ubuntu repositories.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  python3-pip=9.0.1-2.3~ubuntu1.18.04.5 \
+  python3-setuptools=39.0.1-2 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
+# Install TensorFlow with GPU support.
+# https://www.tensorflow.org/install/pip
+
+# Gather the dependencies from the Pip repositories.
+ARG python_pip_version
+ENV PYTHON_PIP_VERSION=${python_pip_version}
+RUN pip3 install --upgrade pip==${PYTHON_PIP_VERSION}
+RUN pip3 install \
+  tensorflow-gpu==1.15.0
 
 ################################################################################
 
