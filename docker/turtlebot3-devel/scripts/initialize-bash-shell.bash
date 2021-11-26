@@ -51,26 +51,17 @@ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/root/TurtleBot3/catkin_ws/src/
 
 # Define Bash functions to conveniently execute the helper scripts in the current shell process.
 
-function turtlebot3-fix-git-paths () {
+function turtlebot3-build-catkin-workspace () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-git-paths.bash
-  popd
-}
-
-function turtlebot3-initialize-catkin-workspace () {
-  # Store the current directory and execute scripts in the current shell process.
-  pushd .
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-git-paths.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/initialize-catkin-workspace.bash
+  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/build-catkin-workspace.bash
   popd
 }
 
 function turtlebot3-reset-catkin-workspace () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-git-paths.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
   popd
@@ -79,7 +70,6 @@ function turtlebot3-reset-catkin-workspace () {
 function turtlebot3-fix-permission-issues () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-git-paths.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
   popd
 }
@@ -95,7 +85,6 @@ function turtlebot3-download-model-data () {
 function turtlebot3-get-fully-started () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
-  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-git-paths.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/download-model-data.bash
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
@@ -127,7 +116,7 @@ echo "ROS_IP is set to '${ROS_IP}'."
 export ROS_HOME=~/.ros
 
 alias simulation_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[44;1;37m\]<local>\[[0m\]\w$ "'
-alias robot_mode='export ROS_MASTER_URI=http://turtlebot3.local:11311; export PS1="\[[41;1;37m\]<turtlebot3>\[[0m\]\w$ "'
+alias robot_mode='export ROS_MASTER_URI=http://turtlebot3-01.local:11311; export PS1="\[[41;1;37m\]<turtlebot3>\[[0m\]\w$ "'
 
 ################################################################################
 

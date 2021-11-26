@@ -129,8 +129,8 @@ Enter a virtual instance of the Docker image (= Docker container) on the develop
   In this case, most 3D accelerated tools, including the TurtleBot3 simulator, will be extremely slow to run.
 
 > **Note:**
-  The script `RUN-DOCKER-CONTAINER.bash` will try to resolve host name `turtlebot3.local` of the TurtleBot3 robot and add its IP address to `/etc/hosts`.
-  You can confirm the result with `ping turtlebot3.local` from inside the container.
+  The script `RUN-DOCKER-CONTAINER.bash` will try to resolve host name `turtlebot3-01.local` of the TurtleBot3 robot and add its IP address to `/etc/hosts`.
+  You can confirm the result with `ping turtlebot3-01.local` from inside the container.
   Note that you can ignore the errors if you do not plan to use the TurtleBot3 robot at that time.
 
 > **Note:**
@@ -257,12 +257,12 @@ Finally, before writing any new code, please make sure to have read the contribu
 The default configuration of the TurtleBot3 on-board computer is as follows:
 
 *   User name: `pi`
-*   Host name: `turtlebot3.local`
+*   Host name: `turtlebot3-01.local`
 *   Password: `turtlebot`
 
 To connect to the TurtleBot3 on-board computer, run the following in a new terminal on the host system:
 
 ```shell
-ping turtlebot3.local
-ssh pi@turtlebot3.local
+ping turtlebot3-01.local
+ssh pi@turtlebot3-01.local
 ```

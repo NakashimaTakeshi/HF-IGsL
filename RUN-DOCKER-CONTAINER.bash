@@ -35,7 +35,7 @@ docker-compose -p ${DOCKER_PROJECT} -f ./docker/docker-compose.yml up -d
 ################################################################################
 
 # Configure the known host names with '/etc/hosts' in the Docker container.
-TURTLEBOT3_HOSTNAME=turtlebot3.local
+TURTLEBOT3_HOSTNAME=turtlebot3-01.local
 echo "Now resolving local host name '${TURTLEBOT3_HOSTNAME}'..."
 TURTLEBOT3_IP=`avahi-resolve -4 --name ${TURTLEBOT3_HOSTNAME} | cut -f 2`
 if [ "$?" != "0" ]; then
