@@ -22,3 +22,23 @@
 	path = catkin_ws/src/aws_robomaker_small_house_world
 	url = https://github.com/aws-robotics/aws-robomaker-small-house-world.git
 	branch = ros1
+[submodule "aws_robomaker_small_warehouse_world"]
+	path = catkin_ws/src/aws_robomaker_small_warehouse_world
+	url = https://github.com/aws-robotics/aws-robomaker-small-warehouse-world.git
+	branch = ros1
+[submodule "aws_robomaker_bookstore_world"]
+	path = catkin_ws/src/aws_robomaker_bookstore_world
+	url = https://github.com/aws-robotics/aws-robomaker-bookstore-world.git
+	branch = ros1
+[submodule "aws_robomaker_hospital_world"]
+	path = catkin_ws/src/aws_robomaker_hospital_world
+	url = https://github.com/aws-robotics/aws-robomaker-hospital-world.git
+	branch = ros1
+[submodule "aws_robomaker_racetrack_world"]
+	path = catkin_ws/src/aws_robomaker_racetrack_world
+	url = https://github.com/aws-robotics/aws-robomaker-racetrack-world.git
+	branch = ros1
+[submodule "DynamixelSDK"]
+	path = catkin_ws/src/dynamixel_sdk
+	url = https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+	branch = melodic-devel
