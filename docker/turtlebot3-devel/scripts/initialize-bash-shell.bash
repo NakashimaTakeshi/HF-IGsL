@@ -51,7 +51,7 @@ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:/root/TurtleBot3/catkin_ws/src/
 
 # Define Bash functions to conveniently execute the helper scripts in the current shell process.
 
-function turtlebot3-build-catkin-workspace () {
+function sde-build-catkin-workspace () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
@@ -59,7 +59,7 @@ function turtlebot3-build-catkin-workspace () {
   popd
 }
 
-function turtlebot3-reset-catkin-workspace () {
+function sde-reset-catkin-workspace () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
@@ -67,14 +67,14 @@ function turtlebot3-reset-catkin-workspace () {
   popd
 }
 
-function turtlebot3-fix-permission-issues () {
+function sde-fix-permission-issues () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
   popd
 }
 
-function turtlebot3-download-model-data () {
+function sde-download-model-data () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash
@@ -82,7 +82,7 @@ function turtlebot3-download-model-data () {
   popd
 }
 
-function turtlebot3-get-fully-started () {
+function sde-get-fully-started () {
   # Store the current directory and execute scripts in the current shell process.
   pushd .
   source /root/TurtleBot3/docker/turtlebot3-devel/scripts/fix-permission-issues.bash

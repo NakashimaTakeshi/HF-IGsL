@@ -9,14 +9,14 @@
     [[[window0]]]
       parent = ""
       type = Window
-  [[turtlebot3-term-11]]
+  [[sde-term-11]]
     [[[child0]]]
       fullscreen = False
       last_active_window = True
       maximised = True
       order = 0
       parent = ""
-      title = TurtleBot3
+      title = SDE
       type = Window
     [[[child1]]]
       order = 0
