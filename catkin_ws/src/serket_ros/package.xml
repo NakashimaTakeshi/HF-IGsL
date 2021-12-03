@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>serket_ros</name>
+  <version>1.0.0</version>
+  <description>The 'serket_ros' package is a ROS wrapper for the Serket library.</description>
+
+  <maintainer email="lotfi.elhafi@gmail.com">Lotfi El Hafi</maintainer>
+  <license>MIT</license>
+  <url type="website">https://gitlab.com/emlab/TurtleBot3</url>
+  <url type="website">https://github.com/naka-lab/Serket</url>
+  <author email="lotfi.elhafi@gmail.com">Lotfi El Hafi</author>
+  <author email="tnakamura@uec.ac.jp">Tomoaki Nakamura</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

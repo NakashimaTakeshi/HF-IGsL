@@ -9,9 +9,6 @@ apt-get update
 # http://wiki.ros.org/rosdep
 rosdep update
 
-# Source the updated ROS environment.
-source /opt/ros/melodic/setup.bash
-
 ################################################################################
 
 # Remove the Catkin workspace.
@@ -26,8 +23,8 @@ cd /root/TurtleBot3/catkin_ws/ && rm -r CMakeLists.txt .catkin_tools/
 
 ################################################################################
 
-# Initialize and build the Catkin workspace.
-cd /root/TurtleBot3/catkin_ws/ && catkin_init_workspace && catkin build
+# Initialize the Catkin workspace.
+cd /root/TurtleBot3/catkin_ws/ && catkin_init_workspace
 
-# Source the Catkin workspace.
-source /root/TurtleBot3/catkin_ws/devel/setup.bash
+# Build the Catkin workspace.
+source /root/TurtleBot3/docker/turtlebot3-devel/scripts/build-catkin-workspace.bash
