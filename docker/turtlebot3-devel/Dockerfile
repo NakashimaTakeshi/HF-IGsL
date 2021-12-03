@@ -164,11 +164,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip=9.0.1-2.3~ubuntu1.18.04.5 \
   python3-setuptools=39.0.1-2 \
+  python3-tk=3.6.9-1~18.04 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
 
-# Install TensorFlow with GPU support.
+# Install the Python 3 dependencies of the Serket library.
+# (Including TensorFlow with GPU support.)
+# http://serket.naka-lab.org/getting_started.html
 # https://www.tensorflow.org/install/pip
 
 # Gather the dependencies from the Pip repositories.
@@ -176,7 +179,10 @@ ARG python_pip_version
 ENV PYTHON_PIP_VERSION=${python_pip_version}
 RUN pip3 install --upgrade pip==${PYTHON_PIP_VERSION}
 RUN pip3 install \
-  tensorflow-gpu==1.15.0
+  matplotlib==3.3.4 \
+  numba==0.53.1 \
+  scikit-learn==0.24.2 \
+  tensorflow-gpu==1.13.1
 
 ################################################################################
 
