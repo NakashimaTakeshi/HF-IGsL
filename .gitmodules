@@ -42,3 +42,7 @@
 	path = catkin_ws/src/dynamixel_sdk
 	url = https://github.com/ROBOTIS-GIT/DynamixelSDK.git
 	branch = melodic-devel
+[submodule "Serket"]
+	path = catkin_ws/src/serket_ros/Serket
+	url = https://github.com/naka-lab/Serket.git
+	branch = master
