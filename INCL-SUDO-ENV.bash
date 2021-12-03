@@ -3,11 +3,11 @@
 ################################################################################
 
 # Pin the versions of the core tools and packages for improved stability.
-CONTAINERD_VERSION="1.4.6-1"
-DOCKER_CE_VERSION="5:20.10.3~3-0~ubuntu-$(lsb_release -cs)"
-DOCKER_COMPOSE_VERSION="1.28.2"
-NVIDIA_DOCKER_VERSION="2.5.0-1"
-NVIDIA_RUNTIME_VERSION="3.4.1-1"
+CONTAINERD_VERSION="1.4.12-1"
+DOCKER_CE_VERSION="5:20.10.11~3-0~ubuntu-focal"
+DOCKER_COMPOSE_VERSION="1.29.2"
+NVIDIA_DOCKER_VERSION="2.8.0-1"
+NVIDIA_RUNTIME_VERSION="3.7.0-1"
 
 ################################################################################
 
@@ -42,7 +42,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 apt-key fingerprint 0EBFCD88
 
 # Add the Docker repository.
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
 # Install Docker version 'DOCKER_CE_VERSION'.
 # Any existing installation will be replaced.
@@ -89,7 +89,7 @@ fi
 # https://github.com/docker/compose/releases
 
 # Install Docker Compose version 'DOCKER_COMPOSE_VERSION'.
-curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 # Install Bash command completion for Docker Compose version 'DOCKER_COMPOSE_VERSION'.
@@ -110,8 +110,7 @@ apt-get purge -y nvidia-docker
 
 # Add the Nvidia Docker package repositories.
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
-LINUX_DISTRIBUTION=$(. /etc/os-release; echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/${LINUX_DISTRIBUTION}/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu20.04/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
 
 # Install 'nvidia-docker2' version 'NVIDIA_DOCKER_VERSION' and reload the Docker daemon configuration.
 apt-get update && apt-get install -y \
@@ -125,7 +124,7 @@ while ! pgrep dockerd > /dev/null; do
   sleep 1
 done
 if [ -e /proc/driver/nvidia/version ]; then
-  docker run --runtime=nvidia --rm nvidia/cuda:10.0-base-ubuntu18.04 nvidia-smi
+  docker run --runtime=nvidia --rm nvidia/cudagl:10.0-devel-ubuntu18.04 nvidia-smi
 fi
 
 ################################################################################
