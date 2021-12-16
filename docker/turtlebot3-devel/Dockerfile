@@ -7,7 +7,8 @@
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
 ARG ros_desktop_version=1.4.1-0bionic.20211104.025752
-ARG python_pip_version=21.3.1
+ARG python3_pip_version=21.3.1
+ARG python2_pip_version=20.3.4
 
 ################################################################################
 
@@ -160,7 +161,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install common Python 3 packages/tools.
 
-# Install Pip 3 from the Ubuntu repositories.
+# Gather the dependencies from the Ubuntu repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip=9.0.1-2.3~ubuntu1.18.04.5 \
   python3-setuptools=39.0.1-2 \
@@ -169,20 +170,46 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ################################################################################
 
+# Install common Python 2 packages/tools.
+
+# Gather the dependencies from the Ubuntu repositories.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  python-pip=9.0.1-2.3~ubuntu1.18.04.5 \
+  && rm -rf /var/lib/apt/lists/*
+
+################################################################################
+
 # Install the Python 3 dependencies of the Serket library.
 # (Including TensorFlow with GPU support.)
 # http://serket.naka-lab.org/getting_started.html
+# https://github.com/naka-lab/Serket
 # https://www.tensorflow.org/install/pip
 
 # Gather the dependencies from the Pip repositories.
-ARG python_pip_version
-ENV PYTHON_PIP_VERSION=${python_pip_version}
-RUN pip3 install --upgrade pip==${PYTHON_PIP_VERSION}
+ARG python3_pip_version
+ENV PYTHON3_PIP_VERSION=${python3_pip_version}
+RUN pip3 install --upgrade pip==${PYTHON3_PIP_VERSION}
 RUN pip3 install \
   matplotlib==3.3.4 \
   numba==0.53.1 \
   scikit-learn==0.24.2 \
   tensorflow-gpu==1.13.1
+
+################################################################################
+
+# Install the Python 2 dependencies of the Serket library.
+# (For integration with ROS Melodic.)
+# http://serket.naka-lab.org/getting_started.html
+# https://github.com/naka-lab/Serket
+
+# Gather the dependencies from the Pip repositories.
+ARG python2_pip_version
+ENV PYTHON2_PIP_VERSION=${python2_pip_version}
+RUN pip2 install --upgrade pip==${PYTHON2_PIP_VERSION}
+RUN pip2 install \
+  llvmlite==0.31.0 \
+  numba==0.47.0 \
+  opencv-python==4.2.0.32
 
 ################################################################################
 

@@ -15,8 +15,6 @@ from sklearn.decomposition import PCA
 from sklearn.metrics.cluster import adjusted_rand_score
 
 # Dataset: MNIST.
-# data = np.loadtxt("data.txt")
-# labels = np.loadtxt("category.txt")
 data = np.loadtxt("../Serket/examples/VAE+GMM/data.txt")
 labels = np.loadtxt("../Serket/examples/VAE+GMM/category.txt")
 
