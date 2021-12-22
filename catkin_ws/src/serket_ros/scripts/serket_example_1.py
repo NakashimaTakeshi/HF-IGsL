@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+################################################################################
+
+# Example 1: VAE+GMM.
+
+################################################################################
+
 import sys
 sys.path.append("../Serket/")
 
@@ -14,16 +20,22 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.metrics.cluster import adjusted_rand_score
 
+################################################################################
+
 # Dataset: MNIST.
 data = np.loadtxt("../Serket/examples/VAE+GMM/data.txt")
 labels = np.loadtxt("../Serket/examples/VAE+GMM/category.txt")
 
-#plt.imshow( data[1].reshape(28,28), cmap="gray" )
-#print(labels[1])
+# Check data.
+plt.imshow( data[1].reshape(28,28), cmap="gray" )
+print(labels[1])
+plt.show()
 
-# Construct and train the integrated model:
+################################################################################
 
-# VAE.
+# Construct and train the integrated model.
+
+# Define VAE architecture.
 encoder_dim = 128
 decoder_dim = 128
 class vae_model(vae.VAE):
@@ -53,14 +65,14 @@ vae1.connect( obs )
 gmm1.connect( vae1 )
 
 # Train the integrated model.
-for i in range(1):
+for i in range(5):
     print( i )
     vae1.update()
     gmm1.update()
 
-# Evaluation:
+################################################################################
 
-# 1. Latent space of VAE:
+# Evaluation 1: Latent space of VAE.
 
 # Get the latent variables.
 feats = vae1.get_forward_msg()
@@ -72,15 +84,17 @@ feats_2dim = pca.transform(feats)
 
 # Visualization.
 for num in range(10):
-  f = feats_2dim[num==labels]
-  plt.plot( f[:,0], f[:,1], "o", label=str(num) )
+    f = feats_2dim[num==labels]
+    plt.plot( f[:,0], f[:,1], "o", label=str(num) )
 
 plt.legend()
 plt.show()
 
-# 2. Classification accuracy:
+################################################################################
 
-# Get the probabilities of classificaiton results.
+# Evaluation 2: Classification accuracy.
+
+# Get the probabilities of classification results.
 preds = gmm1.get_forward_msg()
 
 # Convert them to the labels by argmax operation.
