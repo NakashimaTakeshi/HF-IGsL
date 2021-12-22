@@ -176,7 +176,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} rgiro_chatter_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} serket_ros_default.launch
 [plugins]
 [profiles]
   [[default]]

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <node name="image_publisher" pkg="serket_ros" type="image_publisher.py" cwd="node" output="screen"/>
+  <node name="image_categorization" pkg="serket_ros" type="image_categorization.py" cwd="node" output="screen"/>
+</launch>
