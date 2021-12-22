@@ -85,7 +85,7 @@ mlda1.connect( obs2, gmm1 )
 mm1.connect( mlda1 )
 
 # Train the integrated model.
-for i in range(1):
+for i in range(5):
     print( i )
     vae1.update()
     gmm1.update()

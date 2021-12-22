@@ -10,7 +10,7 @@ from cv_bridge import CvBridge
 def main():
     rospy.init_node('image_publisher', anonymous=True)
 
-    pub = rospy.Publisher('image', Image, queue_size=10)
+    pub = rospy.Publisher('serket_ros/image_publisher/image', Image, queue_size=10)
     bridge = CvBridge()
 
 

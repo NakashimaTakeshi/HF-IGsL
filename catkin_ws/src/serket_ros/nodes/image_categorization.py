@@ -14,19 +14,23 @@ import rospy
 def main():
     rospy.init_node( "image_categorization" )
 
-    obs = srkros.ObservationImg( "image" )
-    cnn = CNN.CNNFeatureExtractor( fileames=None )
+    obs1 = srkros.ObservationImg( "/camera/rgb/image_raw" )
+    #obs1 = srkros.ObservationImg( "/serket_ros/image_publisher/image" )
+    cnn1 = CNN.CNNFeatureExtractor( fileames=None )
     mlda1 = mlda.MLDA( 3, [1000] )
 
-    cnn.connect( obs )
-    mlda1.connect( cnn )
+    cnn1.connect( obs1 )
+    mlda1.connect( cnn1 )
 
     n = 0
     while not rospy.is_shutdown():
-        print("***", n , "***")
-        obs.update()
-        cnn.update()
+        raw_input( "Hit enter to update the integrated model." )
+        obs1.update()
+        print("'obs1' module updated.")
+        cnn1.update()
+        print("'cnn1' module updated.")
         mlda1.update()
+        print("'mlda1' module updated.")
         n += 1
 
 if __name__=="__main__":
