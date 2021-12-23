@@ -99,13 +99,13 @@
       parent = child12
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_gazebo_multi.launch
     [[[terminal14]]] #3
       order = 1
       parent = child12
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} turtlebot3_rviz_multi.launch
     [[[terminal18]]] #8
       order = 0
       parent = child17
