@@ -110,6 +110,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-melodic-gmapping=1.4.1-1bionic.20210921.212836 \
   ros-melodic-navigation=1.16.7-1bionic.20210921.225633 \
   ros-melodic-interactive-markers=1.11.5-1bionic.20210921.213358 \
+  ros-melodic-multirobot-map-merge=2.1.4-1bionic.20210921.222408 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
