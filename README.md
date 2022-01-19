@@ -122,7 +122,12 @@ Enter a virtual instance of the Docker image (= Docker container) on the develop
 
      This script creates or updates the container following the instructions found in `~/TurtleBot3/docker/docker-compose.yml`.
      It allows the container to share system resources, such as volumes and devices, with the host machine.
-2.   Use `ctrl+d` to exit the container at any time.
+2.   Execute the Bash function `sde-get-fully-started` to configure the freshly built Docker container.
+     This function calls several scripts to download the required datasets and build the ROS environment (= Catkin workspace) inside the Docker container.
+     It will remove any existing Catkin workspace and build the new one inside `/root/TurtleBot3/catkin_ws/`.
+     It will also automatically source the newly build ROS environment.
+4.   From there, you have everything ready to start using the SDE to develop new features.
+3.   Use `ctrl+d` to exit the container at any time.
 
 > **Note:**
   If no Nvidia drivers are present, the script `RUN-DOCKER-CONTAINER.bash` sets the Docker runtime to `runc`, instead of `nvidia`, to bypass `nvidia-docker2` when entering the container.
@@ -136,42 +141,10 @@ Enter a virtual instance of the Docker image (= Docker container) on the develop
 > **Note:**
   Be careful if you need to modify `docker-compose.yml` as the container will be recreated from scratch the next time you run `RUN-DOCKER-CONTAINER.bash`.
 
-### Step 4: Test the Catkin Workspace
-
-Build and test the ROS environment (= Catkin workspace) inside the Docker container with the following instructions.
-
-1.   Enter the Docker container if necessary:
-
-     ```shell
-     cd ~/TurtleBot3/ && bash ./RUN-DOCKER-CONTAINER.bash
-     ```
-
-2.   Initialize the Catkin workspace:
-
-     ```shell
-     cd /root/TurtleBot3/ && bash ./docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
-     ```
-
-     This script will remove any existing Catkin workspace and build a new one inside `/root/TurtleBot3/catkin_ws/`.
-3.   Make sure that the new Catkin workspace is sourced:
-
-     ```shell
-     cd /root/TurtleBot3/ && source ./catkin_ws/devel/setup.bash
-     ```
-
-4.   Launch a couple of publisher and subscriber test nodes from the `rgiro_launch` package:
-
-     ```shell
-     roslaunch rgiro_launch rgiro_chatter_default.launch
-     ```
-
-     If everything has installed correctly, you should see a node `rgiro_listener` that subscribes to a publisher node called `rgiro_talker` in a [Rqt](http://wiki.ros.org/rqt) GUI.
-
 > **Note:**
-  The script `reset-catkin-workspace.bash` will build the Catkin workspace using `catkin_make` instead of the newer/faster but still unofficially supported `catkin build` to solve some compatibility issues (at least for now).
-  Please be sure to build using `catkin_make` to avoid strange issues.
+  Note that the Bash function `sde-get-fully-started` should be used only once after instantiating a new container from the Docker image.
 
-### Step 5: Learn the Advanced Functions
+### Step 4: Learn the Advanced Functions
 
 The development environment inside the Docker container offers several useful functions that you should be aware of.
 These advanced functions will help you increase both the convenience and the quality of your work for the TurtleBot3 project.
@@ -190,6 +163,10 @@ Including, but not limited to:
 > **Note:**
   These Bash functions are based on helper scripts that can be found in `/root/TurtleBot3/docker/turtlebot3-devel/scripts/` in the Docker container or in `~/TurtleBot3/docker/turtlebot3-devel/scripts/` in the host machine.
   You can see their definitions in `~/.bashrc` inside the container.
+
+> **Note:**
+  The script `build-catkin-workspace.bash` will build the Catkin workspace using `catkin build` instead of the older but still officially default `catkin_make`.
+  Please be sure to build using `catkin build` to avoid strange issues.
 
 #### Multiple Terminal Operation
 
@@ -223,7 +200,7 @@ They can be found on the host machine at:
     Theoretically, its content could be written directly in the `Dockerfile` but this would result in complex lines of code as helpful Bash syntax like here-documents are not supported by Docker.
     It is automatically sourced by `/root/.bashrc` every time the user enters the Bash shell inside the container, most likely every time `RUN-DOCKER-CONTAINER.bash` is run.
 
-### Step 6: Develop on the Simulator/Robot
+### Step 5: Develop on the Simulator/Robot
 
 From here, you can continue with either one, or both, of the following options depending on the presence of a TurtleBot3 robot within the same local network as the development machine.
 
