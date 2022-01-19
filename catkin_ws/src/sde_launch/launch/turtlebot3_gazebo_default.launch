@@ -9,7 +9,7 @@
   </include>
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
-    <arg name="map_file" default="$(find rgiro_launch)/config/gazebo/maps/turtlebot3_world/map.yaml"/>
+    <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/turtlebot3_world/map.yaml"/>
     <arg name="open_rviz" default="false"/>
     <arg name="move_forward_only" default="false"/>
   </include>

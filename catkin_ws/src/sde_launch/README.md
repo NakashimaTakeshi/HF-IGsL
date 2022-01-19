@@ -1,6 +1,6 @@
-# rgiro_launch
+# sde_launch
 
-The `rgiro_launch` package coordinates the robot tasks and behaviors across all packages using shared launch files.
+The `sde_launch` package coordinates the robot tasks and behaviors across all packages using shared launch files.
 
 *   Maintainer: Lotfi El Hafi ([lotfi.elhafi@gmail.com](mailto:lotfi.elhafi@gmail.com)).
 *   Author: Lotfi El Hafi ([lotfi.elhafi@gmail.com](mailto:lotfi.elhafi@gmail.com)).
