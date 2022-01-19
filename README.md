@@ -122,7 +122,12 @@ Enter a virtual instance of the Docker image (= Docker container) on the develop
 
      This script creates or updates the container following the instructions found in `~/TurtleBot3/docker/docker-compose.yml`.
      It allows the container to share system resources, such as volumes and devices, with the host machine.
-2.   Execute the Bash function `sde-get-fully-started` to configure the freshly built Docker container.
+2.   Configure the freshly built Docker container by executing the following Bash function inside it:
+
+     ```shell
+     sde-get-fully-started
+     ```
+
      This function calls several scripts to download the required datasets and build the ROS environment (= Catkin workspace) inside the Docker container.
      It will remove any existing Catkin workspace and build the new one inside `/root/TurtleBot3/catkin_ws/`.
      It will also automatically source the newly build ROS environment.
