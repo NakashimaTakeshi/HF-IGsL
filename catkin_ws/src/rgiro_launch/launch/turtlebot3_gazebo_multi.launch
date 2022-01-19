@@ -2,20 +2,113 @@
 
 <launch>
 
-  <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3.launch"/>
+  <!-- Configure the TurtleBot3 robots and their initial positions. -->
 
-  <include file="$(find turtlebot3_gazebo)/launch/multi_map_merge.launch"/>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="first_tb3"  default="tb3_0"/>
+  <arg name="second_tb3" default="tb3_1"/>
+  <arg name="third_tb3"  default="tb3_2"/>
+
+  <arg name="first_tb3_x_pos" default="4.0"/>
+  <arg name="first_tb3_y_pos" default="9.0"/>
+  <arg name="first_tb3_z_pos" default="0.0"/>
+  <arg name="first_tb3_yaw"   default="-1.57079633"/>
+
+  <arg name="second_tb3_x_pos" default="-3.0"/>
+  <arg name="second_tb3_y_pos" default="10.0"/>
+  <arg name="second_tb3_z_pos" default="0.0"/>
+  <arg name="second_tb3_yaw"   default="3.14159265"/>
+
+  <arg name="third_tb3_x_pos" default="0.0"/>
+  <arg name="third_tb3_y_pos" default="12.0"/>
+  <arg name="third_tb3_z_pos" default="0.0"/>
+  <arg name="third_tb3_yaw"   default="1.57079633"/>
+
+  <!-- Configure the Gazebo simulation environment. -->
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find aws_robomaker_hospital_world)/worlds/hospital.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Spawn the first TurtleBot3 robot. -->
+
+  <group ns = "$(arg first_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro laser_visual:=true camera_visual:=true imu_visual:=true"/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="tf_prefix" value="$(arg first_tb3)"/>
+    </node>
+    
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg first_tb3) -x $(arg first_tb3_x_pos) -y $(arg first_tb3_y_pos) -z $(arg first_tb3_z_pos) -Y $(arg first_tb3_yaw) -param robot_description"/>
+  </group>
+
+  <!-- Spawn the second TurtleBot3 robot. -->
+
+  <group ns = "$(arg second_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro laser_visual:=true camera_visual:=true imu_visual:=true"/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="tf_prefix" value="$(arg second_tb3)"/>
+    </node>
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg second_tb3) -x $(arg second_tb3_x_pos) -y $(arg second_tb3_y_pos) -z $(arg second_tb3_z_pos) -Y $(arg second_tb3_yaw) -param robot_description"/>
+  </group>
+
+  <!-- Spawn the third TurtleBot3 robot. -->
+
+  <group ns = "$(arg third_tb3)">
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro laser_visual:=true camera_visual:=true imu_visual:=true"/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0"/>
+      <param name="tf_prefix" value="$(arg third_tb3)"/>
+    </node>
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model $(arg third_tb3) -x $(arg third_tb3_x_pos) -y $(arg third_tb3_y_pos) -z $(arg third_tb3_z_pos) -Y $(arg third_tb3_yaw) -param robot_description"/>
+  </group>
+
+  <!-- Run SLAM on each TurtleBot3 robot. -->
 
   <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
-    <arg name="ns" default="tb3_0"/>
+    <arg name="ns" default="$(arg first_tb3)"/>
   </include>
 
   <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
-    <arg name="ns" default="tb3_1"/>
+    <arg name="ns" default="$(arg second_tb3)"/>
   </include>
 
   <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
-    <arg name="ns" default="tb3_2"/>
+    <arg name="ns" default="$(arg third_tb3)"/>
   </include>
+
+  <!-- Merge the map of each TurtleBot3 robot. -->
+
+  <include file="$(find turtlebot3_gazebo)/launch/multi_map_merge.launch">
+    <arg name="first_tb3_x_pos" default="$(arg first_tb3_x_pos)"/>
+    <arg name="first_tb3_y_pos" default="$(arg first_tb3_y_pos)"/>
+    <arg name="first_tb3_z_pos" default="$(arg first_tb3_z_pos)"/>
+    <arg name="first_tb3_yaw"   default="$(arg first_tb3_yaw)"/>
+
+    <arg name="second_tb3_x_pos" default="$(arg second_tb3_x_pos)"/>
+    <arg name="second_tb3_y_pos" default="$(arg second_tb3_y_pos)"/>
+    <arg name="second_tb3_z_pos" default="$(arg second_tb3_z_pos)"/>
+    <arg name="second_tb3_yaw"   default="$(arg second_tb3_yaw)"/>
+
+    <arg name="third_tb3_x_pos" default="$(arg third_tb3_x_pos)"/>
+    <arg name="third_tb3_y_pos" default="$(arg third_tb3_y_pos)"/>
+    <arg name="third_tb3_z_pos" default="$(arg third_tb3_z_pos)"/>
+    <arg name="third_tb3_yaw"   default="$(arg third_tb3_yaw)"/>
+  </include>
+
+  <!-- Run GUI to manually control each TurtleBot3 robot. -->
+
+  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering"/>
 
 </launch>
