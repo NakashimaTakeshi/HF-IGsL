@@ -38,7 +38,7 @@ EOF
     continue;
   fi;
   echo "ROS_MASTER_URI: ${ROS_MASTER_URI}";
-  roslaunch rgiro_launch ${LAUNCH};
+  roslaunch sde_launch ${LAUNCH};
   echo "" # Display an empty line.
 done
 

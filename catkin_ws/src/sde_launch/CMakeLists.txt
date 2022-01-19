@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rgiro_launch)
+project(sde_launch)
 
 find_package(catkin REQUIRED COMPONENTS)
 
