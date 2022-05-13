@@ -1,5 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <launch>
-  <!-- TODO -->
+  <arg name="first_tb3"  default="turtlebot3_01"/>
+  <arg name="second_tb3" default="turtlebot3_02"/>
+  <arg name="third_tb3"  default="turtlebot3_03"/>
+
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <group ns = "$(arg first_tb3)">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+      <arg name="model" value="$(arg model)"/>
+      <arg name="multi_robot_name" default="$(arg first_tb3)"/>
+    </include>
+  </group>
+
+  <group ns = "$(arg second_tb3)">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+      <arg name="model" value="$(arg model)"/>
+      <arg name="multi_robot_name" default="$(arg second_tb3)"/>
+    </include>
+  </group>
+
+  <group ns = "$(arg third_tb3)">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+      <arg name="model" value="$(arg model)"/>
+      <arg name="multi_robot_name" default="$(arg third_tb3)"/>
+    </include>
+  </group>
+
+  <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
+    <arg name="ns" default="$(arg first_tb3)"/>
+  </include>
+
+  <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
+    <arg name="ns" default="$(arg second_tb3)"/>
+  </include>
+
+  <include file="$(find turtlebot3_gazebo)/launch/multi_turtlebot3_slam.launch">
+    <arg name="ns" default="$(arg third_tb3)"/>
+  </include>
+
+  <node pkg="multirobot_map_merge" type="map_merge" respawn="false" name="map_merge" output="screen">
+    <param name="robot_map_topic" value="map"/>
+    <param name="robot_namespace" value="turtlebot3"/>
+    <param name="merged_map_topic" value="map"/>
+    <param name="world_frame" value="map"/>
+    <param name="known_init_poses" value="false"/>
+    <param name="merging_rate" value="0.5"/>
+    <param name="discovery_rate" value="0.05"/>
+    <param name="estimation_rate" value="0.1"/>
+    <param name="estimation_confidence" value="1.0"/>
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg first_tb3)_tf_broadcaster"  args="0 0 0 0 0 0 /map /$(arg first_tb3)/map 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg second_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg second_tb3)/map 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg third_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg third_tb3)/map 100"/>
+
+  <node pkg="tf" type="static_transform_publisher" name="$(arg first_tb3)_odom_to_base_footprint_tf_broadcaster"  args="0 0 0 0 0 0 /$(arg first_tb3)/odom /$(arg first_tb3)/base_footprint 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="$(arg second_tb3)_odom_to_base_footprint_tf_broadcaster" args="0 0 0 0 0 0 /$(arg second_tb3)/odom /$(arg second_tb3)/base_footprint 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="$(arg third_tb3)_odom_to_base_footprint_tf_broadcaster" args="0 0 0 0 0 0 /$(arg third_tb3)/odom /$(arg third_tb3)/base_footprint 100"/>
 </launch>
