@@ -73,10 +73,12 @@ case "$2" in
   ;;
   ( "darknet_ros_default.launch" | \
     "serket_ros_default.launch" | \
-    "turtlebot3_gazebo_default.launch" | \
-    "turtlebot3_gazebo_multi.launch" | \
-    "turtlebot3_rviz_default.launch" | \
-    "turtlebot3_rviz_multi.launch" )
+    "turtlebot3_robot_bringup_multi.launch" | \
+    "turtlebot3_robot_rviz_multi.launch" | \
+    "turtlebot3_simulation_gazebo_default.launch" | \
+    "turtlebot3_simulation_gazebo_multi.launch" | \
+    "turtlebot3_simulation_rviz_default.launch" | \
+    "turtlebot3_simulation_rviz_multi.launch" )
   docker exec -i -t ${DOCKER_CONTAINER} bash -i -c "source ~/TurtleBot3/docker/turtlebot3-devel/scripts/run-roslaunch-repeatedly.bash $2"
   ;;
   ( * )

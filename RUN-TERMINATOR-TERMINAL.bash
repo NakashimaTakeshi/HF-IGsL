@@ -14,5 +14,5 @@ cp ./terminator/config ~/.config/terminator/config
 ################################################################################
 
 # Run Terminator with the project's custom layout.
-terminator -m -l sde-term-11 &
+terminator -m -l sde-term-11-robot &
 sleep 1
