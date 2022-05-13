@@ -116,7 +116,7 @@ echo "ROS_IP is set to '${ROS_IP}'."
 export ROS_HOME=~/.ros
 
 alias simulation_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[44;1;37m\]<local>\[[0m\]\w$ "'
-alias robot_mode='export ROS_MASTER_URI=http://turtlebot3-01.local:11311; export PS1="\[[41;1;37m\]<turtlebot3>\[[0m\]\w$ "'
+alias robot_mode='export ROS_MASTER_URI=http://localhost:11311; export PS1="\[[41;1;37m\]<turtlebot3>\[[0m\]\w$ "'
 
 ################################################################################
 
