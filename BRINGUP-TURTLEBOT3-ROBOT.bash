@@ -16,6 +16,7 @@ export ROS_HOSTNAME=turtlebot3-01.local;
 export TURTLEBOT3_MODEL=waffle_pi;
 killall -9 roscore;
 killall -9 rosmaster;
+/usr/sbin/ntpdate ntp.ubuntu.com;
 ROS_NAMESPACE=turtlebot3_01 roslaunch turtlebot3_bringup turtlebot3_robot.launch multi_robot_name:="turtlebot3_01" set_lidar_frame_id:="turtlebot3_01/base_scan" &
 sleep 5;
 ROS_NAMESPACE=turtlebot3_01 roslaunch turtlebot3_bringup turtlebot3_rpicamera.launch &
@@ -31,6 +32,7 @@ export ROS_HOSTNAME=turtlebot3-02.local;
 export TURTLEBOT3_MODEL=waffle_pi;
 killall -9 roscore;
 killall -9 rosmaster;
+/usr/sbin/ntpdate ntp.ubuntu.com;
 ROS_NAMESPACE=turtlebot3_02 roslaunch turtlebot3_bringup turtlebot3_robot.launch multi_robot_name:="turtlebot3_02" set_lidar_frame_id:="turtlebot3_02/base_scan" &
 sleep 5;
 ROS_NAMESPACE=turtlebot3_02 roslaunch turtlebot3_bringup turtlebot3_rpicamera.launch &
@@ -46,6 +48,7 @@ export ROS_HOSTNAME=turtlebot3-03.local;
 export TURTLEBOT3_MODEL=waffle_pi;
 killall -9 roscore;
 killall -9 rosmaster;
+/usr/sbin/ntpdate ntp.ubuntu.com;
 ROS_NAMESPACE=turtlebot3_03 roslaunch turtlebot3_bringup turtlebot3_robot.launch multi_robot_name:="turtlebot3_03" set_lidar_frame_id:="turtlebot3_03/base_scan" &
 sleep 5;
 ROS_NAMESPACE=turtlebot3_03 roslaunch turtlebot3_bringup turtlebot3_rpicamera.launch &

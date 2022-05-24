@@ -42,7 +42,7 @@
 
   <node pkg="multirobot_map_merge" type="map_merge" respawn="false" name="map_merge" output="screen">
     <param name="robot_map_topic" value="map"/>
-    <param name="robot_namespace" value="turtlebot3"/>
+    <param name="robot_namespace" value="turtlebot3_0"/>
     <param name="merged_map_topic" value="map"/>
     <param name="world_frame" value="map"/>
     <param name="known_init_poses" value="false"/>
@@ -52,9 +52,11 @@
     <param name="estimation_confidence" value="1.0"/>
   </node>
 
-  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg first_tb3)_tf_broadcaster"  args="0 0 0 0 0 0 /map /$(arg first_tb3)/map 100"/>
-  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg second_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg second_tb3)/map 100"/>
-  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg third_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg third_tb3)/map 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="world_map_to_odom_tf_broadcaster" args="0 0 0 0 0 0 /map /odom 100"/>
+
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg first_tb3)_tf_broadcaster"  args="0 0 0 0 0 0 /base_footprint /$(arg first_tb3)/map 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg second_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /base_footprint /$(arg second_tb3)/map 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg third_tb3)_tf_broadcaster" args="0 0 0 0 0 0 /base_footprint /$(arg third_tb3)/map 100"/>
 
   <node pkg="tf" type="static_transform_publisher" name="$(arg first_tb3)_odom_to_base_footprint_tf_broadcaster"  args="0 0 0 0 0 0 /$(arg first_tb3)/odom /$(arg first_tb3)/base_footprint 100"/>
   <node pkg="tf" type="static_transform_publisher" name="$(arg second_tb3)_odom_to_base_footprint_tf_broadcaster" args="0 0 0 0 0 0 /$(arg second_tb3)/odom /$(arg second_tb3)/base_footprint 100"/>
