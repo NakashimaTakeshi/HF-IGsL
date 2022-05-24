@@ -35,7 +35,10 @@ docker-compose -p ${DOCKER_PROJECT} -f ./docker/docker-compose.yml up -d
 ################################################################################
 
 # Configure the known host names with '/etc/hosts' in the Docker container.
-TURTLEBOT3_HOSTNAME=turtlebot3-01.local
+
+for i in {1..3}
+do
+TURTLEBOT3_HOSTNAME=turtlebot3-0${i}.local
 echo "Now resolving local host name '${TURTLEBOT3_HOSTNAME}'..."
 TURTLEBOT3_IP=`avahi-resolve -4 --name ${TURTLEBOT3_HOSTNAME} | cut -f 2`
 if [ "$?" != "0" ]; then
@@ -54,6 +57,7 @@ EOF
 else
   echo "Failed to resolve host name '${TURTLEBOT3_HOSTNAME}': '/etc/hosts' in the container was not automatically updated."
 fi
+done
 
 ################################################################################
 
@@ -69,10 +73,12 @@ case "$2" in
   ;;
   ( "darknet_ros_default.launch" | \
     "serket_ros_default.launch" | \
-    "turtlebot3_gazebo_default.launch" | \
-    "turtlebot3_gazebo_multi.launch" | \
-    "turtlebot3_rviz_default.launch" | \
-    "turtlebot3_rviz_multi.launch" )
+    "turtlebot3_robot_bringup_multi.launch" | \
+    "turtlebot3_robot_rviz_multi.launch" | \
+    "turtlebot3_simulation_gazebo_default.launch" | \
+    "turtlebot3_simulation_gazebo_multi.launch" | \
+    "turtlebot3_simulation_rviz_default.launch" | \
+    "turtlebot3_simulation_rviz_multi.launch" )
   docker exec -i -t ${DOCKER_CONTAINER} bash -i -c "source ~/TurtleBot3/docker/turtlebot3-devel/scripts/run-roslaunch-repeatedly.bash $2"
   ;;
   ( * )
