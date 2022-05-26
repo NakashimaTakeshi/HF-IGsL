@@ -40,7 +40,7 @@ export DOCKERFILE_COMMIT_SHORT_SHA="$(git log -n 1 --pretty=format:%h ./docker/t
 
 # Ask the user credentials to login into the GitLab Docker registry.
 echo "Login into 'registry.gitlab.com'. Enter your GitLab credentials below:"
-docker login registry.gitlab.com
+docker login -u "gitlab+deploy-token-481366" -p "qncpjW8Aqrhs2nR6zQdZ" registry.gitlab.com/emlab/turtlebot3
 
 # If the script runs in CI mode, build the image directly.
 # Otherwise, try to pull it from the registry. If it fails, build locally.

@@ -208,6 +208,7 @@ ARG python2_pip_version
 ENV PYTHON2_PIP_VERSION=${python2_pip_version}
 RUN pip2 install --upgrade pip==${PYTHON2_PIP_VERSION}
 RUN pip2 install \
+  Janome==0.3.10 \
   llvmlite==0.31.0 \
   numba==0.47.0 \
   opencv-python==4.2.0.32
