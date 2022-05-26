@@ -1,5 +1,7 @@
 # Serket module outputs:
-module*/
+nodes/module*/
+scripts/module*/
 
 # Serket data inputs:
-data*/
+nodes/data*/
+scripts/data*/

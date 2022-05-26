@@ -91,6 +91,13 @@ function sde-get-fully-started () {
   popd
 }
 
+function sde-cleanup-output-data () {
+  # Store the current directory and execute scripts in the current shell process.
+  pushd .
+  source /root/TurtleBot3/docker/turtlebot3-devel/scripts/cleanup-output-data.bash
+  popd
+}
+
 ################################################################################
 
 # Set the TurtleBot3/ROS network interface.
