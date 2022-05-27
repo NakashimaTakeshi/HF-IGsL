@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <launch>
-  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_navigation.rviz"/>
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find sde_launch)/config/rviz/turtlebot3_simulation_rviz_default.rviz"/>
 </launch>
