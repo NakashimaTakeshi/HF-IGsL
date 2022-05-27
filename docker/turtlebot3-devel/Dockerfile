@@ -176,6 +176,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Gather the dependencies from the Ubuntu repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python-pip=9.0.1-2.3~ubuntu1.18.04.5 \
+  python-tk=2.7.17-1~18.04 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
