@@ -14,5 +14,9 @@ cp ./terminator/config ~/.config/terminator/config
 ################################################################################
 
 # Run Terminator with the project's custom layout.
-terminator -m -l sde-term-11-simulation &
+if [ -z "$1" ]; then
+  terminator -m -l sde-term-11-simulation &
+else
+  terminator -m -l sde-term-11-$1 &
+fi
 sleep 1
