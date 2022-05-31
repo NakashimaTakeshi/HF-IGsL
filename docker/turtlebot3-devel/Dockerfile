@@ -6,7 +6,7 @@
 # Pin the versions of the core tools and packages using global arguments for improved stability.
 ARG nvidia_cudagl_version=10.0-devel-ubuntu18.04
 ARG nvidia_cudnn_version=7.4.2.24-1+cuda10.0
-ARG ros_desktop_version=1.4.1-0bionic.20211104.025752
+ARG ros_desktop_version=1.4.1-0bionic.20220413.183028
 ARG python3_pip_version=21.3.1
 ARG python2_pip_version=20.3.4
 
@@ -21,6 +21,12 @@ ARG python2_pip_version=20.3.4
 FROM nvidia/cudagl:${nvidia_cudagl_version}
 ARG nvidia_cudagl_version
 ENV NVIDIA_CUDAGL_VERSION=${nvidia_cudagl_version}
+
+# Fix Nvidia GPG keys.
+# https://developer.nvidia.com/blog/updating-the-cuda-linux-gpg-repository-key/
+RUN apt-key del 7fa2af80 \
+  && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
+  && apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
 
 # Install the Nvidia cuDNN library missing in the parent image.
 # https://gitlab.com/nvidia/container-images/cuda/blob/ubuntu18.04/10.0/devel/cudnn7/Dockerfile
@@ -89,28 +95,28 @@ RUN rosdep init
 
 # Gather the dependencies from the ROS repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  ros-melodic-joy=1.14.0-1bionic.20210921.205734 \
-  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20210921.205848 \
-  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20210921.203156 \
-  ros-melodic-laser-proc=0.1.5-0bionic.20210921.205540 \
-  ros-melodic-rgbd-launch=2.2.2-0bionic.20210921.215347 \
-  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20210921.211409 \
-  ros-melodic-rosserial-arduino=0.8.0-0bionic.20210921.220326 \
-  ros-melodic-rosserial-python=0.8.0-0bionic.20210921.203044 \
-  ros-melodic-rosserial-server=0.8.0-0bionic.20210921.204737 \
-  ros-melodic-rosserial-client=0.8.0-0bionic.20210921.215203 \
+  ros-melodic-joy=1.14.0-1bionic.20220127.152644 \
+  ros-melodic-teleop-twist-joy=0.1.3-0bionic.20220127.152746 \
+  ros-melodic-teleop-twist-keyboard=1.0.0-1bionic.20220127.145634 \
+  ros-melodic-laser-proc=0.1.5-0bionic.20220127.152559 \
+  ros-melodic-rgbd-launch=2.2.2-0bionic.20220222.193830 \
+  ros-melodic-depthimage-to-laserscan=1.0.8-0bionic.20220222.185906 \
+  ros-melodic-rosserial-arduino=0.8.0-0bionic.20220127.160859 \
+  ros-melodic-rosserial-python=0.8.0-0bionic.20220127.145542 \
+  ros-melodic-rosserial-server=0.8.0-0bionic.20220127.150809 \
+  ros-melodic-rosserial-client=0.8.0-0bionic.20220127.160614 \
   ros-melodic-rosserial-msgs=0.8.0-0bionic.20210505.005832 \
-  ros-melodic-amcl=1.16.7-1bionic.20210921.224827 \
-  ros-melodic-map-server=1.16.7-1bionic.20210921.204207 \
-  ros-melodic-move-base=1.16.7-1bionic.20210921.225105 \
-  ros-melodic-urdf=1.13.2-1bionic.20210921.204047 \
-  ros-melodic-xacro=1.13.14-1bionic.20211004.233303 \
-  ros-melodic-compressed-image-transport=1.9.5-0bionic.20210921.211930 \
-  ros-melodic-rqt-image-view=0.4.16-1bionic.20210921.210433 \
-  ros-melodic-gmapping=1.4.1-1bionic.20210921.212836 \
-  ros-melodic-navigation=1.16.7-1bionic.20210921.225633 \
-  ros-melodic-interactive-markers=1.11.5-1bionic.20210921.213358 \
-  ros-melodic-multirobot-map-merge=2.1.4-1bionic.20210921.222408 \
+  ros-melodic-amcl=1.16.7-1bionic.20220222.183836 \
+  ros-melodic-map-server=1.16.7-1bionic.20220127.150654 \
+  ros-melodic-move-base=1.16.7-1bionic.20220222.193709 \
+  ros-melodic-urdf=1.13.2-1bionic.20220127.150505 \
+  ros-melodic-xacro=1.13.17-1bionic.20220214.135922 \
+  ros-melodic-compressed-image-transport=1.9.5-0bionic.20220222.190527 \
+  ros-melodic-rqt-image-view=0.4.16-1bionic.20220328.223754 \
+  ros-melodic-gmapping=1.4.1-1bionic.20220127.154525 \
+  ros-melodic-navigation=1.16.7-1bionic.20220222.194313 \
+  ros-melodic-interactive-markers=1.11.5-1bionic.20220127.155017 \
+  ros-melodic-multirobot-map-merge=2.1.4-1bionic.20220127.162049 \
   && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
@@ -147,7 +153,7 @@ RUN apt-get update && apt-get upgrade -y \
 
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  git=1:2.17.1-1ubuntu0.9 \
+  git=1:2.17.1-1ubuntu0.11 \
   inetutils-ping=2:1.9.4-3 \
   iproute2=4.15.0-2ubuntu1.1 \
   mesa-utils=8.4.0-1 \
@@ -175,6 +181,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Gather the dependencies from the Ubuntu repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  ntpdate=1:4.2.8p10+dfsg-5ubuntu7.3 \
   python-pip=9.0.1-2.3~ubuntu1.18.04.5 \
   python-tk=2.7.17-1~18.04 \
   && rm -rf /var/lib/apt/lists/*
