@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function,unicode_literals, absolute_import
 import sys
 sys.path.append("../Serket/")
 
@@ -44,7 +43,7 @@ def main():
     cat_bins = range(1, cat_nbr+1)
 
     while not rospy.is_shutdown():
-        raw_input( "Hit enter to update the integrated model." )
+        input( "Hit enter to update the integrated model." )
 
         obs1.update()
         obs1_buf.update()
@@ -59,24 +58,25 @@ def main():
         mlda1.update()
         print("'mlda1' module updated.")
 
-        mlda1_cat = np.loadtxt("../nodes/module006_mlda/%03d/categories.txt"%n, unpack='False')
-        # print(mlda1_cat)
+        if n != 0:
+            mlda1_cat = np.loadtxt("../nodes/module006_mlda/%03d/categories.txt"%n, unpack='False')
+            # print(mlda1_cat)
 
-        ax.hist(mlda1_cat, histtype='bar', bins=cat_bins)
-        ax.set_xticks(cat_bins)
-        ax.set_xticklabels(cat_bins)
-        ax.set_yticks(range(1, n+2))
-        ax.set_yticklabels(range(1, n+2))
-        ax.set_xlabel("Categories")
-        ax.set_ylabel("Observations")
-        ax.set_title("MLDA")
-        ax.legend()
-        ax.grid()
-        ax.autoscale(False)
+            ax.hist(mlda1_cat, histtype='bar', bins=cat_bins)
+            ax.set_xticks(cat_bins)
+            ax.set_xticklabels(cat_bins)
+            ax.set_yticks(range(1, n+2))
+            ax.set_yticklabels(range(1, n+2))
+            ax.set_xlabel("Categories")
+            ax.set_ylabel("Observations")
+            ax.set_title("MLDA")
+            ax.legend()
+            ax.grid()
+            ax.autoscale(False)
 
-        plt.draw()
-        plt.pause(0.001)
-        ax.cla()
+            plt.draw()
+            plt.pause(0.001)
+            ax.cla()
 
         n += 1
 
