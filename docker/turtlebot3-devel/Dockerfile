@@ -194,6 +194,9 @@ RUN sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/' /root/.bashrc
 ARG DOCKERFILE_COMMIT_SHORT_SHA
 ENV DOCKER_IMAGE_VERSION=${DOCKERFILE_COMMIT_SHORT_SHA}
 
+# Add the '/root/TurtleBot3' directory to the safe Git repository list.
+RUN git config --global --add safe.directory /root/TurtleBot3
+
 # Overwrite the entry point of the parent image.
 ENTRYPOINT []
 
