@@ -4,8 +4,8 @@
 ################################################################################
 
 # Pin the versions of the core tools and packages using global arguments for improved stability.
-ARG nvidia_cudagl_version=11.4.2-devel-ubuntu20.04
-ARG nvidia_cudnn_version=8.2.4.15-1+cuda11.4
+ARG nvidia_cudagl_version=11.2.2-devel-ubuntu20.04
+ARG nvidia_cudnn_version=8.1.1.33-1+cuda11.2
 ARG ros_desktop_version=1.5.0-1focal.20220512.132246
 ARG python3_pip_version=22.1.2
 
@@ -22,7 +22,7 @@ ARG nvidia_cudagl_version
 ENV NVIDIA_CUDAGL_VERSION=${nvidia_cudagl_version}
 
 # Install the Nvidia cuDNN 8 library missing in the parent image.
-# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.4.3/ubuntu2004/devel/cudnn8/Dockerfile
+# https://gitlab.com/nvidia/container-images/cuda/-/blob/master/dist/11.2.0/ubuntu2004/devel/cudnn8/Dockerfile
 ARG nvidia_cudnn_version
 ENV NVIDIA_CUDNN_VERSION=${nvidia_cudnn_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -83,7 +83,7 @@ RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.
 # Add the package keys.
 RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
 
-# Install the 'ros-melodic-desktop-full' packages (including ROS, Rqt, Rviz, and more).
+# Install the 'ros-noetic-desktop-full' packages (including ROS, Rqt, Rviz, and more).
 ARG ros_desktop_version
 ENV ROS_DESKTOP_VERSION=${ros_desktop_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
