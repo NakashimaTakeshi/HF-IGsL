@@ -185,7 +185,7 @@ if __name__ == '__main__':
     # receive args
     base_link = 'base_link'
     cmd_vel = 'cmd_vel'
-    world = 'Small_house'
+    world = 'aws_robomaker_small_house_world'
     
     rospy.init_node('replay_scenario')
     # print "waiting"
