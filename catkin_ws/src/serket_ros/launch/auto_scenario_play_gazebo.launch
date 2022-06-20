@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <node name="auto_scenario_play_gazebo" pkg="serket_ros" type="auto_scenario_play_gazebo.py" cwd="node" output="screen"/>
+</launch>
