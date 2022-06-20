@@ -18,17 +18,17 @@ from nav_msgs.msg import Odometry
 
 
 class ReplayScenario():
-    def __init__(self):
-        self.pub = rospy.Publisher('tb3_0/cmd_vel', Twist, queue_size=1)
+    def __init__(self, cmd_vel):
+        self.pub = rospy.Publisher(cmd_vel, Twist, queue_size=1)
         # self.pub2 = rospy.Publisher('speech_to_text', std_msgs.msg.String, queue_size=10) ## queue size is not important for sending just one messeage.
         # self.srv = rospy.ServiceProxy('rgiro_spco2_slam/spcospeech',spco_speech)
-        # self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction) 
+        # self.client = actionlib.SimpleActionClient('move_base'vel MoveBaseAction) 
         # self.client.wait_for_server()
         self.state = "phase1"
  
-    def reading_scenario(self): 
+    def reading_scenario(self, world): 
         self.scenario = []
-        for line in open( './SpCo2_scenario_in_gazebo.csv', 'r'):
+        for line in open( '../waypoints/' + world + '_waypoints_in_gazebo.csv', 'r'):
             readitems = line[:-1].split(',')
             if not (readitems[0].startswith('#') or line==('\n')):
                 self.scenario.append( readitems )
@@ -128,11 +128,11 @@ class ReplayScenario():
 
 
 
-def print_current_location():
+def print_current_location(base_link):
     now = rospy.Time.now()
-    listener.waitForTransform("map", "tb3_0/base_link", now, rospy.Duration(4.0))
+    listener.waitForTransform("map", base_link, now, rospy.Duration(4.0))
     # Get the current position in map coordinate system from tf
-    position, quaternion = listener.lookupTransform("map", "tb3_0/base_link", now)
+    position, quaternion = listener.lookupTransform("map", base_link, now)
     print "base_link",position, quaternion
     current_position = rospy.wait_for_message('tracker', Odometry)
     print "position_in_gazebo",current_position.pose.pose
@@ -163,10 +163,10 @@ def goal_pose(pose):
 def wait_to_reaching(goal): 
     while True:
         now = rospy.Time.now()
-        listener.waitForTransform("map", "tb3_0/base_link", now, rospy.Duration(4.0))
+        listener.waitForTransform("map", "tb3_1/base_link", now, rospy.Duration(4.0))
 
         # Get the current position in map coordinate system from tf
-        position, quaternion = listener.lookupTransform("map", "tb3_0/base_link", now)
+        position, quaternion = listener.lookupTransform("map", "tb3_1/base_link", now)
         # When a robot comes within 0.01 meter around and 0.01 radians(0.3degree) the waypoint goal, and issue the next waypoint.
         #print math.sqrt((position[0]-goal.target_pose.pose.position.x)**2 + (position[1]-goal.target_pose.pose.position.y)**2)
         #print 2 * ( math.atan(quaternion[2]/quaternion[3])-math.atan(goal.target_pose.pose.orientation.z/goal.target_pose.pose.orientation.w))
@@ -182,6 +182,11 @@ def wait_to_reaching(goal):
     return True
 
 if __name__ == '__main__':
+    # receive args
+    base_link = 'base_link'
+    cmd_vel = 'cmd_vel'
+    world = 'Small_house'
+    
     rospy.init_node('replay_scenario')
     # print "waiting"
     dammy_time = rospy.Time.now()#time.time()
@@ -189,12 +194,12 @@ if __name__ == '__main__':
         dammy_time = rospy.Time.now()
     # print "b"
     listener = tf.TransformListener()
-    listener.waitForTransform("map", "tb3_0/base_link", rospy.Time(), rospy.Duration(4.0))
+    listener.waitForTransform("map", base_link, rospy.Time(), rospy.Duration(4.0))
 
     # print "c"
-    play1 = ReplayScenario()
+    play1 = ReplayScenario(cmd_vel)
     # print "d"    
-    play1.reading_scenario()
+    play1.reading_scenario(world)
     # print "e"
     print play1.scenario
     # print "f"
@@ -227,7 +232,7 @@ if __name__ == '__main__':
             while not(play1.pub_cmd_vel(float(teaching[1]),float(teaching[2]),float(teaching[3]),float(teaching[4]),float(teaching[5]))):
                 rospy.sleep(0.00001)
             print "finish moving"
-            print_current_location()
+            print_current_location(base_link)
 
         else:
             print "no comand error"
