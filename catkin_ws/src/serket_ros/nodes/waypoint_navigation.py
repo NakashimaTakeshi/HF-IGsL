@@ -28,7 +28,7 @@ class ReplayScenario():
  
     def reading_scenario(self, world): 
         self.scenario = []
-        for line in open( '../waypoints/' + world + '_waypoints_in_gazebo.csv', 'r'):
+        for line in open( '../waypoints/' + world + '.csv', 'r'):
             readitems = line[:-1].split(',')
             if not (readitems[0].startswith('#') or line==('\n')):
                 self.scenario.append( readitems )
