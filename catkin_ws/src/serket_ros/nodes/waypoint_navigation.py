@@ -36,7 +36,7 @@ class ReplayScenario():
     def pub_cmd_vel(self,target_position_x,target_position_y,target_position_theta,linear_speed,angular_speed):
         ## Read the coordinates of the robot in the gazebo world.
         current_position = rospy.wait_for_message('tracker', Odometry)
-        print current_position
+        print(current_position)
 
         ## allowable pose error.
         error_distance = 0.05
@@ -55,39 +55,33 @@ class ReplayScenario():
 
         delta_orientation = math.radians(target_position_theta) - current_orientation[2]
         
-        print self.state," START "
-        print "----------------- Phase 1 -----------------"
-        print "target_position(x,y):",'{:.2f}'.format(target_position_x),target_position_y
-        print "current_position(x,y):",'{:.2f}'.format(current_position.pose.pose.position.x),'{:.2f}'.format(current_position.pose.pose.position.y)
-        # print "delta_direction mod",delta_direction % (2 * math.pi)
-        print "delta_distance:",'{:.2f}'.format(delta_distance),"  <  ",error_distance,"m"
-        print "direction:",'{:.2f}'.format(direction),"[rad.]",'{:.2f}'.format(math.degrees(direction)),"[deg.]"
-        print "current_orientation:",'{:.2f}'.format(current_orientation[2]),"[rad.]",'{:.2f}'.format(math.degrees(current_orientation[2])),"[deg.]"
-        print "delta_direction:",'{:.2f}'.format(math.degrees(delta_direction)),"  <  ",'{:.2f}'.format(math.degrees(error_direction)),"[deg.]"
-        print " "
-        print "----------------- Phase 2 -----------------"
-        print "target_orientation:",'{:.2f}'.format(math.radians(target_position_theta)),"[rad.]",target_position_theta,"[deg.]"
-        print "current_orientation:",'{:.2f}'.format(current_orientation[2]),"[rad.]",'{:.2f}'.format(math.degrees(current_orientation[2])),"[deg.]"
-        print "delta_orientation:",'{:.2f}'.format(math.degrees(delta_orientation)),"  <  ",'{:.2f}'.format(math.degrees(error_orientation)),"[deg.]"
-        print " "
-        # print "delta_orientation",delta_orientation
-        # print "orientation:z",current_position.pose.pose.orientation.z
-        # print "orientation:w",current_position.pose.pose.orientation.w
-        #print "orientation:theta",current_orientation[2]
-        # print "target_orientation:theta-DGREES",target_position_theta
+        print('{} START'.format(self.state))
+        print("----------------- Phase 1 -----------------")
+        print("target_position(x,y):" + '{:.2f} {:.2f}'.format(target_position_x, target_position_y))
+        print("current_position(x,y):" + '{:.2f} {:.2f}'.format(current_position.pose.pose.position.x, current_position.pose.pose.position.y))
+        print("delta_distance" + '{:.2f}'.format(delta_distance) + " < " + error_distance + "m")
+        print("direction:"+'{:.2f}'.format(direction)+"[rad.]"+'{:.2f}'.format(math.degrees(direction))+"[deg.]")
+        print("current_orientation:"+'{:.2f}'.format(current_orientation[2])+"[rad.]"+'{:.2f}'.format(math.degrees(current_orientation[2]))+"[deg.]")
+        print("delta_direction:"+'{:.2f}'.format(math.degrees(delta_direction))+"  <  "+'{:.2f}'.format(math.degrees(error_direction))+"[deg.]")
+        print(" ")
+        print("----------------- Phase 2 -----------------")
+        print("target_orientation:"+'{:.2f}'.format(math.radians(target_position_theta))+"[rad.]"+target_position_theta+"[deg.]")
+        print("current_orientation:"+'{:.2f}'.format(current_orientation[2])+"[rad.]"+'{:.2f}'.format(math.degrees(current_orientation[2]))+"[deg.]")
+        print("delta_orientation:"+'{:.2f}'.format(math.degrees(delta_orientation))+"  <  "+'{:.2f}'.format(math.degrees(error_orientation))+"[deg.]")
+        print(" ")
 
 
         if((delta_direction  % (2 * math.pi)) <= math.pi ):
             delta_direction = delta_direction  % (2 * math.pi)
         else:
             delta_direction = (delta_direction  % (2 * math.pi)) - 2 * math.pi
-        print "delta_direction:",'{:.2f}'.format(delta_direction),"[rad.]",'{:.2f}'.format(math.degrees(delta_direction)),"[deg.]"
+        print("delta_direction:"+'{:.2f}'.format(delta_direction)+"[rad.]"+'{:.2f}'.format(math.degrees(delta_direction))+"[deg.]")
 
         if(( delta_orientation  % (2 * math.pi)) <= math.pi ):
             delta_orientation = delta_orientation  % (2 * math.pi)
         else:
             delta_orientation = (delta_orientation  % (2 * math.pi)) - 2 * math.pi
-        print "delta_orientation",'{:.2f}'.format(delta_orientation),"[rad.]",'{:.2f}'.format(math.degrees(delta_orientation)),"[deg.]"
+        print("delta_orientation"+'{:.2f}'.format(delta_orientation)+"[rad.]"+'{:.2f}'.format(math.degrees(delta_orientation))+"[deg.]")
 
         # Calculate delta_distance, delta_direction and  delta_orientation.
         cmd_velocity = Twist()
@@ -101,12 +95,12 @@ class ReplayScenario():
                 if(abs(delta_distance) <= error_distance * 30) :linear_speed = linear_speed * delta_distance / (error_distance * 30)
                 # cmd_velocity.angular.z = 0
                 cmd_velocity.angular.z =  angular_speed * delta_direction / error_direction * math.pi / 180.0
-                print "delta_direction / error_direction ",delta_direction / error_direction 
+                print("delta_direction / error_direction "+delta_direction / error_direction)
                 cmd_velocity.linear.x = linear_speed
 
             self.pub.publish(cmd_velocity)
             self.state = "phases1"
-            print "cmd_velocity:Phase1",cmd_velocity
+            print("cmd_velocity:Phase1"+cmd_velocity)
 
         else:
             if(abs(delta_orientation) >= error_orientation):
@@ -116,13 +110,13 @@ class ReplayScenario():
                 cmd_velocity.angular.z = 0
                 cmd_velocity.linear.x = 0
                 self.pub.publish(cmd_velocity)
-                print "cmd_velocity:Phase3",cmd_velocity
+                print("cmd_velocity:Phase3"+cmd_velocity)
                 return True
 
             # if abs(delta_orientation) <= error_orientation * 5 :cmd_velocity.angular.z = cmd_velocity.angular.z / 5
             self.pub.publish(cmd_velocity)
             self.state = "phases2"
-            print "cmd_velocity:Phase2",cmd_velocity
+            print("cmd_velocity:Phase2"+cmd_velocity)
         
         return False
 
@@ -133,9 +127,9 @@ def print_current_location(base_link):
     listener.waitForTransform("map", base_link, now, rospy.Duration(4.0))
     # Get the current position in map coordinate system from tf
     position, quaternion = listener.lookupTransform("map", base_link, now)
-    print "base_link",position, quaternion
+    print("base_link"+position+quaternion)
     current_position = rospy.wait_for_message('tracker', Odometry)
-    print "position_in_gazebo",current_position.pose.pose
+    print("position_in_gazebo"+current_position.pose.pose)
 
     # filepath="/root/TurtleBot3/catkin_ws/src/serket_ros/output"
     # with open(filepath,"a") as f:
@@ -172,7 +166,7 @@ def wait_to_reaching(goal):
         #print 2 * ( math.atan(quaternion[2]/quaternion[3])-math.atan(goal.target_pose.pose.orientation.z/goal.target_pose.pose.orientation.w))
         if(math.sqrt((position[0]-goal.target_pose.pose.position.x)**2 + (position[1]-goal.target_pose.pose.position.y)**2 ) <= 0.05)\
             and(2*(math.atan(quaternion[2]/quaternion[3])-math.atan(goal.target_pose.pose.orientation.z/goal.target_pose.pose.orientation.w)) <= 0.1):
-            print "reaching"
+            print("reaching")
             rospy.sleep(2)
             break
 
@@ -201,7 +195,7 @@ if __name__ == '__main__':
     # print "d"    
     play1.reading_scenario(world)
     # print "e"
-    print play1.scenario
+    print(play1.scenario)
     # print "f"
     rospy.sleep(2)
     calculate_time = 1
@@ -222,7 +216,7 @@ if __name__ == '__main__':
 
                 # play1.pub2.publish(str_msg)
                 # print_current_location()
-                print "next!"
+                print("next!")
                 # play1.client.send_goal(goal)
                 # rospy.sleep(1.5 * calculate_time + 2)
                 # calculate_time = calculate_time + 1
@@ -231,10 +225,10 @@ if __name__ == '__main__':
         elif(teaching[0])=="move":
             while not(play1.pub_cmd_vel(float(teaching[1]),float(teaching[2]),float(teaching[3]),float(teaching[4]),float(teaching[5]))):
                 rospy.sleep(0.00001)
-            print "finish moving"
+            print("finish moving")
             print_current_location(base_link)
 
         else:
-            print "no comand error"
+            print("no comand error")
             rospy.sleep(1)
             break
