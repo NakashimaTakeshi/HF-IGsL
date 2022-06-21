@@ -71,7 +71,8 @@ case "$2" in
   ( "" )
   docker exec -i -t ${DOCKER_CONTAINER} bash
   ;;
-  ( "serket_ros_default.launch" | \
+  ( "serket_ros_categorization_default.launch" | \
+    "serket_ros_navigation_default.launch" | \
     "turtlebot3_robot_bringup_multi.launch" | \
     "turtlebot3_robot_rviz_multi.launch" | \
     "turtlebot3_simulation_gazebo_default.launch" | \
