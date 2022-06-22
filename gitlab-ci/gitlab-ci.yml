@@ -1,11 +1,7 @@
-# Documentation for configuration of GitLab CI jobs with '.gitlab-ci.yml':
+# Documentation for configuration of GitLab CI jobs with 'gitlab-ci.yml':
 # https://docs.gitlab.com/ee/ci/yaml/
-# https://gitlab.com/help/ci/docker/using_docker_build.md
-
-# This GitLab CI configuration makes use of a persistent data volume in the GitLab CI Docker executor.
-# Thus it will not work with multiple distributed runners such as the GitLab.com shared runners.
-# https://docs.gitlab.com/runner/executors/docker.html#the-builds-and-cache-storage
-# https://docs.gitlab.com/ee/ci/caching/index.html
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#limitations-of-docker-in-docker
 
 # See 'SETUP-GITLAB-RUNNER.bash' for the runner configuration details.
 
@@ -15,124 +11,30 @@
 # https://docs.gitlab.com/ee/ci/yaml/#stage
 
 stages:
-  - build-docker-image
-  - build-catkin-workspace
-  - release-docker-image
+  - build-stage
+  - test-stage
+  - deploy-stage
 
 ################################################################################
 
-# Define YAML anchors to avoid duplicating code across the configuration file.
-# https://docs.gitlab.com/ee/ci/yaml/#anchors
+# Define the common configuration of all jobs.
 
-.ci_docker:
-  # Pull the custom Docker base image defined in '../docker/ci-docker/Dockerfile'.
-  image: ${CI_REGISTRY_IMAGE}/ci-docker:latest
-  services:
-    # Make sure that Docker-in-Docker is available on the GitLab runner.
-    # https://gitlab.com/help/ci/docker/using_docker_build.md#use-docker-in-docker-executor
-    - docker:dind
-  before_script:
-    # Display information for debug purpose.
-    - date -Iseconds
-    - ls -alh /data/
-    - docker images
-    - docker ps -a
-  after_script:
-    # Display information for debug purpose.
-    - ls -alh /data/
-    - docker images
-    - docker ps -a
-    - date -Iseconds
-
-#################################################################################
-
-# Manually build the 'hsr-devel' Docker image.
-
-build-docker-image:
-  extends: .ci_docker
-  stage: build-docker-image
-  when: manual
-  script:
-    - ./BUILD-DOCKER-IMAGE.bash gitlab-ci
-    # Get the commit hash of the built Dockerfile for backup.
-    - DOCKER_FILE_HASH=`git log -n 1 --no-merges --pretty=format:%h ./docker/hsr-devel/Dockerfile`
-    # Save the Docker image into a persistent data volume in the GitLab CI Docker executor.
-    # In addition, request file lock to avoid race conditions.
-    - ./gitlab-ci/scripts/lock-shared-resource.bash createOrWait ${DOCKER_FILE_HASH}
-    - docker save -o /data/docker-image-${DOCKER_FILE_HASH}.tar ${CI_REGISTRY_IMAGE}/hsr-devel:latest
-    - ./gitlab-ci/scripts/lock-shared-resource.bash release ${DOCKER_FILE_HASH}
+# Use Docker-in-Docker with TLS disabled in the Docker executor.
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-disabled-in-the-docker-executor
+image: docker:20.10.11
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+services:
+  - docker:20.10.11-dind
+before_script:
+  - docker info
 
 ################################################################################
 
-# Build the Catkin workspace inside a Docker container instance of the 'hsr-devel' image.
+# Build the Catkin workspace inside a Docker container instance of the 'turtlebot3-devel' image.
 
-build-catkin-workspace:
-  extends: .ci_docker
-  stage: build-catkin-workspace
+build-catkin-workspace-job:
+  stage: build-stage
   script:
-    # Get the currently used Dockerfile hash.
-    - DOCKER_FILE_HASH=`git log -n 1 --no-merges --pretty=format:%h ./docker/hsr-devel/Dockerfile`
-    # Load the Docker image from the data volume of the GitLab CI Docker executor.
-    - echo "Loading /data/docker-image-${DOCKER_FILE_HASH}.tar into Docker..."
-    - docker load -i /data/docker-image-${DOCKER_FILE_HASH}.tar
-    # Touch the file to update the creation timestamp and mark as in use (LRU).
-    - touch /data/docker-image-${DOCKER_FILE_HASH}.tar
-    # Create a shared directory between the containers of the Docker executor and the project workspace in '/builds/naripa/shared/'.
-    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor
-    # https://gitlab.com/gitlab-org/gitlab-ce/issues/41227
-    - 'export SHARED_PATH="$(dirname ${CI_PROJECT_DIR})/shared"'
-    - mkdir -p ${SHARED_PATH}/
-    # Copy the content of the project workspace to the shared directory.
-    - cp -r ./ ${SHARED_PATH}/
-    # Build the Catkin workspace inside the Docker container of the project workspace that is mapped to the shared directory.
-    - docker run
-      -e CI=${CI}
-      -v ${SHARED_PATH}/:/root/HSR/
-      ${CI_REGISTRY_IMAGE}/hsr-devel:latest /root/HSR/docker/hsr-devel/scripts/initialize-catkin-workspace.bash
-    # Copy the content of the shared directory back to the project workspace.
-    # Note: This extra step is required due to some path limitations with the GitLab CI 'artifacts' command.
-    - cp -r ${SHARED_PATH}/. ./
-  # Save the build result to pass it to the next jobs using the GitLab CI 'dependencies' command.
-  artifacts:
-    name: ${CI_COMMIT_SHA}
-    paths:
-      # Note: Only paths relative to the project workspace can be used, thus '/builds/naripa/shared/' is not permitted.
-      # https://docs.gitlab.com/ee/ci/yaml/#artifacts
-      # https://gitlab.com/gitlab-org/gitlab-ce/issues/15530
-      - ./catkin_ws/.catkin_workspace
-      - ./catkin_ws/build/
-      - ./catkin_ws/devel/
-      - ./catkin_ws/install/
-      - ./catkin_ws/src/CMakeLists.txt
-    expire_in: 1 week
-
-################################################################################
-
-# Release the 'hsr-devel' Docker image as the new default when all the jobs have passed.
-
-release-docker-image:
-  extends: .ci_docker
-  stage: release-docker-image
-  retry: 2
-  # Only push the image if on 'devel' branch and on changes and on success.
-  # However, this rule is ignored during new branch or tag creation.
-  # https://docs.gitlab.com/ee/ci/yaml/#complex-rule-clauses
-  # Note: './relative/path' does not work with 'changes'.
-  # Note: '${VAR}' does not work with 'if'.
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "devel"'
-      changes:
-      - docker/hsr-devel/Dockerfile
-      when: on_success
-  script:
-    # Get the commit hash of the built Dockerfile for backup.
-    - DOCKER_FILE_HASH=`git log -n 1 --no-merges --pretty=format:%h ./docker/hsr-devel/Dockerfile`
-    # Load the Docker image from the persistent data volume in the GitLab CI Docker executor.
-    - docker load -i /data/docker-image-${DOCKER_FILE_HASH}.tar
-    # Tag the latest successfully tested Docker image with an explicit commit hash for tracing.
-    - docker tag ${CI_REGISTRY_IMAGE}/hsr-devel:latest ${CI_REGISTRY_IMAGE}/hsr-devel:${DOCKER_FILE_HASH}
-    # Push the Docker image as 'latest' for new default, and as '${DOCKER_FILE_HASH}' for backup, into the GitLab registry.
-    # https://gitlab.com/help/user/packages/container_registry/index.md#build-and-push-images-using-gitlab-cicd
-    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker push ${CI_REGISTRY_IMAGE}/hsr-devel:${DOCKER_FILE_HASH}
-    - docker push ${CI_REGISTRY_IMAGE}/hsr-devel:latest
+    - docker run -e CI=${CI} ${CI_REGISTRY_IMAGE}/turtlebot3-devel:latest /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash

@@ -108,7 +108,6 @@ sudo gitlab-runner register \
   --executor "docker" \
   --docker-privileged=true \
   --docker-image "alpine:latest" \
-  --docker-volumes "/opt/gitlab-runner/:/data/:rw" \
   --env "DOCKER_DRIVER=overlay2" \
   --env "DOCKER_TLS_CERTDIR=" \
   --description "${HOSTNAME}-${RANDOM}"
@@ -117,7 +116,8 @@ sudo gitlab-runner register \
 sudo killall -SIGHUP gitlab-runner
 
 # Make sure that the OverlayFS driver is loaded on boot.
-# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver-for-every-project
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#limitations-of-docker-in-docker
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
 sudo sh -c \
   'grep -q "overlay" /etc/modules \
   || echo "\n# Make sure OverlayFS driver is loaded on boot.\noverlay" >> /etc/modules'
