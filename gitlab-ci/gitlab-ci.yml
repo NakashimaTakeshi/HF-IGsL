@@ -37,6 +37,7 @@ before_script:
 build-catkin-workspace-job:
   stage: build-stage
   script:
+    - docker login -u "gitlab+deploy-token-481366" -p "qncpjW8Aqrhs2nR6zQdZ" registry.gitlab.com/emlab/turtlebot3
     - docker run -e CI=${CI} ${CI_REGISTRY_IMAGE}/turtlebot3-devel:latest /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
 
 ################################################################################
