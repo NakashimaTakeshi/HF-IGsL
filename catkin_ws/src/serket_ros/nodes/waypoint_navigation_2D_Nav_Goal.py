@@ -18,45 +18,53 @@ def main():
     #Move base goal
     action_topic="/move_base"
     goal_position_topic="/debug/goal_pose"
+    world = "aws_robomaker_small_house_world"
 
-    pose = []
-    pose.append([-2.2, -2.9956976240955777, 0.0])
-    pose.append([360.0])
-
-    # Set "target_pose"
-    target_pose = set_target_pose(pose)
+    poses = read_pose_from_csv_file(world)
 
     # Set action client
     cli = actionlib.SimpleActionClient(action_topic, MoveBaseAction)
-    rospy.sleep(1)
     # Set "action_goal"
     action_goal = MoveBaseGoal()
-    action_goal.target_pose = target_pose
-
     # Set publisher node
     goal_point_pub = rospy.Publisher(goal_position_topic, geometry_msgs.PoseStamped, queue_size=10)
-    goal_point_pub.publish(target_pose)
-    
-    # Send action goal
-    cli.send_goal(action_goal)
-    cli.wait_for_result()
-    
-    if cli.get_state() == actionlib_msgs.GoalStatus.SUCCEEDED:
-        print("move succeeded.")
-        return "succeeded"
-    else:
-        print("move failed.")
-        cli.cancel_all_goals()
-        return "failed"
+
+    for pose in poses:
+        # Set "target_pose"
+        target_pose = set_target_pose(pose)
+        rospy.sleep(1)
+        action_goal.target_pose = target_pose
+
+        # Publish "target_pose"
+        goal_point_pub.publish(target_pose)
+
+        # Send action goal
+        cli.send_goal(action_goal)
+        cli.wait_for_result()
+
+        if cli.get_state() == actionlib_msgs.GoalStatus.SUCCEEDED:
+            print("move succeeded. " + "current pose: " + str(pose))
+        else:
+            print("move failed.")
+            cli.cancel_all_goals()
+
+def read_pose_from_csv_file(world): 
+    poses = []
+    for line in open( '../waypoints/' + world + '.csv', 'r'):
+        pose = line[:-1].split(',')
+        if not (pose[0].startswith('#') or line==('\n')):
+            pose_float = [float(item) for item in pose]
+            poses.append(pose_float)
+    return poses;
 
 def set_target_pose(pose): 
     target_pose = geometry_msgs.PoseStamped()
     target_pose.header.frame_id = 'map'
     target_pose.header.stamp = rospy.Time.now()
-    target_pose.pose.position.x = pose[0][0]
-    target_pose.pose.position.y = pose[0][1]
-    target_pose.pose.position.z = pose[0][2]
-    target_pose.pose.orientation = euler_to_quaternion(pose[1][0])
+    target_pose.pose.position.x = pose[0]
+    target_pose.pose.position.y = pose[1]
+    target_pose.pose.position.z = pose[2]
+    target_pose.pose.orientation = euler_to_quaternion(pose[3])
     return target_pose
 
 def euler_to_quaternion(orientation_z):
