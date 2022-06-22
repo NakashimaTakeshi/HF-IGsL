@@ -38,3 +38,23 @@ build-catkin-workspace-job:
   stage: build-stage
   script:
     - docker run -e CI=${CI} ${CI_REGISTRY_IMAGE}/turtlebot3-devel:latest /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
+
+################################################################################
+
+run-unit-test1-job:
+  stage: test-stage
+  script:
+    - echo "Running unit test 1... Completed!"
+
+run-unit-test2-job:
+  stage: test-stage
+  script:
+    - echo "Running unit test 2... Completed!"
+
+
+################################################################################
+
+deploy-test-results-job:
+  stage: deploy-stage
+  script:
+    - echo "Deploying test results... Completed!"
