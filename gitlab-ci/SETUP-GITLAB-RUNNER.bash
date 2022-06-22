@@ -6,7 +6,7 @@
 #
 # Usage: bash SETUP-GITLAB-RUNNER.bash <gitlab-runner-registration-token>
 #
-# <gitlab-runner-registration-token>: To be retrieved from https://gitlab.com/emlab/HSR/-/settings/ci_cd.
+# <gitlab-runner-registration-token>: To be retrieved from https://gitlab.com/ > Project > Settings > CI/CD > Runners.
 
 ################################################################################
 
@@ -19,8 +19,9 @@ fi
 ################################################################################
 
 # Pin the versions of the core tools and packages for improved stability.
-DOCKER_VERSION="5:18.09.3~3-0~ubuntu-$(lsb_release -cs)"
-GITLAB_RUNNER_VERSION="11.8.0"
+CONTAINERD_VERSION="1.4.12-1"
+DOCKER_CE_VERSION="5:20.10.11~3-0~ubuntu-focal"
+GITLAB_RUNNER_VERSION="15.0.0"
 
 ################################################################################
 
@@ -32,7 +33,7 @@ sudo apt-get install -y \
 ################################################################################
 
 # Install Docker Community Edition.
-# https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
+# https://docs.docker.com/engine/install/ubuntu/
 
 # Remove the older versions of Docker if any.
 sudo apt-get remove \
@@ -42,7 +43,7 @@ sudo apt-get remove \
   containerd \
   runc
 
-# Gather the required packages for the Docker installation.
+# Gather the required packages for Docker installation.
 sudo apt-get update
 sudo apt-get install -y \
   apt-transport-https \
@@ -56,15 +57,15 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
 
 # Add the Docker repository.
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 
-# Install Docker version 'DOCKER_VERSION'.
+# Install Docker version 'DOCKER_CE_VERSION'.
 # Any existing installation will be replaced.
 sudo apt-get update
 sudo apt-get install -y \
-  docker-ce=${DOCKER_VERSION} --allow-downgrades \
-  docker-ce-cli=${DOCKER_VERSION} \
-  containerd.io
+  docker-ce=${DOCKER_CE_VERSION} --allow-downgrades \
+  docker-ce-cli=${DOCKER_CE_VERSION} \
+  containerd.io=${CONTAINERD_VERSION}
 
 # Test the Docker installation after making sure that the service is running.
 sudo service docker stop
@@ -88,7 +89,7 @@ sudo usermod -a -G docker ${USER}
 # https://docs.gitlab.com/runner/install/linux-repository.html
 
 # Add the GitLab official repository.
-curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash
 
 # Install GitLab Runner version 'GITLAB_RUNNER_VERSION'.
 sudo apt-get update
@@ -116,7 +117,7 @@ sudo gitlab-runner register \
 sudo killall -SIGHUP gitlab-runner
 
 # Make sure that the OverlayFS driver is loaded on boot.
-# https://docs.gitlab.com/ce/ci/docker/using_docker_build.html#use-driver-for-every-project
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver-for-every-project
 sudo sh -c \
   'grep -q "overlay" /etc/modules \
   || echo "\n# Make sure OverlayFS driver is loaded on boot.\noverlay" >> /etc/modules'
