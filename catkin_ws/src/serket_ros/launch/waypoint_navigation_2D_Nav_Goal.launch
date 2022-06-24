@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<launch>
-  <node name="waypoint_navigation_2D_Nav_Goal" pkg="serket_ros" type="waypoint_navigation_2D_Nav_Goal.py" cwd="node" output="screen"/>
-</launch>
