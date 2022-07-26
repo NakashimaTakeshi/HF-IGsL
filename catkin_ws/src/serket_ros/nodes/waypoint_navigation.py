@@ -40,7 +40,7 @@ class WaypointNavigation():
         self.cli.wait_for_result()
 
         if self.cli.get_state() == actionlib_msgs.GoalStatus.SUCCEEDED:
-            rospy.loginfo("Move succeeded. " + "current pose: " + str(pose) + ".")
+            rospy.loginfo("Move succeeded. ")
         else:
             rospy.logerr("Move failed. " + "failed pose: " + str(pose) + ".")
 
@@ -61,7 +61,7 @@ class WaypointNavigation():
     def generate_multi_pose_from_each_area(self, pose, number):
         poses = []
         for i in range(number):
-            tmp_pose = pose + np.random.randn(1, 4) * 0.4
+            tmp_pose = pose + np.random.randn(1, 4) * 0.5
             tmp_pose[0][2] = 0.0
             # rospy.loginfo("The multi pose of the current area is " + str(tmp_pose[0]) + ".")
             poses.append(tmp_pose[0])
