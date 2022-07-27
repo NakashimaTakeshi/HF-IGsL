@@ -8,7 +8,11 @@
   <arg name="z_pos" default="0.0"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" value="$(find aws_robomaker_bookstore_world)/worlds/bookstore.world"/> -->
+    <!-- <arg name="world_name" value="$(find aws_robomaker_hospital_world)/worlds/hospital.world"/> -->
+    <!-- <arg name="world_name" value="$(find aws_robomaker_racetrack_world)/worlds/racetrack_day.world"/> -->
     <arg name="world_name" value="$(find aws_robomaker_small_house_world)/worlds/small_house.world"/>
+    <!-- <arg name="world_name" value="$(find aws_robomaker_small_warehouse_world)/worlds/no_roof_small_warehouse.world"/> -->
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
@@ -21,7 +25,11 @@
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_bookstore_world/map.yaml"/> -->
+    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_hospital_world/map.yaml"/> -->
+    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_racetrack_world/map.yaml"/> -->
     <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_small_house_world/map.yaml"/>
+    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_small_warehouse_world/map.yaml"/> -->
     <arg name="open_rviz" default="false"/>
     <arg name="move_forward_only" default="false"/>
   </include>
