@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <launch>
-  <node name="place_categorization" pkg="serket_ros" type="place_categorization.py" cwd="node" output="screen"/>
+  <node name="place_categorization" pkg="serket_ros" type="place_categorization.py" cwd="node" output="screen" args="aws_robomaker_small_house_world"/>
 </launch>
