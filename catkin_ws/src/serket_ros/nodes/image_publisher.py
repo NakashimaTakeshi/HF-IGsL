@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals
 import rospy
 from sensor_msgs.msg import Image
 import cv2
@@ -19,7 +18,7 @@ def main():
         msg = bridge.cv2_to_imgmsg(img, encoding=str("bgr8"))
 
 
-        raw_input( "Hit enter to publish." )
+        input( "Hit enter to publish." )
         pub.publish( msg )
         print( "Published." )
 

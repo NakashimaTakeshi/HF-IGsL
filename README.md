@@ -6,6 +6,29 @@ This project aims to develop a shared platform for collaborative research and de
 
 [[_TOC_]]
 
+## External Resources
+
+Consult the links below to access external resources related to the TurtleBot3 project.
+
+### Official Websites
+
+*   TurtleBot3 official manual: [https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/](https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/).
+*   TurtleBot3 GitHub repository: [https://github.com/ROBOTIS-GIT/turtlebot3](https://github.com/ROBOTIS-GIT/turtlebot3).
+*   TurtleBot3 ROS wiki: [http://wiki.ros.org/turtlebot3](http://wiki.ros.org/turtlebot3).
+
+### Related Publications
+
+Summaries of the development history, requirements, vision, and goals of the SDE have been published in the following papers:
+
+*   L. El Hafi, G. A. Garcia Ricardez, F. von Drigalski, Y. Inoue, M. Yamamoto, and T. Yamamoto, "**Software Development Environment for Collaborative Research Workflow in Robotic System Integration**", in *RSJ Advanced Robotics (AR), Special Issue on Software Framework for Robot System Integration*, vol. 36, no. 11, pp. 533-547, Jun. 3, 2022. DOI: [https://doi.org/10.1080/01691864.2022.2068353](https://doi.org/10.1080/01691864.2022.2068353)
+*   L. El Hafi and T. Yamamoto, "**Toward the Public Release of a Software Development Environment for Human Support Robots**", in *Proceedings of 2020 Annual Conference of the Robotics Society of Japan (RSJ 2020)*, ref. RSJ2020AC3E1-01, pp. 1-2, (Virtual), Oct. 9, 2020.
+*   L. El Hafi, S. Matsuzaki, S. Itadera, and T. Yamamoto, "**Deployment of a Containerized Software Development Environment for Human Support Robots**", in *Proceedings of 2019 Annual Conference of the Robotics Society of Japan (RSJ 2019)*, ref. RSJ2019AC3K1-03, pp. 1-2, Tokyo, Japan, Sep. 3, 2019.
+*   L. El Hafi, Y. Hagiwara, and T. Taniguchi, "**Abstraction-Rich Workflow for Agile Collaborative Development and Deployment of Robotic Solutions**", in *Proceedings of 2018 Annual Conference of the Robotics Society of Japan (RSJ 2018)*, ref. RSJ2018AC3D3-02, pp. 1-3, Kasugai, Japan, Sep. 5, 2018.
+
+> **Note:**
+  Cite these papers if you are using the SDE to implement your research!
+  It is crucially important to desseminate the SDE accros the robotics research community.
+
 ## Contribution Guidelines
 
 Carefully read the contribution guidelines before pushing new code or requesting a merge.
@@ -46,7 +69,7 @@ Follow this step-by-step guide to perform the initial setup of the TurtleBot3 pr
 
 *   A [Robotis TurtleBot3](https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/) robot for full operability.
     If not, the TurtleBot3 simulator provides support for basic operations.
-*   An Nvidia GPU capable of running CUDA 10.0 (compute capability >= 3.0), or newer, to accelerate 3D graphics and deep learning computing.
+*   An Nvidia GPU capable of running CUDA 11.2, or newer, to accelerate 3D graphics and deep learning computing.
 *   A properly configured gitlab.com account linked with your personal SSH key to push contributions to the project repository: https://docs.gitlab.com/ee/ssh/.
 
 ### Step 1: Set up the Development Environment
@@ -239,7 +262,7 @@ Finally, before writing any new code, please make sure to have read the contribu
 
 > **Note:**
   The most important rule is to avoid pushing large binary files (datasets, weights, etc.) in the repository.
-  Instead, you need to provide a link to download all your necessary large binary files from the cloud with `turtlebot3-download-model-data`.
+  Instead, you need to provide a link to download all your necessary large binary files from the cloud with `sde-download-model-data`.
   Ideally, all these files should be centralized in an online storage.
 
 ## Robot Configuration
@@ -263,6 +286,10 @@ You can also bring up the TurtleBot3 robots by executing the following script on
 ```shell
 cd ~/TurtleBot3/ && bash ./BRINGUP-TURTLEBOT3-ROBOT.bash
 ```
+
+> **Note:**
+  Do not, under any circumstance, directly modify the system of the on-board computer of the TurtleBot3 robot.
+  Always use the environment of the development machine to interact with the robot using ROS over the local network.
 
 ## Robot Installation
 

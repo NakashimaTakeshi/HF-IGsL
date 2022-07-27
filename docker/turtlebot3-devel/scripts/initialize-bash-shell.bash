@@ -35,8 +35,8 @@ fi
 ################################################################################
 
 # Source the ROS environment.
-echo "Sourcing the ROS environment from '/opt/ros/melodic/setup.bash'."
-source /opt/ros/melodic/setup.bash
+echo "Sourcing the ROS environment from '/opt/ros/noetic/setup.bash'."
+source /opt/ros/noetic/setup.bash
 
 # Source the Catkin workspace.
 echo "Sourcing the Catkin workspace from '/root/TurtleBot3/catkin_ws/devel/setup.bash'."

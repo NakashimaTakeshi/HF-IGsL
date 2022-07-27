@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function,unicode_literals, absolute_import
 import sys
 sys.path.append("../Serket/")
 
@@ -27,7 +26,7 @@ def main():
 
     n = 0
     while not rospy.is_shutdown():
-        raw_input( "Hit enter to update the integrated model." )
+        input( "Hit enter to update the integrated model." )
         obs1.update()
         print("'obs1' module updated.")
         cnn1.update()
