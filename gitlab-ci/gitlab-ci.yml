@@ -1,0 +1,96 @@
+# Documentation for configuration of GitLab CI jobs with 'gitlab-ci.yml':
+# https://docs.gitlab.com/ee/ci/yaml/
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#limitations-of-docker-in-docker
+
+# See 'SETUP-GITLAB-RUNNER.bash' for the runner configuration details.
+
+################################################################################
+
+# Define the pipeline stages.
+# https://docs.gitlab.com/ee/ci/yaml/#stage
+
+stages:
+  - build-stage
+  - test-stage
+  - deploy-stage
+
+################################################################################
+
+# Define the common configuration of Docker-in-Docker for all jobs.
+
+# Use Docker-in-Docker with TLS disabled in the Docker executor.
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-disabled-in-the-docker-executor
+image: docker:20.10.11
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+services:
+  - docker:20.10.11-dind
+before_script:
+  - docker info
+
+# Create a mount point to share files between the Docker-in-Docker container and the child containers.
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#limitations-of-docker-in-docker
+# https://gitlab.com/gitlab-org/gitlab-foss/-/issues/41227
+variables:
+  MOUNT_POINT: /builds/${CI_PROJECT_PATH}/mnt
+before_script:
+  # Copy the content of the project workspace to the mount point.
+  - mkdir -p ${MOUNT_POINT}/
+  - cp -r ./catkin_ws/ ./docker/ ${MOUNT_POINT}/
+after_script:
+  # Copy the content of the mount point back to the project workspace.
+  # Note: This extra step is required due to some path limitations with the GitLab CI 'artifacts' command.
+  - cp -r ${MOUNT_POINT}/. ./
+
+################################################################################
+
+# Build the Catkin workspace inside a Docker container instance of the 'turtlebot3-devel' image.
+
+build-catkin-workspace-job:
+  stage: build-stage
+  script:
+    # Build the Catkin workspace inside the Docker container of the project workspace that is mapped to the mount point.
+    - docker login -u "gitlab+deploy-token-481366" -p "qncpjW8Aqrhs2nR6zQdZ" registry.gitlab.com/emlab/turtlebot3
+    - docker run
+      -e CI=${CI}
+      -v ${MOUNT_POINT}/:/root/TurtleBot3/
+      ${CI_REGISTRY_IMAGE}/turtlebot3-devel:latest /root/TurtleBot3/docker/turtlebot3-devel/scripts/reset-catkin-workspace.bash
+  # Save the build result to pass it to the next jobs.
+  artifacts:
+    name: ${CI_COMMIT_SHA}
+    paths:
+      # Note: Only paths relative to the project workspace can be used, thus '${MOUNT_POINT}/' is not permitted.
+      # https://docs.gitlab.com/ee/ci/yaml/#artifacts
+      # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/15530
+      - ./catkin_ws/.catkin_tools/
+      - ./catkin_ws/build/
+      - ./catkin_ws/devel/
+      - ./catkin_ws/logs/
+      - ./catkin_ws/CMakeLists.txt
+    expire_in: 1 week
+
+################################################################################
+
+# Run unit tests inside Docker container instances of the 'turtlebot3-devel' image.
+
+run-unit-test1-job:
+  stage: test-stage
+  script:
+    - echo "Running unit test 1... Completed!"
+
+run-unit-test2-job:
+  stage: test-stage
+  script:
+    - echo "Running unit test 2... Completed!"
+
+
+################################################################################
+
+# Deploy results of the unit tests inside a Docker container instance of the 'turtlebot3-devel' image.
+
+deploy-test-results-job:
+  stage: deploy-stage
+  script:
+    - echo "Deploying test results... Completed!"

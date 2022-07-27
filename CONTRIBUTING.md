@@ -61,4 +61,4 @@ Please read the famous post *"[How to Write a Git Commit Message](https://chris.
 *   Always prefer hyphens `-` to underscores `_` except when required by convention, such as in ROS.
 *   Use prefixes to distinguish first-party resources from third-party ones.
     For example, add the prefix `turtlebot3_` to the names of the TurtleBot3-related packages, nodes, topics, and services.
-    The prefixes currently in use include: `rgiro_` (Ritsumeikan Global Innovation Research Organization) and `turtlebot3_` (Robotis TurtleBot3).
+    The prefixes currently in use include: `sde_` (Software Development Environment) and `turtlebot3_` (Robotis TurtleBot3).

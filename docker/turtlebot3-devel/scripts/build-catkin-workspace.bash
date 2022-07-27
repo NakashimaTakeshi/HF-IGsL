@@ -3,7 +3,7 @@
 ################################################################################
 
 # Source the ROS distribution environment.
-source /opt/ros/melodic/setup.bash
+source /opt/ros/noetic/setup.bash
 
 # Build the Catkin workspace.
 cd /root/TurtleBot3/catkin_ws/ && catkin build

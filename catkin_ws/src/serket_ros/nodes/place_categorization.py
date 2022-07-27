@@ -1,7 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function,unicode_literals, absolute_import
 import sys
 sys.path.append("../Serket/")
 
