@@ -80,11 +80,11 @@ class PlaceCategorization ():
 
 def main():
     rospy.init_node( "place_categorization" )
-    waypoint_navigation = waynavi.WaypointNavigation(world="aws_robomaker_bookstore_world", each_area_point_number=10)
-    word_publisher = wordpub.WordPublisher(world="aws_robomaker_bookstore_world")
+    waypoint_navigation = waynavi.WaypointNavigation(world="aws_robomaker_small_house_world", each_area_point_number=10)
+    word_publisher = wordpub.WordPublisher(world="aws_robomaker_small_house_world")
     placeCategorization = PlaceCategorization()
     for i in range(3):
-        poses = waypoint_navigation.read_pose_from_csv_file(world="aws_robomaker_bookstore_world", number=10)
+        poses = waypoint_navigation.read_pose_from_csv_file(world="aws_robomaker_small_house_world", number=10)
         j = 0
         for pose in poses:
             for waypoint in pose:

@@ -167,6 +167,7 @@ ARG python3_pip_version
 ENV PYTHON3_PIP_VERSION=${python3_pip_version}
 RUN pip3 install --upgrade pip==${PYTHON3_PIP_VERSION}
 RUN pip3 install \
+  Janome==0.4.2 \
   matplotlib==3.3.4 \
   numba==0.53.1 \
   scikit-learn==0.24.2
