@@ -37,6 +37,8 @@ variables:
   MOUNT_POINT: /builds/${CI_PROJECT_PATH}/mnt
 before_script:
   # Download all the missing Git submodules inside the project workspace.
+  - apk update
+  - apk add git
   - git submodule update --init --recursive
   # Copy the content of the project workspace to the mount point.
   - mkdir -p ${MOUNT_POINT}/
