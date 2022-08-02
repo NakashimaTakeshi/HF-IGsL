@@ -1,0 +1,91 @@
+world,area,sentences,index
+aws_robomaker_bookstore_world,counter,please pay at this counter,0
+aws_robomaker_bookstore_world,counter,is there room at the counter,0
+aws_robomaker_bookstore_world,counter,where is the information counter,0
+aws_robomaker_bookstore_world,counter,please come to the counter at least an hour before your flight,0
+aws_robomaker_bookstore_world,counter,you can get it at a bookstore,0
+aws_robomaker_bookstore_world,counter,he bought a number of books at the bookstore,0
+aws_robomaker_bookstore_world,counter,he bought an English book at a bookstore,0
+aws_robomaker_bookstore_world,counter,have you finished reading the book I lent you the other day,0
+aws_robomaker_bookstore_world,counter,i want you to return the book I lent you the other day,0
+aws_robomaker_bookstore_world,counter,did you pay for the book,0
+aws_robomaker_bookstore_world,bookshelf,he has a large number of books on his bookshelf,1
+aws_robomaker_bookstore_world,bookshelf,he fixed the bookshelf to the wall,1
+aws_robomaker_bookstore_world,bookshelf,he made her a bookshelf,1
+aws_robomaker_bookstore_world,bookshelf,i have a large number of books on my bookshelf,1
+aws_robomaker_bookstore_world,bookshelf,our living room is sunny,1
+aws_robomaker_bookstore_world,bookshelf,the bookshelf is built in,1
+aws_robomaker_bookstore_world,bookshelf,carry these books back to the bookshelf,1
+aws_robomaker_bookstore_world,bookshelf,my son has read every book on that shelf,1
+aws_robomaker_bookstore_world,bookshelf,the other day I came across a book that you might like,1
+aws_robomaker_bookstore_world,bookshelf,the teacher asked me which book I liked,1
+aws_robomaker_bookstore_world,rest area,they had a rest for a while,2
+aws_robomaker_bookstore_world,rest area,we took a rest for a while,2
+aws_robomaker_bookstore_world,rest area,i want to rest a little because all the homework is finished,2
+aws_robomaker_bookstore_world,rest area,i share a bedroom with my sister,2
+aws_robomaker_bookstore_world,rest area,i felt better after I took a rest,2
+aws_robomaker_bookstore_world,rest area,my grandfather would often read and study at this desk,2
+aws_robomaker_bookstore_world,rest area,i want to take a rest,2
+aws_robomaker_bookstore_world,rest area,may I share this table with you,2
+aws_robomaker_bookstore_world,rest area,it makes me feel cheerful,2
+aws_robomaker_bookstore_world,rest area,some people relax by reading,2
+aws_robomaker_small_house_world,kitchen,i heard something crashing in the kitchen in the middle of the night,0
+aws_robomaker_small_house_world,kitchen,mother is in the kitchen,0
+aws_robomaker_small_house_world,kitchen,every morning she helps her mother to prepare breakfast in the kitchen,0
+aws_robomaker_small_house_world,kitchen,there is a cooking table next to the refrigerator,0
+aws_robomaker_small_house_world,kitchen,they are talking in the kitchen,0
+aws_robomaker_small_house_world,kitchen,we were cooking tempura at that time,0
+aws_robomaker_small_house_world,kitchen,mother hummed to herself as she went about her cooking,0
+aws_robomaker_small_house_world,kitchen,she finished up lunch with coffee,0
+aws_robomaker_small_house_world,kitchen,"opening the refrigerator, I noticed the meat had spoiled",0
+aws_robomaker_small_house_world,kitchen,nothing remained in the refrigerator,0
+aws_robomaker_small_house_world,living room,the living room adjoins the dining room,1
+aws_robomaker_small_house_world,living room,the living room in my new house is very large,1
+aws_robomaker_small_house_world,living room,father made our living room more spacious,1
+aws_robomaker_small_house_world,living room,one Sunday morning George burst into the living room and said the following,1
+aws_robomaker_small_house_world,living room,our living room is sunny,1
+aws_robomaker_small_house_world,living room,she put the blanket over the child sleeping on the sofa,1
+aws_robomaker_small_house_world,living room,"as he was tired, he was lying on the sofa with his eyes closed",1
+aws_robomaker_small_house_world,living room,i am tired of watching television,1
+aws_robomaker_small_house_world,living room,my father usually watches television after dinner,1
+aws_robomaker_small_house_world,living room,there is a dictionary on the desk,1
+aws_robomaker_small_house_world,bedroom,i went up to my bedroom on tiptoe,2
+aws_robomaker_small_house_world,bedroom,i have my own bedroom at home,2
+aws_robomaker_small_house_world,bedroom,i found myself lying in my bedroom,2
+aws_robomaker_small_house_world,bedroom,i share a bedroom with my sister,2
+aws_robomaker_small_house_world,bedroom,i like to have a full-length mirror in my bedroom,2
+aws_robomaker_small_house_world,bedroom,"to be a good child, you need to go to bed and get up early",2
+aws_robomaker_small_house_world,bedroom,i go to bed early at night,2
+aws_robomaker_small_house_world,bedroom,she put on her sister's jeans and looked in the mirror,2
+aws_robomaker_small_house_world,bedroom,a good conscience is a soft pillow,2
+aws_robomaker_small_house_world,bedroom,the alarm clock is ten minutes fast,2
+aws_robomaker_small_warehouse_world,storage area,she deposited the box on the table,0
+aws_robomaker_small_warehouse_world,storage area,prepare five postcard sized pieces of cardboard,0
+aws_robomaker_small_warehouse_world,storage area,they had to clean out the goods in stock within the year,0
+aws_robomaker_small_warehouse_world,storage area,i think this table takes up too much space,0
+aws_robomaker_small_warehouse_world,storage area,leave more space between the lines,0
+aws_robomaker_small_warehouse_world,storage area,this table takes up too much space,0
+aws_robomaker_small_warehouse_world,storage area,she deposited the box on the table,0
+aws_robomaker_small_warehouse_world,storage area,the box she found was empty,0
+aws_robomaker_small_warehouse_world,storage area,she had the box carried downstairs,0
+aws_robomaker_small_warehouse_world,storage area,he had a big box in his arms,0
+aws_robomaker_small_warehouse_world,entrance area,the goods arrived in good condition,1
+aws_robomaker_small_warehouse_world,entrance area,the goods arrived yesterday,1
+aws_robomaker_small_warehouse_world,entrance area,the goods were sent out yesterday,1
+aws_robomaker_small_warehouse_world,entrance area,i will notify you of the arrival of the goods,1
+aws_robomaker_small_warehouse_world,entrance area,do not sign a delivery receipt unless it accurately lists the goods received,1
+aws_robomaker_small_warehouse_world,entrance area,the bookshelf is built in,1
+aws_robomaker_small_warehouse_world,entrance area,many goods are transported at midnight by truck,1
+aws_robomaker_small_warehouse_world,entrance area,leave a space between the lines,1
+aws_robomaker_small_warehouse_world,entrance area,the goods ordered from England last month have not arrived yet,1
+aws_robomaker_small_warehouse_world,entrance area,she put the lid on the box,1
+aws_robomaker_small_warehouse_world,picking area,a young man came for the new product,2
+aws_robomaker_small_warehouse_world,picking area,we have adequate inventories of the product to meet local demand,2
+aws_robomaker_small_warehouse_world,picking area,export of the product will start soon,2
+aws_robomaker_small_warehouse_world,picking area,we will ship the product immediately after receiving your order,2
+aws_robomaker_small_warehouse_world,picking area,this product brought us a large margin,2
+aws_robomaker_small_warehouse_world,picking area,i regret to say that the product you have asked for is currently out of stock,2
+aws_robomaker_small_warehouse_world,picking area,we can deliver the product in June,2
+aws_robomaker_small_warehouse_world,picking area,"with this price, your product would not be competitive in the Japanese market",2
+aws_robomaker_small_warehouse_world,picking area,thank you for sending the product information asked for,2
+aws_robomaker_small_warehouse_world,picking area,successfully demonstrated a new product in 7 districts,2
