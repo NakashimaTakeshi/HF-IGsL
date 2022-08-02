@@ -79,30 +79,34 @@ class PlaceCategorization ():
         rospy.loginfo("Categorization updated successfully.")
 
 def main():
-    world = sys.argv[1]
+    # Initialize the default parameters
+    world = rospy.get_param('/world')
+    isAttended = rospy.get_param('/isAttended')
     rospy.init_node( "place_categorization" )
-    waypoint_navigation = waynavi.WaypointNavigation(world=world, each_area_point_number=10)
     word_publisher = wordpub.WordPublisher(world=world)
     placeCategorization = PlaceCategorization()
-    for i in range(3):
-        poses = waypoint_navigation.read_pose_from_csv_file(world=world, number=10)
-        j = 0
-        for pose in poses:
-            for waypoint in pose:
-                rospy.loginfo("Starting move. ")
-                waypoint_navigation.execute(waypoint)
-                word_publisher.publish_word(j)
-                placeCategorization.update()
-                rospy.loginfo("-----------------------------------------------------------------------")
-            j += 1
-    # for pose in poses:
-    #     for waypoint in pose:
-    #         # rospy.loginfo("Starting move. current pose " + str(waypoint) + ".")
-    #         rospy.loginfo("Starting move. ")
-    #         waypoint_navigation.execute(waypoint)
-    #         placeCategorization.update()
-    #         rospy.loginfo("-----------------------------------------------------------------------")
-    
+
+    if isAttended:
+        # User will run place_categorization without waypoint navigation (Manual)
+        while not rospy.is_shutdown():
+            place_word = input("Please input a sentence to describe the current scene: ")
+            word_publisher.publish_word_manual(place_word)
+            input( "Hit enter to update the integrated model." )
+            placeCategorization.update()
+    else:
+        # User will run place_categorization with waypoint navigation (Automatical)
+        waypoint_navigation = waynavi.WaypointNavigation(world=world, each_area_point_number=10)
+        for i in range(3):
+            poses = waypoint_navigation.read_pose_from_csv_file(world=world, number=10)
+            j = 0
+            for pose in poses:
+                for waypoint in pose:
+                    rospy.loginfo("Starting move. ")
+                    waypoint_navigation.execute(waypoint)
+                    word_publisher.publish_word(j)
+                    placeCategorization.update()
+                    rospy.loginfo("-----------------------------------------------------------------------")
+                j += 1
 
 if __name__=="__main__":
     main()

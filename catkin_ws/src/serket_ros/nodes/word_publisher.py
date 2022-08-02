@@ -19,3 +19,6 @@ class WordPublisher ():
     def publish_word(self, roomIndex):
         place_word = self.df_cur_world_sentences[self.df_cur_world_sentences["index"] == roomIndex].sample(n=1)["sentences"].values[0]
         self.pub.publish(place_word)
+
+    def publish_word_manual(self, place_word):
+        self.pub.publish(place_word)
