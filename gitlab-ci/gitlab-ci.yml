@@ -36,6 +36,8 @@ before_script:
 variables:
   MOUNT_POINT: /builds/${CI_PROJECT_PATH}/mnt
 before_script:
+  # Download all the missing Git submodules inside the project workspace.
+  - git submodule update --init --recursive
   # Copy the content of the project workspace to the mount point.
   - mkdir -p ${MOUNT_POINT}/
   - cp -r ./catkin_ws/ ./docker/ ${MOUNT_POINT}/
