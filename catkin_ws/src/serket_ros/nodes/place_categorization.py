@@ -49,7 +49,7 @@ class PlaceCategorization ():
         self.bow1_buf.connect(self.bow1)
 
         # Combine gmm and cnn model into mlda model
-        self.mlda1.connect(self.gmm1, self.cnn1_buf)
+        self.mlda1.connect(self.gmm1, self.cnn1_buf, self.bow1_buf)
         
     def update(self):
         rospy.loginfo("Starting categorization updated process.")
