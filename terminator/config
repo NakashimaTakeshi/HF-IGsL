@@ -93,7 +93,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} serket_ros_navigation_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash
     [[[terminal13]]] #2
       order = 0
       parent = child12
@@ -176,7 +176,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} serket_ros_categorization_default.launch
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} serket_ros_simulation_categorization_default.launch
   [[sde-term-11-robot]]
     [[[child0]]]
       fullscreen = False
@@ -344,7 +344,7 @@
       parent = child8
       profile = default
       type = Terminal
-      command = bash ./RUN-DOCKER-CONTAINER.bash
+      command = bash ./RUN-DOCKER-CONTAINER.bash ${USER} serket_ros_robot_categorization_default.launch
 [plugins]
 [profiles]
   [[default]]
