@@ -18,11 +18,15 @@ import waypoint_navigation as waynavi
 import word_publisher as wordpub
 
 class PlaceCategorization ():
-    def __init__(self):
+    def __init__(self, cat_nbr):
+
+        # Initialize the plot configuration
+        self.cat_nbr = cat_nbr
+        self.fig = plt.figure("Place Categorization")
+        self.ax = self.fig.add_subplot(1, 1, 1)
 
         # Initialize the gmm and mlda model
-        cat_nbr = 10
-        self.gmm1 = gmm.GMM( cat_nbr )
+        self.gmm1 = gmm.GMM(cat_nbr)
         self.mlda1 = mlda.MLDA(cat_nbr)
 
         # Robot self-pose information
@@ -77,14 +81,39 @@ class PlaceCategorization ():
         self.mlda1.update()
         rospy.loginfo("'mlda1' module updated.")
         rospy.loginfo("Categorization updated successfully.")
+    
+    def data_visualization(self, vis_timer) :
+        cat_bins = range(1, self.cat_nbr+1)
+
+        mlda1_cat = np.loadtxt("../nodes/module001_mlda/%03d/categories.txt"%vis_timer, unpack='False')
+
+        self.ax.hist(mlda1_cat, histtype='bar', bins=cat_bins)
+        self.ax.set_xticks(cat_bins)
+        self.ax.set_xticklabels(cat_bins)
+        self.ax.set_yticks(range(1, vis_timer+2))
+        self.ax.set_yticklabels(range(1, vis_timer+2))
+        self.ax.set_xlabel("Categories")
+        self.ax.set_ylabel("Observations")
+        self.ax.set_title("Place categorization in current world")
+        self.ax.legend()
+        self.ax.grid()
+        self.ax.autoscale(False)
+
+        plt.draw()
+        plt.pause(0.001)
+        self.ax.cla()
+
+        rospy.loginfo("Draw the number " + str(vis_timer + 1) + " observation time plot")
+        rospy.sleep(2)
 
 def main():
     # Initialize the default parameters
     world = rospy.get_param('/world')
-    isAttended = rospy.get_param('/isAttended')
+    isAttended = rospy.get_param('/is_attended')
     rospy.init_node( "place_categorization" )
     word_publisher = wordpub.WordPublisher(world=world)
-    placeCategorization = PlaceCategorization()
+    vis_timer = 0
+    placeCategorization = PlaceCategorization(cat_nbr=10)
 
     if isAttended:
         # User will run place_categorization without waypoint navigation (Manual)
@@ -93,6 +122,12 @@ def main():
             word_publisher.publish_word_manual(place_word)
             input( "Hit enter to update the integrated model." )
             placeCategorization.update()
+            if vis_timer == 0 or vis_timer == 1 :
+                rospy.loginfo("The first time and the second time will not draw plot")
+            else:
+                placeCategorization.data_visualization(vis_timer)
+            vis_timer += 1
+            rospy.loginfo("-----------------------------------------------------------------------")
     else:
         # User will run place_categorization with waypoint navigation (Automatical)
         waypoint_navigation = waynavi.WaypointNavigation(world=world, each_area_point_number=10)
@@ -105,6 +140,11 @@ def main():
                     waypoint_navigation.execute(waypoint)
                     word_publisher.publish_word(j)
                     placeCategorization.update()
+                    if vis_timer == 0 or vis_timer == 1 :
+                        rospy.loginfo("The first time and the second time will not draw plot")
+                    else:
+                        placeCategorization.data_visualization(vis_timer)
+                    vis_timer += 1
                     rospy.loginfo("-----------------------------------------------------------------------")
                 j += 1
 
