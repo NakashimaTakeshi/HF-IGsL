@@ -7,7 +7,7 @@
 ARG nvidia_cudagl_version=11.2.2-devel-ubuntu20.04
 ARG nvidia_cudnn_version=8.1.1.33-1+cuda11.2
 ARG ros_desktop_version=1.5.0-1focal.20220512.132246
-ARG python3_pip_version=22.1.2
+ARG python3_pip_version=22.2.1
 
 ################################################################################
 
@@ -167,9 +167,11 @@ ARG python3_pip_version
 ENV PYTHON3_PIP_VERSION=${python3_pip_version}
 RUN pip3 install --upgrade pip==${PYTHON3_PIP_VERSION}
 RUN pip3 install \
-  matplotlib==3.3.4 \
-  numba==0.53.1 \
-  scikit-learn==0.24.2
+  Janome==0.4.2 \
+  matplotlib==3.5.2 \
+  numba==0.56.0 \
+  pandas==1.4.3 \
+  scikit-learn==1.1.1
 
 ################################################################################
 
