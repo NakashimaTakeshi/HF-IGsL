@@ -82,7 +82,7 @@ class PlaceCategorization ():
         rospy.loginfo("'mlda1' module updated.")
         rospy.loginfo("Categorization updated successfully.")
     
-    def data_visualization(self, vis_timer, world) :
+    def data_visualization(self, vis_timer) :
         cat_bins = range(1, self.cat_nbr+1)
 
         mlda1_cat = np.loadtxt("../nodes/module001_mlda/%03d/categories.txt"%vis_timer, unpack='False')
@@ -94,7 +94,7 @@ class PlaceCategorization ():
         self.ax.set_yticklabels(range(1, vis_timer+2))
         self.ax.set_xlabel("Categories")
         self.ax.set_ylabel("Observations")
-        self.ax.set_title("Place categorization of " + world)
+        self.ax.set_title("Place categorization in current world")
         self.ax.legend()
         self.ax.grid()
         self.ax.autoscale(False)
@@ -125,7 +125,7 @@ def main():
             if vis_timer == 0 or vis_timer == 1 :
                 rospy.loginfo("The first time and the second time will not draw plot")
             else:
-                placeCategorization.data_visualization(vis_timer, world)
+                placeCategorization.data_visualization(vis_timer)
             vis_timer += 1
             rospy.loginfo("-----------------------------------------------------------------------")
     else:
@@ -143,7 +143,7 @@ def main():
                     if vis_timer == 0 or vis_timer == 1 :
                         rospy.loginfo("The first time and the second time will not draw plot")
                     else:
-                        placeCategorization.data_visualization(vis_timer, world)
+                        placeCategorization.data_visualization(vis_timer)
                     vis_timer += 1
                     rospy.loginfo("-----------------------------------------------------------------------")
                 j += 1
