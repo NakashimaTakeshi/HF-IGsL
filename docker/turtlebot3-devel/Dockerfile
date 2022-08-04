@@ -7,7 +7,7 @@
 ARG nvidia_cudagl_version=11.2.2-devel-ubuntu20.04
 ARG nvidia_cudnn_version=8.1.1.33-1+cuda11.2
 ARG ros_desktop_version=1.5.0-1focal.20220512.132246
-ARG python3_pip_version=22.2.1
+ARG python3_pip_version=22.2.2
 
 ################################################################################
 
@@ -130,12 +130,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install common optional packages/tools.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  git=1:2.25.1-1ubuntu3.4 \
+  git=1:2.25.1-1ubuntu3.5 \
   inetutils-ping=2:1.9.4-11ubuntu0.1 \
   iproute2=5.5.0-1ubuntu1 \
   mesa-utils=8.4.0-1build1 \
   nano=4.8-1ubuntu1 \
   net-tools=1.60+git20180626.aebd88e-1ubuntu1 \
+  ntpdate=1:4.2.8p12+dfsg-3ubuntu4.20.04.1 \
   openssh-client=1:8.2p1-4ubuntu0.5 \
   unzip=6.0-25ubuntu1 \
   wget=1.20.3-1ubuntu2 \

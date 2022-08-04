@@ -2,7 +2,7 @@
 
 <launch>
   <remap from="/camera/rgb/image_raw" to="/turtlebot3_01/raspicam_node/image"/>
-  <remap from="/odom"/ to="/turtlebot3_01/odom"/>
+  <remap from="/odom" to="/turtlebot3_01/odom"/>
 
   <include file="$(find serket_ros)/launch/place_categorization.launch"/>
 </launch>
