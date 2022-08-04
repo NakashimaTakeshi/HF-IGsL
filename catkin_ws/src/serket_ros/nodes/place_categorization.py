@@ -103,6 +103,7 @@ class PlaceCategorization ():
         plt.pause(0.001)
         self.ax.cla()
 
+        rospy.loginfo("Draw the number " + str(vis_timer + 1) + " observation time plot")
         rospy.sleep(2)
 
 def main():
@@ -126,6 +127,7 @@ def main():
             else:
                 placeCategorization.data_visualization(vis_timer, world)
             vis_timer += 1
+            rospy.loginfo("-----------------------------------------------------------------------")
     else:
         # User will run place_categorization with waypoint navigation (Automatical)
         waypoint_navigation = waynavi.WaypointNavigation(world=world, each_area_point_number=10)
@@ -138,12 +140,12 @@ def main():
                     waypoint_navigation.execute(waypoint)
                     word_publisher.publish_word(j)
                     placeCategorization.update()
-                    rospy.loginfo("-----------------------------------------------------------------------")
                     if vis_timer == 0 or vis_timer == 1 :
                         rospy.loginfo("The first time and the second time will not draw plot")
                     else:
                         placeCategorization.data_visualization(vis_timer, world)
                     vis_timer += 1
+                    rospy.loginfo("-----------------------------------------------------------------------")
                 j += 1
 
 if __name__=="__main__":
