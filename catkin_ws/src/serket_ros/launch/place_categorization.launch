@@ -2,6 +2,6 @@
 
 <launch>
   <param name="world" type= "str" value="aws_robomaker_small_house_world"/>
-  <param name="isAttended" type= "boolean" value="True"/>
+  <param name="is_attended" type= "boolean" value="True"/>
   <node name="place_categorization" pkg="serket_ros" type="place_categorization.py" cwd="node" output="screen" args="aws_robomaker_small_house_world"/>
 </launch>
