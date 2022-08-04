@@ -112,7 +112,7 @@ if [ -z "${TURTLEBOT3_IP}" ]; then
 else
   # If the robot host name is found, set the local 'ROS_IP' using the network interface that connects to the robot.
   # TODO: Use Bash instead of Python.
-  export ROS_IP=`python /root/TurtleBot3/docker/turtlebot3-devel/scripts/print-interface-ip.py ${TURTLEBOT3_IP}`
+  export ROS_IP=`python3 /root/TurtleBot3/docker/turtlebot3-devel/scripts/print-interface-ip.py ${TURTLEBOT3_IP}`
 fi
 if [ -z "${ROS_IP}" ]; then
   # If the local 'ROS_IP' is still empty, default to the Docker network interface ('docker0') for sanity.
