@@ -174,6 +174,19 @@ RUN pip3 install \
   pandas==1.4.3 \
   scikit-learn==1.1.1
 
+# RSSM_Experiment Manager
+RUN pip3 install \
+    hydra-core \
+    wandb
+    
+# RSSM_Utils
+RUN pip3 install \
+    joblib \
+    scikit-image \
+    torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113 \
+    tqdm \
+    opencv-python
+    
 ################################################################################
 
 # Set up the Bash shell environment.

@@ -4,9 +4,10 @@ version: "2.4"
 
 services:
   turtlebot3:
-    hostname: turtlebot3
+    hostname: HF-PGM
     runtime: ${DOCKER_RUNTIME}
     privileged: true
+    container_name: otakeshunsuke_hf-pgm_turtlebot3_1
     environment:
       # Display X Server GUIs.
       - DISPLAY=${DISPLAY}
@@ -18,7 +19,7 @@ services:
       - DOCKER_RUNTIME=${DOCKER_RUNTIME}
       # Configure the PulseAudio interface.
       - PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native
-    image: registry.gitlab.com/emlab/turtlebot3/turtlebot3-devel:latest
+    image: otake_hf-pgm_turtlebot3-devel:latest
     build:
       context: ../
       dockerfile: ./docker/turtlebot3-devel/Dockerfile
