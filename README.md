@@ -85,7 +85,7 @@ Set up the environment of the development machine with the following instruction
 2.   Clone the TurtleBot3 project repository in your home folder:
 
      ```shell
-     cd ~/ && git clone https://gitlab.com/emlab/TurtleBot3.git
+     cd ~/ && git clone -b HF-PGM-otake https://gitlab.com/emlab/TurtleBot3.git
      ```
 
      Enter your GitLab developer credentials if prompted.
@@ -120,7 +120,7 @@ Create a virtual environment using Docker (= Docker image) on the development ma
 1.   Build the Docker image:
 
      ```shell
-     cd ~/TurtleBot3/ && bash ./BUILD-DOCKER-IMAGE.bash
+     cd ~/TurtleBot3/ && bash ./BUILD-DOCKER-IMAGE.bash gitlab-ci
      ```
 
      This script builds the image following the instructions found in `~/TurtleBot3/docker/turtlebot3-devel/Dockerfile`.
