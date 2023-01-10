@@ -85,7 +85,7 @@ Set up the environment of the development machine with the following instruction
 2.   Clone the TurtleBot3 project repository in your home folder:
 
      ```shell
-     cd ~/ && git clone https://gitlab.com/emlab/TurtleBot3.git
+     cd ~/ && git clone -b HF-PGM-otake https://gitlab.com/emlab/TurtleBot3.git
      ```
 
      Enter your GitLab developer credentials if prompted.
