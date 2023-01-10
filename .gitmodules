@@ -41,3 +41,7 @@
 [submodule "catkin_ws/src/navigation"]
 	path = catkin_ws/src/navigation
 	url = https://github.com/ros-planning/navigation.git
+[submodule "catkin_ws/src/geometry2"]
+	path = catkin_ws/src/geometry2
+	url = https://github.com/ros/geometry2.git
+    branch = noetic-devel
