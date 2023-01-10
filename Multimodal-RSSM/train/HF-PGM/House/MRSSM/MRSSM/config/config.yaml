@@ -1,0 +1,5 @@
+defaults:
+- main: main
+- env: House
+- rssm: multimodal
+- train: train
