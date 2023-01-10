@@ -38,3 +38,6 @@
 	path = catkin_ws/src/serket_ros/Serket
 	url = https://github.com/naka-lab/Serket.git
 	branch = ros
+[submodule "catkin_ws/src/navigation"]
+	path = catkin_ws/src/navigation
+	url = https://github.com/ros-planning/navigation.git
