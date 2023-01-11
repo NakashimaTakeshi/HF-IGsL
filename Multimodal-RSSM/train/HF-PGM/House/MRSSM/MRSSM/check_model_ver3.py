@@ -182,7 +182,7 @@ past_belief, past_state = torch.zeros(1, model.cfg.rssm.belief_size, device=mode
 
 for t in range(1000):
     observations_seq = dict(image_hsr_256 = observations_target["image_hsr_256"][t:t+1])
-    state = model.horiemon(observations_seq, actions[t:t+1], past_state, past_belief)
+    state = model.estimate_state_online(observations_seq, actions[t:t+1], past_state, past_belief)
 
     past_belief, past_state = state["beliefs"][0], state["posterior_states"][0]
     locandscale = model.pose_poredict_model(past_belief)

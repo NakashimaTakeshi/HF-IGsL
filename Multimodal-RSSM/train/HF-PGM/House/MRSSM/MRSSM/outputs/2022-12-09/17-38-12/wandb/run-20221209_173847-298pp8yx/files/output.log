@@ -1,0 +1,25 @@
+using cuda:1
+Initialize training environment and experience replay memory
+load dataset from /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/MobileRobotImage_20221127/train
+find 10 npy files!
+load dataset:   0%|                                                                | 0/10 [00:00<?, ?it/s]
+Error executing job with overrides: ['main.experiment_name=test2']
+Traceback (most recent call last):
+  File "main.py", line 45, in main
+    run(_cfg)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 76, in run
+    train(cfg, cwd, results_dir, device)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 31, in train
+    D = get_dataset_loader(cfg, cwd, device, cfg.train.train_data_path)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 24, in get_dataset_loader
+    load_dataset(cfg, cwd, D, dataset_path)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../utils/replay_buffer/memory.py", line 41, in load_dataset
+    _load_dataset(cfg, cwd, exp_replay, D)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../utils/replay_buffer/memory.py", line 28, in _load_dataset
+    D.load_dataset(dataset_dir=dataset_dir)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../utils/replay_buffer/memory.py", line 288, in load_dataset
+    self._set_data_to_buffer(file_name)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../utils/replay_buffer/memory.py", line 271, in _set_data_to_buffer
+    self.actions[idx] = np2tensor(data[self.action_name])
+RuntimeError: shape mismatch: value tensor of shape [2803, 7] cannot be broadcast to indexing result of shape [2803, 1]
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.

@@ -1,0 +1,25 @@
+{
+    "os": "Linux-5.15.0-52-generic-x86_64-with-glibc2.29",
+    "python": "3.8.0",
+    "heartbeatAt": "2022-12-13T06:23:25.917457",
+    "startedAt": "2022-12-13T06:23:25.396791",
+    "docker": null,
+    "gpu": "NVIDIA RTX A6000",
+    "gpu_count": 2,
+    "cpu_count": 48,
+    "cuda": null,
+    "args": [
+        "main.experiment_name=HF_PGM_1"
+    ],
+    "state": "running",
+    "program": "main.py",
+    "git": {
+        "remote": "https://gitlab.com/emlab/Multimodal-RSSM.git",
+        "commit": "5f164fc13bf58085532b4f242058a11990ca3ea1"
+    },
+    "email": null,
+    "root": "/home/docker/sharespace/Multimodal-RSSM",
+    "host": "2898240a4f94",
+    "username": "docker",
+    "executable": "/home/docker/.pyenv/versions/3.8.0/bin/python"
+}
