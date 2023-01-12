@@ -1,19 +1,23 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 138
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /RobotModel1
+        - /RobotModel1/Links1
+        - /RobotModel1/Links1/base_footprint1
+        - /RobotModel1/Links1/base_link1
         - /TF1
         - /TF1/Frames1
-        - /TF1/Tree1
+        - /Image1
         - /Global Map1/Costmap1
         - /Global Map1/Planner1
         - /Local Map1/Polygon1
         - /Local Map1/Costmap1
         - /Local Map1/Planner1
       Splitter Ratio: 0.5
-    Tree Height: 418
+    Tree Height: 556
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -129,7 +133,7 @@ Visualization Manager:
       Frames:
         All Enabled: false
         base_footprint:
-          Value: false
+          Value: true
         base_link:
           Value: false
         base_scan:
@@ -146,6 +150,8 @@ Visualization Manager:
           Value: false
         imu_link:
           Value: false
+        map:
+          Value: true
         odom:
           Value: true
         wheel_left_link:
@@ -159,7 +165,26 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                base_scan:
+                  {}
+                camera_link:
+                  camera_rgb_frame:
+                    camera_rgb_optical_frame:
+                      {}
+                caster_back_left_link:
+                  {}
+                caster_back_right_link:
+                  {}
+                imu_link:
+                  {}
+                wheel_left_link:
+                  {}
+                wheel_right_link:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -272,7 +297,7 @@ Visualization Manager:
           Topic: /move_base/DWAPlannerROS/global_plan
           Unreliable: false
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Global Map
     - Class: rviz/Group
       Displays:
@@ -319,14 +344,14 @@ Visualization Manager:
           Topic: /move_base/DWAPlannerROS/local_plan
           Unreliable: false
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Local Map
     - Alpha: 1
       Arrow Length: 0.05000000074505806
       Axes Length: 0.30000001192092896
       Axes Radius: 0.009999999776482582
       Class: rviz/PoseArray
-      Color: 0; 192; 0
+      Color: 255; 0; 0
       Enabled: true
       Head Length: 0.07000000029802322
       Head Radius: 0.029999999329447746
@@ -378,7 +403,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 37.319549560546875
+      Distance: 17.765775680541992
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -386,17 +411,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -7.311058521270752
-        Y: -0.35477858781814575
-        Z: 0
+        X: 3.9265189170837402
+        Y: 2.3394012451171875
+        Z: 1.2814998626708984e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0010000000474974513
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 1.029796838760376
       Target Frame: <Fixed Frame>
-      Yaw: 3.1415927410125732
+      Yaw: 1.666593313217163
     Saved: ~
 Window Geometry:
   Displays:
