@@ -63,8 +63,18 @@ class RSSM_ros():
         state_path = model_path.replace("models", "states_models").replace(".pth", ".npy")
         print("state_path:", state_path)
 
+        states_np = np.load(state_path, allow_pickle=True).item()
+        print("-- dataset --")
+        for key in states_np.keys():
+            print(key)
+
+        print("-- key of states --")
+        print(states_np[key].keys())
+
         self.pose_predict_loc = []
         self.pose_predict_scale = []
+        self.past_belief = torch.zeros(1, self.model.cfg.rssm.belief_size, device=self.model.cfg.main.device)
+        self.past_state = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
 
 
 
@@ -89,6 +99,11 @@ class RSSM_ros():
         resp.y_loc = self.pose_predict_loc[-1][1]
         resp.cos_loc = self.pose_predict_loc[-1][2]
         resp.sin_loc = self.pose_predict_loc[-1][3]
+        resp.x_scale = self.pose_predict_scale[-1][0]
+        resp.y_scale = self.pose_predict_scale[-1][1]
+        resp.cos_scale = self.pose_predict_scale[-1][2]
+        resp.sin_scale = self.pose_predict_scale[-1][3]
+
         return resp
 
 
