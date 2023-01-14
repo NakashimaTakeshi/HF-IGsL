@@ -16,8 +16,8 @@ multimodal_params: # if multimodal is True, multimodal_params are used
 
 #Using HF-PGM model (Proposed model 1)
 HF_PGM:
-  use: False
-  pose_predict: False
+  use: True
+  pose_predict: True
 
 # contrastive_learning: we can use CL when observation is single-modal or fusion timing is obs_emb
 MuMMI:
@@ -55,8 +55,8 @@ worldmodel_LogProbLoss: False   # default: False
 
 
 # -- KL divergence --
-overshooting_distance: 5        # default: 0
-overshooting_kl_beta: 1         # default: 0
+overshooting_distance: 0        # default: 0
+overshooting_kl_beta: 0         # default: 0
 overshooting_reward_scale: 0    # default: 0
 global_kl_beta: 0               # default: 0
 free_nats: 3                    # default: 3

@@ -145,7 +145,7 @@ class RSSM(RSSM_base):
         predict_pose_loss["predict_pose_loss"] = (-log_probs).mean(dim=(0,1)).sum()
         return predict_pose_loss
 
-    def horiemon(self, observations, actions, past_state, past_belief):
+    def estimate_state_online(self, observations, actions, past_state, past_belief):
         """
         関数horiemon
         estimate_stateのオンライン版

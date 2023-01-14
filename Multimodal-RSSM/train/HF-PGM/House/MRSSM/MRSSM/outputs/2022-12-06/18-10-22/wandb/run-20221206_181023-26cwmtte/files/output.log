@@ -1,0 +1,32 @@
+using cuda:1
+Initialize training environment and experience replay memory
+load dataset from /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/MobileRobotImage_20221127/train
+find 10 npy files!
+
+load dataset: 100%|███████████████████████████████████████████████████████| 10/10 [00:03<00:00,  2.77it/s]
+set color augment params
+calc pca from torch.Size([287, 3, 256, 256]) data
+load dataset from /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/MobileRobotImage_20221127/validation
+find 3 npy files!
+load dataset: 100%|█████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  3.23it/s]
+/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/torch/optim/adam.py:90: UserWarning: optimizer contains a parameter group with duplicate parameters; in future, this will cause an error; see github.com/pytorch/pytorch/issues/40967 for more information
+  super(Adam, self).__init__(params, defaults)
+train:   0%|                                                                     | 0/8000 [00:00<?, ?it/s]
+Error executing job with overrides: ['main.experiment_name=test2']
+Traceback (most recent call last):
+  File "main.py", line 45, in main
+    run(_cfg)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 76, in run
+    train(cfg, cwd, results_dir, device)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 61, in train
+    model.optimize(D)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/base/base.py", line 414, in optimize
+    states = self.estimate_state(observations_target, actions[:-1], rewards, nonterminals[:-1])
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/base/base.py", line 456, in estimate_state
+    raise NotImplementedError
+NotImplementedError
+Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
+set color augment params
+calc pca from torch.Size([87, 3, 256, 256]) data
+Initialise model parameters randomly
+Multimodal RSSM (fusion obs_emb by NN)

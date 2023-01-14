@@ -318,7 +318,7 @@ class RSSM_base(nn.Module):
                                     self.cfg.rssm.learning_rate_schedule, self.cfg.rssm.model_learning_rate)
         
         if self.cfg.rssm.HF_PGM["pose_predict"]:
-            predict_pose_loss = self._calc_predict_pose_loss(actions[:-1], beliefs)
+            predict_pose_loss = self._calc_predict_pose_loss(actions[1:], beliefs)
         
         if not self.cfg.rssm.predict_reward:
             reward_loss = torch.zeros_like(reward_loss)

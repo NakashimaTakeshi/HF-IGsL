@@ -1,0 +1,149 @@
+2022-12-06 18:10:23,943 INFO    StreamThr :47601 [internal.py:wandb_internal():88] W&B internal server running at pid: 47601, started at: 2022-12-06 18:10:23.942517
+2022-12-06 18:10:23,945 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: status
+2022-12-06 18:10:23,946 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: status
+2022-12-06 18:10:23,948 DEBUG   SenderThread:47601 [sender.py:send():303] send: header
+2022-12-06 18:10:23,948 INFO    WriterThread:47601 [datastore.py:open_for_write():75] open: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/run-26cwmtte.wandb
+2022-12-06 18:10:23,953 DEBUG   SenderThread:47601 [sender.py:send():303] send: run
+2022-12-06 18:10:24,379 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: check_version
+2022-12-06 18:10:24,380 INFO    SenderThread:47601 [dir_watcher.py:__init__():216] watching files in: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files
+2022-12-06 18:10:24,381 INFO    SenderThread:47601 [sender.py:_start_run_threads():928] run started: 26cwmtte with start time 1670317823.938124
+2022-12-06 18:10:24,381 DEBUG   SenderThread:47601 [sender.py:send():303] send: summary
+2022-12-06 18:10:24,381 INFO    SenderThread:47601 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-12-06 18:10:24,381 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: check_version
+2022-12-06 18:10:24,455 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: run_start
+2022-12-06 18:10:24,462 DEBUG   HandlerThread:47601 [meta.py:__init__():34] meta init
+2022-12-06 18:10:24,462 DEBUG   HandlerThread:47601 [meta.py:__init__():49] meta init done
+2022-12-06 18:10:24,462 DEBUG   HandlerThread:47601 [meta.py:probe():215] probe
+2022-12-06 18:10:24,476 DEBUG   HandlerThread:47601 [meta.py:_setup_git():205] setup git
+2022-12-06 18:10:24,494 DEBUG   HandlerThread:47601 [meta.py:_setup_git():212] setup git done
+2022-12-06 18:10:24,494 DEBUG   HandlerThread:47601 [meta.py:_save_pip():53] save pip
+2022-12-06 18:10:24,495 DEBUG   HandlerThread:47601 [meta.py:_save_pip():67] save pip done
+2022-12-06 18:10:24,495 DEBUG   HandlerThread:47601 [meta.py:probe():253] probe done
+2022-12-06 18:10:24,499 DEBUG   SenderThread:47601 [sender.py:send():303] send: files
+2022-12-06 18:10:24,499 INFO    SenderThread:47601 [sender.py:_save_file():1171] saving file wandb-metadata.json with policy now
+2022-12-06 18:10:24,505 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: stop_status
+2022-12-06 18:10:24,506 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: stop_status
+2022-12-06 18:10:24,691 DEBUG   SenderThread:47601 [sender.py:send():303] send: telemetry
+2022-12-06 18:10:24,691 DEBUG   SenderThread:47601 [sender.py:send():303] send: telemetry
+2022-12-06 18:10:24,692 DEBUG   SenderThread:47601 [sender.py:send():303] send: files
+2022-12-06 18:10:24,692 INFO    SenderThread:47601 [sender.py:_save_file():1171] saving file hydra_config.yaml with policy live
+2022-12-06 18:10:25,142 INFO    Thread-17 :47601 [upload_job.py:push():143] Uploaded file /tmp/tmp5328845owandb/17zy54mg-wandb-metadata.json
+2022-12-06 18:10:25,341 INFO    Thread-18 :47601 [upload_job.py:push():143] Uploaded file /tmp/tmp5328845owandb/2fp0m7kt-hydra_config.yaml
+2022-12-06 18:10:25,383 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_created():275] file/dir created: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-summary.json
+2022-12-06 18:10:25,383 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_created():275] file/dir created: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:25,384 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_created():275] file/dir created: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-metadata.json
+2022-12-06 18:10:25,384 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_created():275] file/dir created: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/hydra_config.yaml
+2022-12-06 18:10:25,384 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_created():275] file/dir created: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/requirements.txt
+2022-12-06 18:10:27,382 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:29,383 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:31,384 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:32,030 DEBUG   SenderThread:47601 [sender.py:send():303] send: exit
+2022-12-06 18:10:32,030 INFO    SenderThread:47601 [sender.py:send_exit():442] handling exit code: 1
+2022-12-06 18:10:32,030 INFO    SenderThread:47601 [sender.py:send_exit():444] handling runtime: 7
+2022-12-06 18:10:32,030 INFO    SenderThread:47601 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-12-06 18:10:32,031 INFO    SenderThread:47601 [sender.py:send_exit():450] send defer
+2022-12-06 18:10:32,031 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,031 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 0
+2022-12-06 18:10:32,031 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,031 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 0
+2022-12-06 18:10:32,031 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 1
+2022-12-06 18:10:32,031 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,031 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 1
+2022-12-06 18:10:32,127 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,127 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 1
+2022-12-06 18:10:32,128 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 2
+2022-12-06 18:10:32,128 DEBUG   SenderThread:47601 [sender.py:send():303] send: stats
+2022-12-06 18:10:32,128 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,128 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 2
+2022-12-06 18:10:32,129 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,129 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 2
+2022-12-06 18:10:32,129 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 3
+2022-12-06 18:10:32,129 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,129 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 3
+2022-12-06 18:10:32,129 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,129 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 3
+2022-12-06 18:10:32,129 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 4
+2022-12-06 18:10:32,129 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,129 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 4
+2022-12-06 18:10:32,129 DEBUG   SenderThread:47601 [sender.py:send():303] send: summary
+2022-12-06 18:10:32,130 INFO    SenderThread:47601 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-12-06 18:10:32,130 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,130 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 4
+2022-12-06 18:10:32,130 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 5
+2022-12-06 18:10:32,131 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,131 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 5
+2022-12-06 18:10:32,131 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,131 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 5
+2022-12-06 18:10:32,359 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 6
+2022-12-06 18:10:32,360 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:32,360 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 6
+2022-12-06 18:10:32,360 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:32,360 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 6
+2022-12-06 18:10:32,385 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-summary.json
+2022-12-06 18:10:32,385 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/config.yaml
+2022-12-06 18:10:33,030 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: poll_exit
+2022-12-06 18:10:33,385 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:34,712 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 7
+2022-12-06 18:10:34,712 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: poll_exit
+2022-12-06 18:10:34,713 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:34,713 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 7
+2022-12-06 18:10:34,713 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:34,714 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 7
+2022-12-06 18:10:34,714 INFO    SenderThread:47601 [dir_watcher.py:finish():362] shutting down directory watcher
+2022-12-06 18:10:35,385 INFO    Thread-13 :47601 [dir_watcher.py:_on_file_modified():292] file/dir modified: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:35,386 INFO    SenderThread:47601 [dir_watcher.py:finish():392] scan: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files
+2022-12-06 18:10:35,386 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/config.yaml config.yaml
+2022-12-06 18:10:35,386 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-summary.json wandb-summary.json
+2022-12-06 18:10:35,387 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/requirements.txt requirements.txt
+2022-12-06 18:10:35,390 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-metadata.json wandb-metadata.json
+2022-12-06 18:10:35,394 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/hydra_config.yaml hydra_config.yaml
+2022-12-06 18:10:35,397 INFO    SenderThread:47601 [dir_watcher.py:finish():406] scan save: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log output.log
+2022-12-06 18:10:35,398 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 8
+2022-12-06 18:10:35,399 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:35,402 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 8
+2022-12-06 18:10:35,402 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:35,402 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 8
+2022-12-06 18:10:35,403 INFO    SenderThread:47601 [file_pusher.py:finish():168] shutting down file pusher
+2022-12-06 18:10:35,995 INFO    Thread-19 :47601 [upload_job.py:push():143] Uploaded file /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/config.yaml
+2022-12-06 18:10:35,998 INFO    Thread-22 :47601 [upload_job.py:push():143] Uploaded file /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/output.log
+2022-12-06 18:10:36,000 INFO    Thread-20 :47601 [upload_job.py:push():143] Uploaded file /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/wandb-summary.json
+2022-12-06 18:10:36,052 INFO    Thread-21 :47601 [upload_job.py:push():143] Uploaded file /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/files/requirements.txt
+2022-12-06 18:10:36,253 INFO    Thread-12 :47601 [sender.py:transition_state():463] send defer: 9
+2022-12-06 18:10:36,253 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:36,253 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 9
+2022-12-06 18:10:36,254 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:36,254 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 9
+2022-12-06 18:10:36,254 INFO    SenderThread:47601 [file_pusher.py:join():173] waiting for file pusher
+2022-12-06 18:10:36,254 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 10
+2022-12-06 18:10:36,254 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:36,254 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 10
+2022-12-06 18:10:36,255 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:36,255 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 10
+2022-12-06 18:10:36,439 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 11
+2022-12-06 18:10:36,440 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:36,440 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 11
+2022-12-06 18:10:36,440 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:36,440 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 11
+2022-12-06 18:10:36,441 INFO    SenderThread:47601 [sender.py:transition_state():463] send defer: 12
+2022-12-06 18:10:36,441 DEBUG   SenderThread:47601 [sender.py:send():303] send: final
+2022-12-06 18:10:36,441 DEBUG   SenderThread:47601 [sender.py:send():303] send: footer
+2022-12-06 18:10:36,441 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: defer
+2022-12-06 18:10:36,441 INFO    HandlerThread:47601 [handler.py:handle_request_defer():161] handle defer: 12
+2022-12-06 18:10:36,441 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: defer
+2022-12-06 18:10:36,441 INFO    SenderThread:47601 [sender.py:send_request_defer():459] handle sender defer: 12
+2022-12-06 18:10:36,443 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: poll_exit
+2022-12-06 18:10:36,443 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: server_info
+2022-12-06 18:10:36,443 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: poll_exit
+2022-12-06 18:10:36,443 DEBUG   SenderThread:47601 [sender.py:send_request():317] send_request: server_info
+2022-12-06 18:10:36,446 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: get_summary
+2022-12-06 18:10:36,447 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: sampled_history
+2022-12-06 18:10:36,810 INFO    MainThread:47601 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-12-06 18:10:36,810 INFO    MainThread:47601 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-12-06 18:10:36,810 INFO    MainThread:47601 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-12-06 18:10:36,811 DEBUG   HandlerThread:47601 [handler.py:handle_request():138] handle_request: shutdown
+2022-12-06 18:10:36,811 INFO    HandlerThread:47601 [handler.py:finish():814] shutting down handler
+2022-12-06 18:10:37,441 INFO    WriterThread:47601 [datastore.py:close():279] close: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/2022-12-06/18-10-22/wandb/run-20221206_181023-26cwmtte/run-26cwmtte.wandb
+2022-12-06 18:10:37,809 INFO    SenderThread:47601 [sender.py:finish():1331] shutting down sender
+2022-12-06 18:10:37,809 INFO    SenderThread:47601 [file_pusher.py:finish():168] shutting down file pusher
+2022-12-06 18:10:37,809 INFO    SenderThread:47601 [file_pusher.py:join():173] waiting for file pusher
+2022-12-06 18:10:37,813 INFO    MainThread:47601 [internal.py:handle_exit():78] Internal process exited

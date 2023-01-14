@@ -1,0 +1,36 @@
+using cuda:1
+Initialize training environment and experience replay memory
+Traceback (most recent call last):
+  File "main.py", line 48, in <module>
+    main()
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/main.py", line 90, in decorated_main
+    _run_hydra(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/_internal/utils.py", line 389, in _run_hydra
+    _run_app(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/_internal/utils.py", line 452, in _run_app
+    run_and_report(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/_internal/utils.py", line 213, in run_and_report
+    return func()
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/_internal/utils.py", line 453, in <lambda>
+    lambda: hydra.run(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/_internal/hydra.py", line 119, in run
+    ret = run_job(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/hydra/core/utils.py", line 186, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "main.py", line 45, in main
+    run(_cfg)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 76, in run
+    train(cfg, cwd, results_dir, device)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 31, in train
+    D = get_dataset_loader(cfg, cwd, device, cfg.train.train_data_path)
+  File "/home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/../../../../../algos/MRSSM/MRSSM/train.py", line 19, in get_dataset_loader
+    pca_scales=cfg.train.augmentation.pca_scales,
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/omegaconf/dictconfig.py", line 351, in __getattr__
+    return self._get_impl(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/omegaconf/dictconfig.py", line 451, in _get_impl
+    return self._resolve_with_default(
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/omegaconf/basecontainer.py", line 105, in _resolve_with_default
+    return _get_value(resolved_node)
+  File "/home/docker/.pyenv/versions/3.8.0/lib/python3.8/site-packages/omegaconf/_utils.py", line 748, in _get_value
+    from .base import Container, UnionNode
+KeyboardInterrupt

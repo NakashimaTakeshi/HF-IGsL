@@ -1,0 +1,220 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.13.4
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.8.0
+    start_time: 1669484274.009169
+    t:
+      1:
+      - 1
+      - 50
+      - 55
+      2:
+      - 1
+      - 50
+      - 55
+      3:
+      - 2
+      - 3
+      - 13
+      - 15
+      - 16
+      - 23
+      4: 3.8.0
+      5: 0.13.4
+      8:
+      - 5
+env:
+  desc: null
+  value:
+    action_name: action
+    action_repeat: 1
+    action_size: 1
+    bit_depth: 5
+    env_config:
+      env_name: SingleHoleDrilling
+    max_episode_length: null
+    observation_shapes:
+      Pose:
+      - 7
+      action:
+      - 1
+      d_pose_quat_norm:
+      - 3
+      d_pose_quat_norm_prev:
+      - 3
+      d_pose_quat_v2:
+      - 3
+      d_pose_quat_v2_prev:
+      - 3
+      image:
+      - 3
+      - 64
+      - 64
+      image_horizon:
+      - 3
+      - 64
+      - 64
+      image_horizon_128:
+      - 3
+      - 128
+      - 128
+      image_horizon_128_bin:
+      - 1
+      - 128
+      - 128
+      image_horizon_256:
+      - 3
+      - 256
+      - 256
+      image_horizon_256_bin:
+      - 1
+      - 256
+      - 256
+      image_horizon_64:
+      - 3
+      - 64
+      - 64
+      image_horizon_64_bin:
+      - 1
+      - 64
+      - 64
+      image_hsr_128:
+      - 3
+      - 128
+      - 128
+      image_hsr_256:
+      - 3
+      - 256
+      - 256
+      image_hsr_300:
+      - 3
+      - 300
+      - 300
+      image_vertical_128:
+      - 3
+      - 128
+      - 128
+      image_vertical_128_bin:
+      - 1
+      - 128
+      - 128
+      image_vertical_256:
+      - 3
+      - 256
+      - 256
+      image_vertical_256_bin:
+      - 1
+      - 256
+      - 256
+      image_vertical_64:
+      - 3
+      - 64
+      - 64
+      image_vertical_64_bin:
+      - 1
+      - 64
+      - 64
+      pose_quat:
+      - 3
+      pose_quat_next:
+      - 3
+      pose_quat_norm:
+      - 3
+      pose_quat_norm_next:
+      - 3
+      pose_quat_v2:
+      - 3
+      pose_quat_v2_next:
+      - 3
+      sound:
+      - 128
+      - 20
+      weight_value:
+      - 1
+      weight_value_norm:
+      - 1
+    taskset_name: cobotta
+main:
+  desc: null
+  value:
+    device: cuda:1
+    disable_cuda: false
+    experiment_name: RSSM-seed_0
+    git_hash: da9e5d6
+    log_dir: /home/docker/sharespace/Multimodal-RSSM_github/train/COBOTTA/SingleHoleDrilling/MRSSM/MRSSM/results/RSSM-seed_0/2022-11-27/run_0
+    seed: 0
+    tags:
+    - RSSM
+    wandb: true
+rssm:
+  desc: null
+  value:
+    activation_function:
+      cnn: relu
+      dense: elu
+      fusion: relu
+    adam_epsilon: 1.0e-07
+    belief_size: 1024
+    condition_names:
+    - Pose
+    embedding_size:
+      fusion: 1024
+      image: 1024
+      other: 128
+      sound: 256
+    free_nats: 3
+    global_kl_beta: 1
+    grad_clip_norm: 100.0
+    hidden_size: 1024
+    kl_balancing_alpha: 0.5
+    kl_beta: 1
+    learning_rate_schedule: 0
+    model_learning_rate: 0.001
+    multimodal: true
+    multimodal_params:
+      expert_dist: q(st|ht,ot)
+      fusion_method: NN
+    normalization: BatchNorm
+    observation_names_enc:
+    - image_hsr_256
+    observation_names_rec:
+    - image_hsr_256
+    overshooting_distance: 0
+    overshooting_kl_beta: 0
+    overshooting_reward_scale: 0
+    predict_reward: false
+    state_size: 128
+    worldmodel_LogProbLoss: false
+train:
+  desc: null
+  value:
+    action_noise: 0.3
+    augmentation:
+      dh_base: 1
+      dw_base: 1
+      n_crop: 9
+      noise_scales:
+      - 0.0
+      pca_scales:
+      - 0.0
+    batch_size: 50
+    checkpoint_interval: 1000
+    chunk_size: 50
+    experience_size: 100000
+    model_path: null
+    test: false
+    test_episodes: null
+    test_interval: null
+    train_data_path:
+    - ../../../../../dataset/COBOTTA/HF-PGM_MobileRobot_withPose/MobileRobotImage_20221127/train
+    train_iteration: 10000
+    use_amp: true
+    validation_data_path:
+    - ../../../../../dataset/COBOTTA/HF-PGM_MobileRobot_withPose/MobileRobotImage_20221127/validation
+    validation_interval: 10

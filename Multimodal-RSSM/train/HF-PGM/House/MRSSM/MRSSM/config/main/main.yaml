@@ -1,5 +1,5 @@
 # main:
-experiment_name: Single
+experiment_name: HF-PGM_test
 tags:
 log_dir:
 seed: 1

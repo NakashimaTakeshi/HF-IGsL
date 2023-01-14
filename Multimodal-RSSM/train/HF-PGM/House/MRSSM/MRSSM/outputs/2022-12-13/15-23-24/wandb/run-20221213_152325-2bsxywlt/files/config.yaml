@@ -1,0 +1,141 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.13.4
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.8.0
+    start_time: 1670912605.402389
+    t:
+      1:
+      - 1
+      - 50
+      - 55
+      2:
+      - 1
+      - 50
+      - 55
+      3:
+      - 1
+      - 3
+      - 13
+      - 15
+      - 16
+      - 23
+      4: 3.8.0
+      5: 0.13.4
+      8:
+      - 5
+env:
+  desc: null
+  value:
+    action_name: Pose
+    action_repeat: 1
+    action_size: 7
+    bit_depth: 5
+    env_config:
+      env_name: House
+    max_episode_length: null
+    observation_shapes:
+      image_hsr_256:
+      - 3
+      - 256
+      - 256
+    taskset_name: HF-PGM
+main:
+  desc: null
+  value:
+    device: cuda:1
+    disable_cuda: false
+    experiment_name: HF_PGM_1-seed_0
+    git_hash: 5f164fc
+    log_dir: /home/docker/sharespace/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/HF_PGM_1-seed_0/2022-12-13/run_3
+    seed: 0
+    tags:
+    - RSSM
+    wandb: true
+rssm:
+  desc: null
+  value:
+    HF_PGM:
+      use: true
+    MuMMI:
+      use: false
+    activation_function:
+      cnn: relu
+      dense: elu
+      fusion: relu
+    adam_epsilon: 1.0e-07
+    belief_size: 256
+    coefficients:
+      image_horizon: 1
+      pose_quat_norm: 1
+      sound: 1
+    condition_names:
+    - Pose
+    dreaming:
+      cpc_contrast: window
+      cpc_overshooting_distance: 3
+      mycpc_temp_logits: 1
+      use: false
+    embedding_size:
+      fusion: 1024
+      image: 1024
+      other: 128
+      sound: 256
+    free_nats: 3
+    global_kl_beta: 0
+    grad_clip_norm: 100.0
+    hidden_size: 256
+    kl_balancing_alpha: 0.5
+    kl_beta: 1
+    learning_rate_schedule: 0
+    model_learning_rate: 0.001
+    multimodal: false
+    multimodal_params:
+      fusion_method: PoE
+      fusion_timing: obs_emb
+      num_components: null
+    normalization: BatchNorm
+    obs_emb_kl_beta: 0
+    observation_names_enc:
+    - image_hsr_256
+    observation_names_rec:
+    - image_hsr_256
+    overshooting_distance: 0
+    overshooting_kl_beta: 0
+    overshooting_reward_scale: 0
+    predict_reward: false
+    state_size: 32
+    worldmodel_LogProbLoss: false
+train:
+  desc: null
+  value:
+    action_noise: 0.3
+    augmentation:
+      dh_base: 1
+      dw_base: 1
+      n_crop: 9
+      noise_scales:
+      - 0.0
+      pca_scales:
+      - 0.0
+    batch_size: 50
+    checkpoint_interval: 1000
+    chunk_size: 50
+    experience_size: 300000
+    model_path: null
+    pretrained_model: null
+    test: false
+    test_episodes: null
+    test_interval: null
+    train_data_path:
+    - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/MobileRobotImage_20221127/train
+    train_iteration: 8000
+    use_amp: true
+    validation_data_path:
+    - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/MobileRobotImage_20221127/validation
+    validation_interval: 10
