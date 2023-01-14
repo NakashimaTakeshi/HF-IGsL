@@ -120,10 +120,14 @@ AMCLLaser::SetModelLikelihoodFieldProb(double z_hit,
 
 ////////////////////////////////////////////////////////////////////////////////
 // Apply the laser sensor model
-bool AMCLLaser::UpdateSensor(pf_t *pf, AMCLSensorData *data)
+//bool AMCLLaser::UpdateSensor(pf_t *pf, AMCLSensorData *data)
+bool AMCLLaser::UpdateSensor(pf_t *pf, AMCLSensorData *data, double res[])
 {
   if (this->max_beams < 2)
     return false;
+
+  printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
+  printf("cos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf", res[4], res[5], res[6], res[7]);
 
   // Apply the laser sensor model
   if(this->model_type == LASER_MODEL_BEAM)
@@ -297,6 +301,11 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
     sample->weight *= p;
     total_weight += sample->weight;
+//    printf("i=%d, samples=%u ,sample->weight= %lf ,total_weight= %lf \n",j, sample,sample->weight,total_weight);
+//*********  add RSSM update *******//
+
+
+//*************************//
   }
 
   return(total_weight);

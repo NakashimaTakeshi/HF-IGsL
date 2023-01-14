@@ -1332,10 +1332,9 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
               (i * angle_increment);
     }
 
-    lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata);
-
     amcl::SendRssmPredictPosition srv;
     srv.request.exc_rssm = true;
+
     if (rssm_client_.call(srv))
     {
       ROS_INFO("x_loc: %lf,x_scale: %lf", (float)srv.response.x_loc, (float)srv.response.x_scale);
@@ -1347,6 +1346,11 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
     {
       ROS_ERROR("Failed to call service RSSM");
     }
+    double response[8] = {(double)srv.response.x_loc, (double)srv.response.x_scale, (double)srv.response.y_loc, (double)srv.response.y_scale, (double)srv.response.cos_loc, (double)srv.response.cos_scale, (double)srv.response.sin_loc, (double)srv.response.sin_scale};
+
+    lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata, response);
+//    lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata);
+
 
     lasers_update_[laser_index] = false;
 
