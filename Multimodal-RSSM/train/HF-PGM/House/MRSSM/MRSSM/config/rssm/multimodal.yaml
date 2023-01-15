@@ -62,7 +62,7 @@ global_kl_beta: 0               # default: 0
 free_nats: 3                    # default: 3
 
 kl_beta: 1 # this is the beta param like beta-VAE  default: 1
-kl_balancing_alpha: 0.5 # default: 0.5
+kl_balancing_alpha: 0.8 # default: 0.5
 # kl_loss =    alpha    * compute_kl(stop_grad(approx_posterior), prior)
 #         + (1 - alpha) * compute_kl(approx_posterior, stop_grad(prior))
 

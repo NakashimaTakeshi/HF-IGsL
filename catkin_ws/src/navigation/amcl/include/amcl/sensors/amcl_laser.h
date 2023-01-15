@@ -42,6 +42,7 @@ typedef enum
   LASER_MODEL_LIKELIHOOD_FIELD_PROB
 } laser_model_t;
 
+
 // Laser sensor data
 class AMCLLaserData : public AMCLSensorData
 {
@@ -96,14 +97,17 @@ class AMCLLaser : public AMCLSensor
 
   // Determine the probability for the given pose
   private: static double BeamModel(AMCLLaserData *data, 
-                                   pf_sample_set_t* set);
+                                   pf_sample_set_t* set,
+                                   double res[]);
   // Determine the probability for the given pose
   private: static double LikelihoodFieldModel(AMCLLaserData *data, 
-                                              pf_sample_set_t* set);
+                                              pf_sample_set_t* set,
+                                              double res[]);
 
   // Determine the probability for the given pose - more probablistic model 
   private: static double LikelihoodFieldModelProb(AMCLLaserData *data, 
-					     pf_sample_set_t* set);
+					     pf_sample_set_t* set,
+               double res[]);
 
   private: void reallocTempData(int max_samples, int max_obs);
 
@@ -150,6 +154,7 @@ class AMCLLaser : public AMCLSensor
   private: double chi_outlier;
 };
 
+double gaussian_likelihood(double x, double mu, double sigma);
 
 }
 

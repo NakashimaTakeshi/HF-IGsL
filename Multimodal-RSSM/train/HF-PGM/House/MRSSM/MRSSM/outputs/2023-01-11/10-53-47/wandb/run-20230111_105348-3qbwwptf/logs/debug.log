@@ -29,3 +29,10 @@ config: {'main': {'experiment_name': 'HF-PGM_test-seed_0', 'tags': ['RSSM'], 'lo
 2023-01-11 10:53:57,191 INFO    MainThread:18070 [wandb_watch.py:watch():51] Watching
 2023-01-11 10:53:57,191 INFO    MainThread:18070 [wandb_watch.py:watch():51] Watching
 2023-01-11 10:53:57,191 INFO    MainThread:18070 [wandb_watch.py:watch():51] Watching
+2023-01-11 13:40:33,386 INFO    MainThread:18070 [wandb_run.py:_finish():1753] finishing run gumma/House/3qbwwptf
+2023-01-11 13:40:33,386 INFO    MainThread:18070 [wandb_run.py:_atexit_cleanup():1955] got exitcode: 0
+2023-01-11 13:40:33,386 INFO    MainThread:18070 [wandb_run.py:_restore():1938] restore
+2023-01-11 13:40:33,386 INFO    MainThread:18070 [wandb_run.py:_restore():1944] restore done
+2023-01-11 13:40:39,075 INFO    MainThread:18070 [wandb_run.py:_footer_history_summary_info():3408] rendering history
+2023-01-11 13:40:39,079 INFO    MainThread:18070 [wandb_run.py:_footer_history_summary_info():3440] rendering summary
+2023-01-11 13:40:39,082 INFO    MainThread:18070 [wandb_run.py:_footer_sync_info():3364] logging synced files

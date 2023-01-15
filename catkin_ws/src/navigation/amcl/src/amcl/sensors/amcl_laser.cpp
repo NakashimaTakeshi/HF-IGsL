@@ -33,6 +33,7 @@
 #include <assert.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+
 #endif
 
 #include "amcl/sensors/amcl_laser.h"
@@ -126,18 +127,17 @@ bool AMCLLaser::UpdateSensor(pf_t *pf, AMCLSensorData *data, double res[])
   if (this->max_beams < 2)
     return false;
 
-  printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
-  printf("cos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf", res[4], res[5], res[6], res[7]);
+
 
   // Apply the laser sensor model
   if(this->model_type == LASER_MODEL_BEAM)
-    pf_update_sensor(pf, (pf_sensor_model_fn_t) BeamModel, data);
+    pf_update_sensor(pf, (pf_sensor_model_fn_t) BeamModel, data, res);
   else if(this->model_type == LASER_MODEL_LIKELIHOOD_FIELD)
-    pf_update_sensor(pf, (pf_sensor_model_fn_t) LikelihoodFieldModel, data);  
+    pf_update_sensor(pf, (pf_sensor_model_fn_t) LikelihoodFieldModel, data, res);  
   else if(this->model_type == LASER_MODEL_LIKELIHOOD_FIELD_PROB)
-    pf_update_sensor(pf, (pf_sensor_model_fn_t) LikelihoodFieldModelProb, data);  
+    pf_update_sensor(pf, (pf_sensor_model_fn_t) LikelihoodFieldModelProb, data, res);  
   else
-    pf_update_sensor(pf, (pf_sensor_model_fn_t) BeamModel, data);
+    pf_update_sensor(pf, (pf_sensor_model_fn_t) BeamModel, data, res);
 
   return true;
 }
@@ -145,7 +145,7 @@ bool AMCLLaser::UpdateSensor(pf_t *pf, AMCLSensorData *data, double res[])
 
 ////////////////////////////////////////////////////////////////////////////////
 // Determine the probability for the given pose
-double AMCLLaser::BeamModel(AMCLLaserData *data, pf_sample_set_t* set)
+double AMCLLaser::BeamModel(AMCLLaserData *data, pf_sample_set_t* set, double res[])
 {
   AMCLLaser *self;
   int i, j, step;
@@ -216,7 +216,7 @@ double AMCLLaser::BeamModel(AMCLLaserData *data, pf_sample_set_t* set)
   return(total_weight);
 }
 
-double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set)
+double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set, double res[])
 {
   AMCLLaser *self;
   int i, j, step;
@@ -224,6 +224,7 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
   double p;
   double obs_range, obs_bearing;
   double total_weight;
+  double RSSM_likelihood, p_HF_PGM;
   pf_sample_t *sample;
   pf_vector_t pose;
   pf_vector_t hit;
@@ -231,6 +232,9 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
   self = (AMCLLaser*) data->sensor;
 
   total_weight = 0.0;
+
+  printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
+  printf("\ncos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf\n", res[4], res[5], res[6], res[7]);
 
   // Compute the sample weights
   for (j = 0; j < set->sample_count; j++)
@@ -299,7 +303,19 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
       p += pz*pz*pz;
     }
 
-    sample->weight *= p;
+    double particle_pose[4] = {sample->pose.v[0], sample->pose.v[1], cos(sample->pose.v[2]), sin(sample->pose.v[2])};
+
+    
+
+    RSSM_likelihood = 0;
+    for(i = 0; i < 4; i++){
+      RSSM_likelihood += gaussian_likelihood(particle_pose[i], res[i], res[i+1]);
+    }
+    p_HF_PGM = p * RSSM_likelihood;
+
+    printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
+
+    sample->weight *= p_HF_PGM;
     total_weight += sample->weight;
 //    printf("i=%d, samples=%u ,sample->weight= %lf ,total_weight= %lf \n",j, sample,sample->weight,total_weight);
 //*********  add RSSM update *******//
@@ -311,7 +327,7 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
   return(total_weight);
 }
 
-double AMCLLaser::LikelihoodFieldModelProb(AMCLLaserData *data, pf_sample_set_t* set)
+double AMCLLaser::LikelihoodFieldModelProb(AMCLLaserData *data, pf_sample_set_t* set, double res[])
 {
   AMCLLaser *self;
   int i, j, step;
@@ -516,4 +532,9 @@ void AMCLLaser::reallocTempData(int new_max_samples, int new_max_obs){
   for(int k=0; k < max_samples; k++){
     temp_obs[k] = new double[max_obs]();
   }
+}
+
+double amcl::gaussian_likelihood(double x, double mu, double sigma) {
+    double exponent = -0.5 * pow((x - mu) / sigma, 2);
+    return (1 / (sigma * sqrt(2 * M_PI))) * exp(exponent);
 }

@@ -1,4 +1,4 @@
-bool success
+bool exc_rssm
 ---
 float64 x_loc
 float64 y_loc
