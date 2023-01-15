@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from hydra import initialize, compose
 import glob
 from scipy.spatial.transform import Rotation as R
+import cv2
 
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
@@ -19,6 +20,9 @@ from utils.evaluation.visualize_utils import get_pca_model, tensor2np, get_xy, g
 
 from ros_rssm.srv import *
 import rospy
+from cv_bridge import CvBridge
+from std_msgs import Image
+from geometry_msgs import PoseWithCovarianceStamped
 
 class RSSM_ros():
     def __init__(self):
@@ -76,24 +80,39 @@ class RSSM_ros():
         self.past_belief = torch.zeros(1, self.model.cfg.rssm.belief_size, device=self.model.cfg.main.device)
         self.past_state = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
 
+    def ros_init(self):
+        rospy.init_node('PredictPosition_RSSM_server')
+        self.pose_subscriber()
+        self.img_subscriber()
+        self.PredictPosition_RSSM_server()
+        print("Ready to PredictPosition_RSSM.")
+        rospy.spin()
 
+    def img_subscriber(self):
+        rospy.Subscriber("chatter", Image, self.img_callback)
 
+    def pose_subscriber(self):
+        rospy.Subscriber("chatter", PoseWithCovarianceStamped, self.pose_callback)
+
+    def img_callback(self, msg):
+        bridge = CvBridge()
+        cv_array = bridge.imgmsg_to_cv2(msg)
+        self.img = cv2.resize(cv_array[80:560,:],(256,256))
+
+    def pose_callback(self, msg):
+        self.pose = posewithcovariancestamped_converter(msg)
 
     def PredictPosition_RSSM(self, req):
-        print("i="+str(self.i))
-        self.i += 1
-        print("Returning [%s + %s = %s]"%(req.a, req.b, (req.a + req.b)))
-        # return AddTwoIntsResponse(req.a + req.b)
-
+        normaziimg = 
         observations_seq = dict(image_hsr_256 = observations_target["image_hsr_256"][t:t+1])
         state = self.model.estimate_state_online(observations_seq, actions[t:t+1], past_state, past_belief)
 
-        past_belief, past_state = state["beliefs"][0], state["posterior_states"][0]
-        locandscale = self.model.pose_poredict_model(past_belief)
-        self.pose_predict_loc.append(tensor2np(locandscale["loc"]))
-        self.pose_predict_scale.append(tensor2np(locandscale["scale"]))
+        self.past_belief, self.past_state = state["beliefs"][0], state["posterior_states"][0]
+        locandscale = self.model.pose_poredict_model(self.past_belief)
+        self.pose_predict_loc.append(tensor2np(locandscale["loc"]).tolist()[0])
+        self.pose_predict_scale.append(tensor2np(locandscale["scale"]).tolit()[0])
 
-        resp = SendRssmPredictPositionRespose()
+        resp = SendRssmPredictPositionResponse()
 
         resp.x_loc = self.pose_predict_loc[-1][0]
         resp.y_loc = self.pose_predict_loc[-1][1]
@@ -108,12 +127,48 @@ class RSSM_ros():
 
 
     def PredictPosition_RSSM_server(self):
-        rospy.init_node('PredictPosition_RSSM_server')
+        
         s = rospy.Service('PredictPosition_RSSM', SendRssmPredictPosition, self.PredictPosition_RSSM)
-        print("Ready to PredictPosition_RSSM.")
-        rospy.spin()
+        
+def quaternion2euler_numpy(x, y, z, w):
+    """
+    Convert a quaternion into euler angles (roll, pitch, yaw)
+    roll is rotation around x in radians (counterclockwise)
+    pitch is rotation around y in radians (counterclockwise)
+    yaw is rotation around z in radians (counterclockwise)
+    """
+    t0 = +2.0 * (w * x + y * z)
+    t1 = +1.0 - 2.0 * (x * x + y * y)
+    roll_x = np.degrees(np.arctan2(t0, t1))
+    t2 = +2.0 * (w * y - z * x)
+    t2 = np.where(t2>+1.0,+1.0,t2)
+    t2 = np.where(t2<-1.0, -1.0, t2)
+    pitch_y = np.degrees(np.arcsin(t2))
+    t3 = +2.0 * (w * z + x * y)
+    t4 = +1.0 - 2.0 * (y * y + z * z)
+    yaw_z = np.degrees(np.arctan2(t3, t4))
+    return roll_x, pitch_y, yaw_z # in radians
+
+
+def posewithcovariancestamped_converter(msg):
+    pose_list = pose_converter(msg.pose.pose)
+    pose_list_oira = quaternion2euler_numpy(*pose_list[3:7])
+    pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
+    return np.array(pose_data)
+
+def pose_converter(msg):
+    position_list = geometry_msgs_vector3d_converter(msg.position)
+    orientation_list = geometry_msgs_quaternion_converter(msg.orientation)
+    return position_list + orientation_list
+
+def geometry_msgs_vector3d_converter(msg):
+    return [msg.x, msg.y, msg.z]
+
+def geometry_msgs_quaternion_converter(msg):
+    return [msg.x, msg.y, msg.z, msg.w]
+
 
 if __name__ == "__main__":
     
     test = RSSM_ros()
-    test.PredictPosition_RSSM_server()
+    test.ros_init_()
