@@ -88,7 +88,7 @@ class AMCLLaser : public AMCLSensor
 
   // Update the filter based on the sensor model.  Returns true if the
   // filter has been updated.
-  public: virtual bool UpdateSensor(pf_t *pf, AMCLSensorData *data);
+  public: virtual bool UpdateSensor(pf_t *pf, AMCLSensorData *data, double res[]);
 
   // Set the laser's pose after construction
   public: void SetLaserPose(pf_vector_t& laser_pose) 

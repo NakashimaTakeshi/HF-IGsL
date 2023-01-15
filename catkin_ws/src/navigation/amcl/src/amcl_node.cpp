@@ -480,7 +480,7 @@ AmclNode::AmclNode() :
 
   pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 2, true);
   particlecloud_pub_ = nh_.advertise<geometry_msgs::PoseArray>("particlecloud", 2, true);
-  rssm_client_ = nh_.serviceClient<amcl::SendRssmPredictPosition>("add_two_ints");
+  rssm_client_ = nh_.serviceClient<amcl::SendRssmPredictPosition>("PredictPosition_RSSM");
 
   global_loc_srv_ = nh_.advertiseService("global_localization",
 					 &AmclNode::globalLocalizationCallback,
