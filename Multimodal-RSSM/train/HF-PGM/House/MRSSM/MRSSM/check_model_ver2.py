@@ -8,7 +8,6 @@ from tqdm import tqdm
 import hydra
 from omegaconf import DictConfig, OmegaConf
 import torch
-from IPython import display
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from hydra import initialize, initialize_config_module, initialize_config_dir, compose
@@ -48,7 +47,10 @@ def display_pose(action):
     pose_array[0][0]=action[0]*20+190
     pose_array[0][1]=action[1]*(-20)+115
 
-    pose_array[0][3]=quaternion_to_euler_zyx(action[3:7])
+    if len(action) == 7:
+        pose_array[0][3]=quaternion_to_euler_zyx(action[3:7])
+    elif len(action) == 4:
+        pose_array[0][3] = math.degrees(math.atan(action[3]/action[2]))
     return pose_array
 
 def room_clustering(position):
@@ -77,8 +79,8 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-model_idx = 5
+path_name = "HF-PGM_experiment_1-seed_0/2023-01-16/run_0"
+model_idx = 2
 cfg_device = "cuda:0"
 #cfg_device = "cpu"
 data="validation"
@@ -126,9 +128,9 @@ else:
 
 
 # # Reconstruction
-epi_idx = 2
+epi_idx = 0
 crop_idx = 0
-observations, actions, rewards, nonterminals = get_episode_data(D, epi_idx=epi_idx, crop_idx=crop_idx)
+observations, actions, rewards, nonterminals = get_episode_data(D, epi_idx = epi_idx, crop_idx = crop_idx)
 
 for name in observations.keys():
     if "image_horizon" in name:
@@ -273,7 +275,7 @@ feat_pca = pca_st_q.transform(feat)
 sx_img, sy_img, sz_img = get_xyz(feat_pca)
 # ax2.set_aspect('equal')
 w_graph = 4
-h_graph = 4
+h_graph = 2
 
 fig = plt.figure(figsize=(w_graph*5,h_graph*5))
 ax1 = fig.add_subplot(h_graph, w_graph, 1)
@@ -337,7 +339,7 @@ def plot_rcon(t):
     # ax3.plot(hx_recon[0:t], hy_recon[0:t], hz_recon[0:t], alpha=0.4)
     # ax3.scatter(hx_recon[t],hy_recon[t],hz_recon[t],label="h")
     ax3.plot(hx_recon_2d[0:t], hy_recon_2d[0:t], alpha=0.4)
-    ax3.scatter(hx_recon_2d[t],hy_recon_2d[t],label="h")
+    ax3.scatter(hx_recon_2d[t], hy_recon_2d[t], label="h")
     ax3.set_xlim(-10,10)
     ax3.set_ylim(-10,10)
     # ax3.set_zlim(-10,10)
@@ -429,13 +431,14 @@ def plot_rcon(t):
 
 
 # 4. アニメーション化
-anim = FuncAnimation(fig, plot_rcon, tqdm(np.arange(n_frame)), interval= dt*50)
+anim = FuncAnimation(fig, plot_rcon, tqdm(np.arange(n_frame)), interval= dt*333)
 
 os.makedirs(folder_name, exist_ok=True)
 if data=="train":
     save_file_name = f"{folder_name}/train_ep{epi_idx}_predict_pose.mp4"
 else:
-    save_file_name = "{}/validation_ep{}_predict_pose.mp4".format(folder_name, epi_idx)
-anim.save(save_file_name, writer='ffmpeg')
+    save_file_name = "{}/validation_ep{}_predict_pose.gif".format(folder_name, epi_idx)
+anim.save(save_file_name, writer='pillow')
 
+print(save_file_name)
 print("fin")

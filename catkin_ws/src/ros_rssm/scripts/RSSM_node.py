@@ -30,8 +30,8 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-        model_idx = 5
+        path_name = "HF-PGM_experiment_1-seed_0/2023-01-16/run_0"
+        model_idx = 3
         cfg_device = "cuda:0"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
@@ -79,6 +79,7 @@ class RSSM_ros():
         self.pose_predict_scale = []
         self.past_belief = torch.zeros(1, self.model.cfg.rssm.belief_size, device=self.model.cfg.main.device)
         self.past_state = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
+        self.i=1
         
 
     def ros_init_(self):
@@ -93,25 +94,31 @@ class RSSM_ros():
         rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.callback_pose)
 
     def image_subscriber(self):
-        rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback_image)
+        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback_image)
 
     def callback_image(self, msg):
-        bridge = CvBridge()
-        img_cv2 = bridge.imgmsg_to_cv2(msg, "bgr8")
+        img_cv2 = self.image_cmp_msg2opencv(msg)
         img_cut = img_cv2[ :, 80:560]
         self.img = cv2.resize(img_cut,(256, 256))
+        self.i+=1
+        if self.i%500==0:
+            cv2.imwrite("test.png", self.img)
         # print(self.img.shape)
         # print(self.pose)
 
     def callback_pose(self, msg):
         self.pose = self.posewithcovariancestamped_converter(msg)
 
+    def image_cmp_msg2opencv(self, image_msg):
+        image_np = np.fromstring(image_msg.data, dtype=np.uint8)
+        image_np = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+        return image_np
 
     def posewithcovariancestamped_converter(self, msg):
         pose_list = self.pose_converter(msg.pose.pose)
         pose_list_oira = self.quaternion2euler_numpy(pose_list[3], pose_list[4], pose_list[5], pose_list[6])
         pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
-        return np.array(pose_list)
+        return np.array(pose_data)
     
     def pose_converter(self, msg):
         position_list = self.geometry_msgs_vector3d_converter(msg.position)

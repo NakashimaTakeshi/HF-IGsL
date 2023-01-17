@@ -1337,17 +1337,17 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
 
     if (rssm_client_.call(srv))
     {
-      ROS_INFO("x_loc: %lf,x_scale: %lf", (float)srv.response.x_loc, (float)srv.response.x_scale);
-      ROS_INFO("y_loc: %lf,y_scale: %lf", (float)srv.response.y_loc, (float)srv.response.y_scale);
-      ROS_INFO("cos_loc: %lf,cos_scale: %lf", (float)srv.response.cos_loc, (float)srv.response.cos_scale);
-      ROS_INFO("sin_loc: %lf,sin_scale: %lf", (float)srv.response.sin_loc, (float)srv.response.sin_scale);
+      // ROS_INFO("x_loc: %lf,x_scale: %lf", (float)srv.response.x_loc, (float)srv.response.x_scale);
+      // ROS_INFO("y_loc: %lf,y_scale: %lf", (float)srv.response.y_loc, (float)srv.response.y_scale);
+      // ROS_INFO("cos_loc: %lf,cos_scale: %lf", (float)srv.response.cos_loc, (float)srv.response.cos_scale);
+      // ROS_INFO("sin_loc: %lf,sin_scale: %lf", (float)srv.response.sin_loc, (float)srv.response.sin_scale);
     }
     else
     {
       ROS_ERROR("Failed to call service RSSM");
     }
     double response[8] = {(double)srv.response.x_loc, (double)srv.response.x_scale, (double)srv.response.y_loc, (double)srv.response.y_scale, (double)srv.response.cos_loc, (double)srv.response.cos_scale, (double)srv.response.sin_loc, (double)srv.response.sin_scale};
-
+    printf("DataGet\nx_loc=%lf\n",srv.response.x_loc);
     lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata, response);
 //    lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata);
 

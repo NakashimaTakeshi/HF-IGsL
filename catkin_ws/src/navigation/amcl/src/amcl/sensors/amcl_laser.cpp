@@ -233,9 +233,9 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
   total_weight = 0.0;
 
-  printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
-  printf("\ncos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf\n", res[4], res[5], res[6], res[7]);
-
+  // printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
+  // printf("\ncos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf\n", res[4], res[5], res[6], res[7]);
+  printf("Measurement Model\nx_loc= %lf\n", res[0]);
   // Compute the sample weights
   for (j = 0; j < set->sample_count; j++)
   {
@@ -311,10 +311,11 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
     for(i = 0; i < 4; i++){
       RSSM_likelihood += gaussian_likelihood(particle_pose[i], res[i], res[i+1]);
     }
-    p_HF_PGM = p * RSSM_likelihood;
+    p_HF_PGM = p + RSSM_likelihood*RSSM_likelihood*RSSM_likelihood;
 
-    printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
+    // printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
 
+    // sample->weight *= p_HF_PGM;
     sample->weight *= p_HF_PGM;
     total_weight += sample->weight;
 //    printf("i=%d, samples=%u ,sample->weight= %lf ,total_weight= %lf \n",j, sample,sample->weight,total_weight);

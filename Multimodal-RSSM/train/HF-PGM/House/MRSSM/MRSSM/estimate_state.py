@@ -20,7 +20,7 @@ def multi_run(path):
 
     # device = "cpu"
     device = "cuda:0"
-    itr = 5_000
+    itr = 3_000
     # itr = 2_000
 
     for folder_dir in foders_dir:

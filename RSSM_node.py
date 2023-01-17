@@ -145,16 +145,8 @@ class RSSM_ros():
 
 
     def PredictPosition_RSSM(self, req):
-        print("2222")
-        # print("i="+str(self.i))
-        # self.i += 1
-        # print("Returning [%s + %s = %s]"%(req.a, req.b, (req.a + req.b)))
-        # return AddTwoIntsResponse(req.a + req.b)
-
-        # observations_seq = dict(image_hsr_256 = observations_target["image_hsr_256"][t:t+1])
-        # state = self.model.estimate_state_online(observations_seq, actions[t:t+1], self.past_state, self.past_belief)
-        normalized_img = normalize_image(np2tensor(self.img.transpose(2, 0, 1)), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-        action = np2tensor(self.pose).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        normalized_img = normalize_image(np2tensor(self.img.transpose(2, 0, 1)), 5).unsqueeze(0).unsqueeze(0).to(device = self.model.device)
+        action = np2tensor(self.pose).unsqueeze(0).unsqueeze(0).to(device = self.model.device)
 
         observations_seq = dict(image_hsr_256 = normalized_img)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
@@ -190,7 +182,7 @@ def normalize_image(observation, bit_depth):
     observation.add_(torch.rand_like(observation).div_(2 ** bit_depth))
     return observation
 
-def np2tensor(data, dtype=torch.float32):
+def np2tensor(data, dtype = torch.float32):
     if torch.is_tensor(data):
         return data
     else:

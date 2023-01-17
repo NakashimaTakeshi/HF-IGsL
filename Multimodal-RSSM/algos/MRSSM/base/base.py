@@ -363,7 +363,7 @@ class RSSM_base(nn.Module):
                         + reward_loss \
                         + contrastive_loss["contrastive_loss_sum"] \
                         + self.cfg.rssm.kl_beta*kl_loss["kl_loss_sum"]\
-                        + predict_pose_loss["predict_pose_loss"]
+                        + self.cfg.rssm.HF_PGM["pose_predict_index"] * predict_pose_loss["predict_pose_loss"]
         else:
             with torch.cuda.amp.autocast(enabled=self.cfg.train.use_amp):
                 observations_loss, reward_loss, kl_loss, contrastive_loss = self._calc_loss(observations_target, actions, rewards, nonterminals, states, observations_contrastive)
