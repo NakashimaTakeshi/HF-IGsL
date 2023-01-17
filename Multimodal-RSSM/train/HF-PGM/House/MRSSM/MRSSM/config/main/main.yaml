@@ -1,10 +1,10 @@
 # main:
-experiment_name: HF-PGM_test
+experiment_name: HF-PGM_experiment_1
 tags:
 log_dir:
 seed: 1
 disable_cuda: False
-device: cuda:1
+device: cuda:0
 
 # log
 wandb : True

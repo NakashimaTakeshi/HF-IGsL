@@ -9,7 +9,7 @@ from record_utils import *
 
 
 if __name__ == '__main__':
-    target_hz = 10
+    target_hz = 1
     target_topics = dict(
         image_hsr_256=dict(
             topic_name = "/camera/rgb/image_raw/compressed",
