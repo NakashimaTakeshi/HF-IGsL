@@ -1,0 +1,13 @@
+# env:
+env_config:
+  env_name: House
+taskset_name: HF-PGM
+
+observation_shapes: 
+  image_hsr_256: [3, 256, 256]
+
+action_name: "Pose"
+action_size: 4
+action_repeat: 1
+bit_depth: 5
+max_episode_length: 
