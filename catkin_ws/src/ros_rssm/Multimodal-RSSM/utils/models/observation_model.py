@@ -6,10 +6,11 @@ import torch.distributions
 
 from torch.distributions import Normal
 
+
 class ObservationModel_base(nn.Module):
-    def __init__(self, 
-                 belief_size: int, 
-                 state_size: int, 
+    def __init__(self,
+                 belief_size: int,
+                 state_size: int,
                  decoder,
                  mode,
                  activation_function: str = 'relu'
@@ -20,13 +21,12 @@ class ObservationModel_base(nn.Module):
         self.embedding_size = decoder.embedding_size
 
         if self.hf_pgm_use:
-            self.fc = nn.Linear(state_size,self.embedding_size)
+            self.fc = nn.Linear(state_size, self.embedding_size)
         else:
             self.fc = nn.Linear(belief_size + state_size, self.embedding_size)
 
         self.decoder = decoder
         self.modules = [self.fc, self.decoder]
-    
 
     def forward(self, h_t: torch.Tensor, s_t: torch.Tensor) -> Dict:
         # reshape input tensors
@@ -48,7 +48,7 @@ class ObservationModel_base(nn.Module):
         features_shape = observation.size()[1:]
         observation = observation.reshape(T, B, *features_shape)
         return {'loc': observation, 'scale': 1.0}
-    
+
     def get_state_dict(self):
         state_dict = dict(fc=self.fc.state_dict(),
                           decoder=self.decoder.state_dict(),
@@ -71,29 +71,67 @@ class ObservationModel_base(nn.Module):
         return log_prob
 
     def get_mse(self, h_t, s_t, o_t):
-        #print("h_t:",h_t)
-        #print("s_t:",s_t)
+        # print("h_t:",h_t)
+        # print("s_t:",s_t)
         loc_and_scale = self.forward(h_t, s_t)
-        #print("loc:",loc_and_scale['loc'])
+        # print("loc:",loc_and_scale['loc'])
         mse = F.mse_loss(loc_and_scale['loc'], o_t, reduction='none')
         return mse
 
+
+class ObservationModel_with_scale_base(ObservationModel_base):
+    def __init__(self,
+                 belief_size: int,
+                 state_size: int,
+                 decoder,
+                 mode,
+                 activation_function: str = 'relu'
+                 ):
+        super().__init__(belief_size=belief_size,
+                         state_size=state_size,
+                         decoder=decoder,
+                         mode=mode,
+                         activation_function=activation_function)
+
+    def forward(self, h_t: torch.Tensor, s_t: torch.Tensor) -> Dict:
+        # reshape input tensors
+        (T, B), features_shape = h_t.size()[:2], h_t.size()[2:]
+        h_t = h_t.reshape(T*B, *features_shape)
+
+        (T, B), features_shape = s_t.size()[:2], s_t.size()[2:]
+        s_t = s_t.reshape(T*B, *features_shape)
+
+        # No nonlinearity here
+        if self.hf_pgm_use:
+            hidden = self.act_fn(self.fc(s_t))
+        else:
+            hidden = self.act_fn(self.fc(torch.cat([h_t, s_t], dim=1)))
+        # hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
+
+        loc, scale = self.decoder(hidden)
+
+        features_shape = loc.size()[1:]
+
+        loc = loc.reshape(T, B, *features_shape)
+        scale = scale.reshape(T, B, *features_shape)
+        return {'loc': loc, 'scale': scale}
+
+
 class ObservationModel_dummy(ObservationModel_base):
     def __init__(self,
-                 belief_size: int = 1, 
-                 state_size: int = 1, 
+                 belief_size: int = 1,
+                 state_size: int = 1,
                  decoder=None,
                  activation_function: str = 'relu') -> None:
-        dummy_decoder = DenseDecoder(1,1)
+        dummy_decoder = DenseDecoder(1, 1)
         super().__init__(belief_size, state_size, dummy_decoder, activation_function)
         self.modules = []
 
-    
 
 class DenseDecoder(nn.Module):
-    def __init__(self, 
-                 observation_size: torch.Tensor, 
-                 embedding_size: int, 
+    def __init__(self,
+                 observation_size: torch.Tensor,
+                 embedding_size: int,
                  activation_function: str = 'relu'
                  ):
         super().__init__()
@@ -107,38 +145,69 @@ class DenseDecoder(nn.Module):
         hidden = self.act_fn(self.fc1(hidden))
         observation = self.fc2(hidden)
         return observation
-    
+
+
+class PoseDecoder(nn.Module):
+    def __init__(self,
+                 observation_size: torch.Tensor,
+                 embedding_size: int,
+                 activation_function: str = 'relu',
+                 min_std_dev: float = 0.1
+                 ):
+        super().__init__()
+        self.embedding_size = embedding_size
+        self.min_std_dev = min_std_dev
+        self.act_fn = getattr(F, activation_function)
+        self.fc1 = nn.Linear(embedding_size, embedding_size)
+        self.fc2 = nn.Linear(embedding_size, observation_size*2)
+        self.modules = [self.fc1, self.fc2]
+
+    def forward(self, hidden):
+        hidden = self.act_fn(self.fc1(hidden))
+        x = self.fc2(hidden)
+        loc, scale = torch.chunk(x, 2, dim=1)
+        scale = F.softplus(scale) + self.min_std_dev
+        return loc, scale
+
 
 class ImageDecoder(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
-                 image_dim=3, 
+
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
                  normalization=None,
                  ):
         super().__init__()
         self.embedding_size = embedding_size
         if normalization == None:
             self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 5, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(128, 64, 5, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(64, 32, 6, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(32, image_dim, 6, stride=2)
-            )
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(128, 64, 5, stride=2),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(64, 32, 6, stride=2),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32, image_dim, 6, stride=2)
+                                      )
         elif normalization == "BatchNorm":
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 5, stride=2,bias=False),
-                                        nn.BatchNorm2d(128, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(128, 64, 5, stride=2,bias=False),
-                                        nn.BatchNorm2d(64, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(64, 32, 6, stride=2,bias=False),
-                                        nn.BatchNorm2d(32, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(32, image_dim, 6, stride=2)
-            )
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 5, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          128, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          128, 64, 5, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          64, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          64, 32, 6, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          32, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32, image_dim, 6, stride=2)
+                                      )
         else:
             raise NotImplementedError
         self.modules = [self.conv]
@@ -147,41 +216,52 @@ class ImageDecoder(nn.Module):
         hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
         return self.conv(hidden)
 
+
 class ImageDecoder_84(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
-                 image_dim=3, 
+
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
                  normalization=None,
                  ):
         super().__init__()
         self.embedding_size = embedding_size
         if normalization == None:
             self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 3, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(128, 64, 4, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(64, 32, 4, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(32, 16, 6, stride=2),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(16, image_dim, 6, stride=2)
-            )
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(128, 64, 4, stride=2),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(64, 32, 4, stride=2),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(32, 16, 6, stride=2),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          16, image_dim, 6, stride=2)
+                                      )
         elif normalization == "BatchNorm":
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 3, stride=2,bias=False),
-                                        nn.BatchNorm2d(128, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(128, 64, 4, stride=2,bias=False),
-                                        nn.BatchNorm2d(64, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(64, 32, 4, stride=2,bias=False),
-                                        nn.BatchNorm2d(32, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(32, 16, 6, stride=2,bias=False),
-                                        nn.BatchNorm2d(16, affine=True, track_running_stats=True),
-                                        nn.ReLU(),
-                                        nn.ConvTranspose2d(16, image_dim, 6, stride=2)
-            )
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128, 3, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          128, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          128, 64, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          64, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          64, 32, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          32, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32, 16, 6, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          16, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          16, image_dim, 6, stride=2)
+                                      )
         else:
             raise NotImplementedError
         self.modules = [self.conv]
@@ -189,43 +269,57 @@ class ImageDecoder_84(nn.Module):
     def forward(self, hidden: torch.Tensor) -> torch.Tensor:
         hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
         return self.conv(hidden)
+
 
 class ImageDecoder_128(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
-                 image_dim=3, 
+
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
                  normalization=None,
                  ):
         super().__init__()
         self.embedding_size = embedding_size
         scale = 2
         if normalization == None:
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(128*scale, 64*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(64*scale, 32*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(32*scale, 16*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(16*scale, image_dim, 6, stride=2)
-            )
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          128*scale, 64*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          64*scale, 32*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32*scale, 16*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          16*scale, image_dim, 6, stride=2)
+                                      )
         elif normalization == "BatchNorm":
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2,bias=False),
-                                    nn.BatchNorm2d(128*scale, affine=True, track_running_stats=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(128*scale, 64*scale, 4, stride=2,bias=False),
-                                    nn.BatchNorm2d(64*scale, affine=True, track_running_stats=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(64*scale, 32*scale, 4, stride=2,bias=False),
-                                    nn.BatchNorm2d(32*scale, affine=True, track_running_stats=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(32*scale, 16*scale, 4, stride=2,bias=False),
-                                    nn.BatchNorm2d(16*scale, affine=True, track_running_stats=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(16*scale, image_dim, 6, stride=2)
-            )
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          128*scale, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          128*scale, 64*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          64*scale, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          64*scale, 32*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          32*scale, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32*scale, 16*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          16*scale, affine=True, track_running_stats=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          16*scale, image_dim, 6, stride=2)
+                                      )
         else:
             raise NotImplementedError
         self.modules = [self.conv]
@@ -233,48 +327,65 @@ class ImageDecoder_128(nn.Module):
     def forward(self, hidden: torch.Tensor) -> torch.Tensor:
         hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
         return self.conv(hidden)
+
 
 class ImageDecoder_256(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
-                 image_dim=3, 
+
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
                  normalization=None,
                  ):
         super().__init__()
         self.embedding_size = embedding_size
         scale = 2
         if normalization == None:
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(128*scale, 64*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(64*scale, 32*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(32*scale, 16*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(16*scale, 8*scale, 4, stride=2,bias=True),
-                                    nn.ReLU(),
-                                    nn.ConvTranspose2d(8*scale, image_dim, 6, stride=2)
-            )
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          128*scale, 64*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          64*scale, 32*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          32*scale, 16*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          16*scale, 8*scale, 4, stride=2, bias=True),
+                                      nn.ReLU(),
+                                      nn.ConvTranspose2d(
+                                          8*scale, image_dim, 6, stride=2)
+                                      )
         elif normalization == "BatchNorm":
-            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2,bias=False),
-                                      nn.BatchNorm2d(128*scale, affine=True, track_running_stats=True),
+            self.conv = nn.Sequential(nn.ConvTranspose2d(embedding_size, 128*scale, 6, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          128*scale, affine=True, track_running_stats=True),
                                       nn.ReLU(),
-                                      nn.ConvTranspose2d(128*scale, 64*scale, 4, stride=2,bias=False),
-                                      nn.BatchNorm2d(64*scale, affine=True, track_running_stats=True),
+                                      nn.ConvTranspose2d(
+                                          128*scale, 64*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          64*scale, affine=True, track_running_stats=True),
                                       nn.ReLU(),
-                                      nn.ConvTranspose2d(64*scale, 32*scale, 4, stride=2,bias=False),
-                                      nn.BatchNorm2d(32*scale, affine=True, track_running_stats=True),
+                                      nn.ConvTranspose2d(
+                                          64*scale, 32*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          32*scale, affine=True, track_running_stats=True),
                                       nn.ReLU(),
-                                      nn.ConvTranspose2d(32*scale, 16*scale, 4, stride=2,bias=False),
-                                      nn.BatchNorm2d(16*scale, affine=True, track_running_stats=True),
+                                      nn.ConvTranspose2d(
+                                          32*scale, 16*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          16*scale, affine=True, track_running_stats=True),
                                       nn.ReLU(),
-                                      nn.ConvTranspose2d(16*scale, 8*scale, 4, stride=2,bias=False),
-                                      nn.BatchNorm2d(8*scale, affine=True, track_running_stats=True),
+                                      nn.ConvTranspose2d(
+                                          16*scale, 8*scale, 4, stride=2, bias=False),
+                                      nn.BatchNorm2d(
+                                          8*scale, affine=True, track_running_stats=True),
                                       nn.ReLU(),
-                                      nn.ConvTranspose2d(8*scale, image_dim, 6, stride=2)
-            )
+                                      nn.ConvTranspose2d(
+                                          8*scale, image_dim, 6, stride=2)
+                                      )
         else:
             raise NotImplementedError
         self.modules = [self.conv]
@@ -283,40 +394,52 @@ class ImageDecoder_256(nn.Module):
         hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
         return self.conv(hidden)
 
+
 class SoundDecoder(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
+
+    def __init__(self,
+                 embedding_size: int,
                  normalization=None,
                  ):
         super().__init__()
         self.embedding_size = embedding_size
         if normalization == None:
             self.conv = nn.Sequential(nn.ConvTranspose2d(5, 64, kernel_size=(5, 5), stride=(3, 1), padding=(1, 2)),
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(32, 128, kernel_size=(5, 5), stride=(1, 1), padding=(1, 2)),
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(64, 64, kernel_size=(4, 8), stride=(2, 2), padding=(1, 3)),
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(32, 32, kernel_size=(4, 8), stride=(2, 2), padding=(1, 3)),
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(16, 1, kernel_size=(3, 9), stride=(1, 1), padding=(1, 4)))
-        
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(32, 128, kernel_size=(
+                                          5, 5), stride=(1, 1), padding=(1, 2)),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(64, 64, kernel_size=(
+                                          4, 8), stride=(2, 2), padding=(1, 3)),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(32, 32, kernel_size=(
+                                          4, 8), stride=(2, 2), padding=(1, 3)),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(16, 1, kernel_size=(3, 9), stride=(1, 1), padding=(1, 4)))
+
         elif normalization == "BatchNorm":
-            self.conv = nn.Sequential(nn.ConvTranspose2d(5, 64, kernel_size=(5, 5), stride=(3, 1), padding=(1, 2),bias=False),
-                                  nn.BatchNorm2d(64, affine=True, track_running_stats=True), 
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(32, 128, kernel_size=(5, 5), stride=(1, 1), padding=(1, 2),bias=False),
-                                  nn.BatchNorm2d(128, affine=True, track_running_stats=True), 
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(64, 64, kernel_size=(4, 8), stride=(2, 2), padding=(1, 3),bias=False),
-                                  nn.BatchNorm2d(64, affine=True, track_running_stats=True), 
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(32, 32, kernel_size=(4, 8), stride=(2, 2), padding=(1, 3),bias=False),
-                                  nn.BatchNorm2d(32, affine=True, track_running_stats=True), 
-                                  nn.GLU(dim=1),
-                                  nn.ConvTranspose2d(16, 1, kernel_size=(3, 9), stride=(1, 1), padding=(1, 4),bias=False))
-        
+            self.conv = nn.Sequential(nn.ConvTranspose2d(5, 64, kernel_size=(5, 5), stride=(3, 1), padding=(1, 2), bias=False),
+                                      nn.BatchNorm2d(
+                                          64, affine=True, track_running_stats=True),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(32, 128, kernel_size=(
+                                          5, 5), stride=(1, 1), padding=(1, 2), bias=False),
+                                      nn.BatchNorm2d(
+                                          128, affine=True, track_running_stats=True),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(64, 64, kernel_size=(
+                                          4, 8), stride=(2, 2), padding=(1, 3), bias=False),
+                                      nn.BatchNorm2d(
+                                          64, affine=True, track_running_stats=True),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(32, 32, kernel_size=(
+                                          4, 8), stride=(2, 2), padding=(1, 3), bias=False),
+                                      nn.BatchNorm2d(
+                                          32, affine=True, track_running_stats=True),
+                                      nn.GLU(dim=1),
+                                      nn.ConvTranspose2d(16, 1, kernel_size=(3, 9), stride=(1, 1), padding=(1, 4), bias=False))
+
         else:
             raise NotImplementedError
         self.modules = [self.conv]
@@ -330,36 +453,45 @@ class SoundDecoder(nn.Module):
 # inspired by https://github.com/SamuelBroughton/StarGAN-Voice-Conversion-2/blob/master/model.py
 class SoundDecoder_v2(nn.Module):
     __constants__ = ['embedding_size']
-    def __init__(self, 
-                 embedding_size: int, 
+
+    def __init__(self,
+                 embedding_size: int,
                  normalization=None,
                  channels_base=128,
                  ):
         super().__init__()
         self.channels_base = channels_base
         self.embedding_size = int(channels_base*2*32*4)
-        
+
         # # Up-sampling layers.
         self.up_sample_0 = nn.Sequential(
-            nn.ConvTranspose2d(in_channels=int(channels_base*2), out_channels=int(channels_base*4), kernel_size=(3,4), stride=(1,1), padding=(1,1), bias=False),
-            nn.BatchNorm2d(num_features=int(channels_base*4), affine=True, track_running_stats=True),
+            nn.ConvTranspose2d(in_channels=int(channels_base*2), out_channels=int(
+                channels_base*4), kernel_size=(3, 4), stride=(1, 1), padding=(1, 1), bias=False),
+            nn.BatchNorm2d(num_features=int(channels_base*4),
+                           affine=True, track_running_stats=True),
             nn.GLU(dim=1)
         )
         self.up_sample_1 = nn.Sequential(
-            nn.ConvTranspose2d(in_channels=int(channels_base*2), out_channels=int(channels_base*2), kernel_size=4, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(num_features=int(channels_base*2), affine=True, track_running_stats=True),
+            nn.ConvTranspose2d(in_channels=int(channels_base*2), out_channels=int(
+                channels_base*2), kernel_size=4, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(num_features=int(channels_base*2),
+                           affine=True, track_running_stats=True),
             nn.GLU(dim=1)
         )
         self.up_sample_2 = nn.Sequential(
-            nn.ConvTranspose2d(in_channels=channels_base, out_channels=channels_base, kernel_size=4, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(num_features=channels_base, affine=True, track_running_stats=True),
+            nn.ConvTranspose2d(in_channels=channels_base, out_channels=channels_base,
+                               kernel_size=4, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(num_features=channels_base,
+                           affine=True, track_running_stats=True),
             nn.GLU(dim=1)
         )
 
         # Out.
-        self.out = nn.Conv2d(in_channels=int(channels_base/2), out_channels=1, kernel_size=7, stride=1, padding=3, bias=False)
-        
-        self.modules = [self.up_sample_0, self.up_sample_1, self.up_sample_2, self.out]
+        self.out = nn.Conv2d(in_channels=int(
+            channels_base/2), out_channels=1, kernel_size=7, stride=1, padding=3, bias=False)
+
+        self.modules = [self.up_sample_0,
+                        self.up_sample_1, self.up_sample_2, self.out]
 
     def forward(self, hidden: torch.Tensor) -> torch.Tensor:
         x = hidden.view(-1, int(self.channels_base*2), 32, 4)
@@ -369,49 +501,70 @@ class SoundDecoder_v2(nn.Module):
         observation = self.out(x)
         return observation.squeeze(1)
 
-def build_ObservationModel(name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, mode,normalization=None):
+
+def build_ObservationModel(name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, mode, normalization=None):
     if "image" in name:
         image_size = observation_shapes[name][1:]
         image_dim = observation_shapes[name][0]
-        if image_size == [256,256]:
-            decoder = ImageDecoder_256(embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode ,activation_function=activation_function["cnn"])
-        elif image_size == [128,128]:
-            decoder = ImageDecoder_128(embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode, activation_function=activation_function["cnn"])
-        elif image_size == [84,84]:
-            decoder = ImageDecoder_84(embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode, activation_function=activation_function["cnn"])
-        elif image_size == [64,64]:
-            decoder = ImageDecoder(embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode, activation_function=activation_function["cnn"])
+        if image_size == [256, 256]:
+            decoder = ImageDecoder_256(
+                embedding_size["image"], image_dim=image_dim, normalization=normalization)
+            observation_models = ObservationModel_base(
+                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+        elif image_size == [128, 128]:
+            decoder = ImageDecoder_128(
+                embedding_size["image"], image_dim=image_dim, normalization=normalization)
+            observation_models = ObservationModel_base(
+                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+        elif image_size == [84, 84]:
+            decoder = ImageDecoder_84(
+                embedding_size["image"], image_dim=image_dim, normalization=normalization)
+            observation_models = ObservationModel_base(
+                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+        elif image_size == [64, 64]:
+            decoder = ImageDecoder(
+                embedding_size["image"], image_dim=image_dim, normalization=normalization)
+            observation_models = ObservationModel_base(
+                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
     elif "sound" in name:
-        decoder = SoundDecoder_v2(embedding_size["image"], normalization=normalization)
-        observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["cnn"])
+        decoder = SoundDecoder_v2(
+            embedding_size["image"], normalization=normalization)
+        observation_models = ObservationModel_base(
+            belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["cnn"])
+    elif "Pose" == name:
+        decoder = PoseDecoder(
+            observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
+        observation_models = ObservationModel_with_scale_base(
+            belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode, activation_function=activation_function["cnn"])
     else:
-        decoder = DenseDecoder(observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
-        observation_models = ObservationModel_base(belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["dense"])
+        decoder = DenseDecoder(
+            observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
+        observation_models = ObservationModel_base(
+            belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["dense"])
     return observation_models
+
 
 class MultimodalObservationModel:
     __constants__ = ['embedding_size']
 
-    def __init__(self, 
-                observation_names_rec,
-                observation_shapes,
-                embedding_size,
-                belief_size: int,
-                state_size: int,
-                hidden_size: int,
-                activation_function,
-                normalization=None,
-                device=torch.device("cpu")):
+    def __init__(self,
+                 observation_names_rec,
+                 observation_shapes,
+                 embedding_size,
+                 belief_size: int,
+                 state_size: int,
+                 hidden_size: int,
+                 activation_function,
+                 normalization=None,
+                 device=torch.device("cpu"),
+                 HFPGM_mode = False):
         self.observation_names_rec = observation_names_rec
 
         self.observation_models = dict()
         self.modules = []
         for name in self.observation_names_rec:
-            self.observation_models[name] = build_ObservationModel(name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, normalization=normalization).to(device)
+            self.observation_models[name] = build_ObservationModel(
+                name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, normalization=normalization, mode = HFPGM_mode).to(device)
             self.modules += self.observation_models[name].modules
 
     def __call__(self, h_t: torch.Tensor, s_t: torch.Tensor):
@@ -428,7 +581,8 @@ class MultimodalObservationModel:
     def get_log_prob(self, h_t, s_t, o_t):
         observation_log_prob = dict()
         for name in self.observation_names_rec:
-            log_prob = self.observation_models[name].get_log_prob(h_t, s_t, o_t[name])
+            log_prob = self.observation_models[name].get_log_prob(
+                h_t, s_t, o_t[name])
             observation_log_prob[name] = log_prob
         return observation_log_prob
 
@@ -445,10 +599,11 @@ class MultimodalObservationModel:
     def get_pred_key(self, h_t: torch.Tensor, s_t: torch.Tensor, key):
         return self.get_pred_value(h_t, s_t, key)
 
-    def get_state_dict(self): 
+    def get_state_dict(self):
         observation_model_state_dict = dict()
         for name in self.observation_models.keys():
-            observation_model_state_dict[name] = self.observation_models[name].get_state_dict()
+            observation_model_state_dict[name] = self.observation_models[name].get_state_dict(
+            )
         return observation_model_state_dict
 
     def _load_state_dict(self, state_dict):
@@ -468,5 +623,3 @@ class MultimodalObservationModel:
     def train(self):
         for name in self.observation_models.keys():
             self.observation_models[name].train()
-
-    

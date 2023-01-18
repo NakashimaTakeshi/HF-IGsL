@@ -1,5 +1,5 @@
 # main:
-experiment_name: HF-PGM_experiment_1
+experiment_name: HF-PGM_Multimodal_experiment_1
 tags:
 log_dir:
 seed: 1

@@ -1,30 +1,37 @@
 # model:
 
 # -- Architecture --
-observation_names_enc: ["image_horizon", "sound"]
-observation_names_rec: []
+observation_names_enc: ["image_hsr_256", "Pose"]
+observation_names_rec: ["image_hsr_256", "Pose"]
 
-condition_names: ["d_pose_quat_v2"]
+condition_names: ["action"]
 predict_reward: False
+
 
 multimodal: True
 multimodal_params: # if multimodal is True, multimodal_params are used
   fusion_timing: obs_emb   # stochastic_state, obs_emb
-  fusion_method: MoPoE_gmm_component     # NN, PoE, MoPoE, MoPoE_mean, MoPoE_select. MoPoE_mean calculate the expected value as posterior dist.
+  fusion_method: MoPoE     # NN, PoE, MoPoE, MoPoE_mean, MoPoE_select. MoPoE_mean calculate the expected value as posterior dist.
   num_components: 
+
+#Using HF-PGM model (Proposed model 1)
+HF_PGM:
+  use: False
+  pose_predict: False
+  pose_predict_index: 1.00    # default: 1
 
 # contrastive_learning: we can use CL when observation is single-modal or fusion timing is obs_emb
 MuMMI:
   use: False
 dreaming:
-  use: True
+  use: False
   cpc_overshooting_distance: 3
   cpc_contrast: window          # default: window #  window, time, batch
   mycpc_temp_logits: 1          # default: 1
 
 coefficients:
   image_horizon: 1
-  sound: 0.1
+  sound: 1
   pose_quat_norm: 1
 
 activation_function:
@@ -38,10 +45,10 @@ embedding_size:
   sound:   256                  # default:  256
   other:   128                  # default:  128
 
-hidden_size: 256                # default: 200
-belief_size: 256                # default: 200
-state_size:   32                # default: 30
-normalization: BatchNorm        # BatchNorm, InstanceNorm, GroupNorm, None # default: None
+hidden_size: 200                # default: 200
+belief_size: 200                # default: 200
+state_size:  30                # default: 30
+normalization: BatchNorm # BatchNorm, InstanceNorm, GroupNorm, None # default: None
 
 
 # -- observation loss --

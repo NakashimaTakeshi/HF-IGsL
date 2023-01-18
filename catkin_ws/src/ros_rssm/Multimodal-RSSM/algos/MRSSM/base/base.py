@@ -677,7 +677,8 @@ class MRSSM_obs_emb_base(MRSSM_base):
                                                                 hidden_size=self.cfg.rssm.hidden_size,
                                                                 activation_function=dict(self.cfg.rssm.activation_function),
                                                                 normalization=self.cfg.rssm.normalization,
-                                                                device=device)
+                                                                device=device,
+                                                                HFPGM_mode=self.cfg.rssm.HF_PGM["use"])
         else:
             self.observation_model = ObservationModel_dummy()
         

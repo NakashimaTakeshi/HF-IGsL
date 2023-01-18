@@ -1,5 +1,5 @@
 defaults:
 - main: main
 - env: House
-- rssm: multimodal
+- rssm: HF-PGM_Multimodal
 - train: train
