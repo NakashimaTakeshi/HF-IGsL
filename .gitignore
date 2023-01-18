@@ -34,3 +34,4 @@ catkin_ws/install/
 *.wandb
 *.json
 ffmpeg/
+catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/figs_out_dir/
