@@ -28,3 +28,9 @@ catkin_ws/install/
 
 # 'rosbag' files.
 *.bag
+*.pth
+*.npy
+*.log
+*.wandb
+*.json
+ffmpeg/
