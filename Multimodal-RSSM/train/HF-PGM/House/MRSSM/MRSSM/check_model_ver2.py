@@ -79,7 +79,7 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_experiment_1-seed_0/2023-01-16/run_0"
+path_name = "HF-PGM_experiment_1-seed_0/2023-01-17/run_1"
 model_idx = 2
 cfg_device = "cuda:0"
 #cfg_device = "cpu"

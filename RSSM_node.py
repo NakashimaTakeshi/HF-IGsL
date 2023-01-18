@@ -32,7 +32,7 @@ class RSSM_ros():
         # #パラーメーター設定
         path_name = "HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
         model_idx = 5
-        cfg_device = "cuda:0"
+        cfg_device = "cuda:1"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
         model_folder = os.path.join("results", path_name)

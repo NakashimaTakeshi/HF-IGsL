@@ -12,6 +12,7 @@ from hydra import initialize, compose
 import glob
 from scipy.spatial.transform import Rotation as R
 import cv2
+import datetime
 
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
@@ -23,15 +24,16 @@ import rospy
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image, CompressedImage
 from geometry_msgs.msg import PoseWithCovarianceStamped
-
+from nav_msgs.msg import Odometry
+from std_srvs.srv import *
 class RSSM_ros():
     def __init__(self):
         # 勾配を計算しない
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_experiment_1-seed_0/2023-01-16/run_0"
-        model_idx = 3
+        path_name = "HF-PGM_experiment_1-seed_0/2023-01-17/run_1"
+        model_idx = 2
         cfg_device = "cuda:0"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
@@ -80,13 +82,32 @@ class RSSM_ros():
         self.past_belief = torch.zeros(1, self.model.cfg.rssm.belief_size, device=self.model.cfg.main.device)
         self.past_state = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
         self.i=1
+
+        self.eval_data = dict()
+        eval_data_key = ["image_t", "pose_t-1", "grand_pose_t","predict_pose_loc", "predict_pose_scale"]
+
+        for key in eval_data_key:  
+            self.eval_data[key] = []
         
+        self.mode = True
+
+        now = datetime.datetime.now()
+        filename = 'log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+
+
+        self.out_path = os.path.join("eval_data", filename)
+
+
+
 
     def ros_init_(self):
         rospy.init_node('PredictPosition_RSSM_server')
         self.pose_subscriber()
         self.image_subscriber()
+        self.grand_pose_subscriber()
         self.PredictPosition_RSSM_server()
+        self.save_data_subscriber()
+        rospy.on_shutdown(self.save_eval_data)
         print("Ready to PredictPosition_RSSM.")
         rospy.spin()
 
@@ -96,18 +117,39 @@ class RSSM_ros():
     def image_subscriber(self):
         rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback_image)
 
+    def grand_pose_subscriber(self):
+        rospy.Subscriber("/tracker", Odometry, self.callback_grand_pose)
+
+    def PredictPosition_RSSM_publisher(self):
+        self.pub_rssm_predict_position = rospy.Publisher("PredictPosition_RSSM_topic", PoseWithCovarianceStamped)
+
+    def save_data_subscriber(self):
+        rospy.Service("Save_eval_data", Empty, self.save_eval_data)
+
+    def save_eval_data(self):
+        self.mode = False
+
+        if os.path.exists(os.path.dirname(self.out_path)) == False:
+            os.mkdir(os.path.dirname(self.out_path))
+
+        np.save(self.out_path, self.eval_data, allow_pickle=True, fix_imports=True)
+        print("Save eval data Dir=:", self.out_path)
+        
+        # return EmptyResponse()
+
     def callback_image(self, msg):
         img_cv2 = self.image_cmp_msg2opencv(msg)
         img_cut = img_cv2[ :, 80:560]
         self.img = cv2.resize(img_cut,(256, 256))
-        self.i+=1
-        if self.i%500==0:
-            cv2.imwrite("test.png", self.img)
         # print(self.img.shape)
         # print(self.pose)
 
     def callback_pose(self, msg):
         self.pose = self.posewithcovariancestamped_converter(msg)
+    
+    def callback_grand_pose(self, msg):
+        self.grand_pose_receiver = self.posewithcovariancestamped_converter(msg)
+
 
     def image_cmp_msg2opencv(self, image_msg):
         image_np = np.fromstring(image_msg.data, dtype=np.uint8)
@@ -152,16 +194,10 @@ class RSSM_ros():
 
 
     def PredictPosition_RSSM(self, req):
-        print("2222")
-        # print("i="+str(self.i))
-        # self.i += 1
-        # print("Returning [%s + %s = %s]"%(req.a, req.b, (req.a + req.b)))
-        # return AddTwoIntsResponse(req.a + req.b)
-
-        # observations_seq = dict(image_hsr_256 = observations_target["image_hsr_256"][t:t+1])
-        # state = self.model.estimate_state_online(observations_seq, actions[t:t+1], self.past_state, self.past_belief)
-        normalized_img = normalize_image(np2tensor(self.img.transpose(2, 0, 1)), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-        action = np2tensor(self.pose).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
+        print(sub_data["image"].shape)
+        normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
 
         observations_seq = dict(image_hsr_256 = normalized_img)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
@@ -170,7 +206,6 @@ class RSSM_ros():
         locandscale = self.model.pose_poredict_model(self.past_belief)
         self.pose_predict_loc.append(tensor2np(locandscale["loc"])[0].tolist())
         self.pose_predict_scale.append(tensor2np(locandscale["scale"])[0].tolist())
-        print(self.pose_predict_loc[-1])
 
         resp = SendRssmPredictPositionResponse()
 
@@ -183,6 +218,23 @@ class RSSM_ros():
         resp.cos_scale = self.pose_predict_scale[-1][2]
         resp.sin_scale = self.pose_predict_scale[-1][3]
 
+        if self.mode == True:
+            print("---------------------------")
+            print("HF-PGM (RSSM SERBER) | t = ", self.i)
+            print("x_{t-1}        :", np.round(sub_data["pose"], decimals= 2).tolist())
+            print("p(x_t|h_t)[loc]:", [round(t, 2) for t in self.pose_predict_loc[-1]])
+            print("Grand x_t      :", np.round(sub_data["grand_pose"], decimals= 2).tolist())
+            print("Grand x_t_now  :", np.round(self.grand_pose_receiver, decimals= 2).tolist())
+            self.i += 1
+
+            self.eval_data["image_t"].append(sub_data["image"])
+            self.eval_data["pose_t-1"].append(sub_data["pose"])
+            self.eval_data["grand_pose_t"].append(sub_data["grand_pose"])
+            self.eval_data["predict_pose_loc"].append(np.array(self.pose_predict_loc[-1]))
+            self.eval_data["predict_pose_scale"].append(np.array(self.pose_predict_scale[-1]))
+        else:
+            print("fin")
+            quit()
         return resp
 
 

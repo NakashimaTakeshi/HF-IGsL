@@ -4,7 +4,7 @@ tags:
 log_dir:
 seed: 1
 disable_cuda: False
-device: cuda:0
+device: cuda:1
 
 # log
 wandb : True
