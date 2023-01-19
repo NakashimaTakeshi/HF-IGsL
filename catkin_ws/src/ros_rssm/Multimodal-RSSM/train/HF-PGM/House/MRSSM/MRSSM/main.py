@@ -31,7 +31,13 @@ def set_experiment_name(cfg, experiment_name):
 
 def set_tags(cfg, tags):
     _cfg = copy.deepcopy(cfg)
-    _cfg.main.tags = copy.deepcopy(tags)
+    _cfg.main.tags += copy.deepcopy(tags)
+    return _cfg
+
+def update_tag(cfg):
+    _cfg = copy.deepcopy(cfg)
+    if _cfg.rssm.HF_PGM.use:
+        cfg.main.tags += ["use_HFPGM"]
     return _cfg
 
 @hydra.main(config_path="config", config_name="config")
@@ -41,6 +47,7 @@ def main(cfg_raw: DictConfig) -> None:
         _cfg = copy.deepcopy(cfg_raw)
         # _cfg = set_experiment_name(_cfg, experiment_name)
         _cfg = set_tags(_cfg, tags)
+        _cfg = update_tag(_cfg)
         _cfg = setting_seed(_cfg, seed)
         run(_cfg)
 
