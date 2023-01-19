@@ -34,13 +34,12 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_experiment_1-seed_0/2023-01-17/run_1"
+        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_3"
         model_idx = 2
         cfg_device = "cuda:0"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-        model_folder = os.path.join("results", path_name)
-
+        model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
 
 
         with initialize(config_path=model_folder):
@@ -199,15 +198,20 @@ class RSSM_ros():
         sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
         print(sub_data["image"].shape)
         normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-        action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        action = torch.zeros([1, 1, 1], device=self.model.device)
         predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-        observations_seq = dict(image_hsr_256 = normalized_img)
+
+
+        observations_seq = dict(image_hsr_256 = normalized_img, Pose = predict_pose)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
 
         self.past_belief, self.past_state = state["beliefs"][0], state["posterior_states"][0]
-        locandscale = self.model.pose_poredict_model(self.past_belief)
-        self.pose_predict_loc.append(tensor2np(locandscale["loc"])[0].tolist())
-        self.pose_predict_scale.append(tensor2np(locandscale["scale"])[0].tolist())
+        
+        locandscale = self.model.observation_model.observation_models["Pose"](s_t=state["posterior_states"], h_t=state["beliefs"])
+        print("tensor2np(locandscale['loc'])[0].tolist()",tensor2np(locandscale["loc"])[0].tolist())
+
+        self.pose_predict_loc.append(tensor2np(locandscale["loc"])[0][0].tolist())
+        self.pose_predict_scale.append(tensor2np(locandscale["scale"])[0][0].tolist())
 
         resp = SendRssmPredictPositionResponse()
 
