@@ -16,7 +16,7 @@ multimodal_params: # if multimodal is True, multimodal_params are used
 
 #Using HF-PGM model (Proposed model 1)
 HF_PGM:
-  use: False
+  use: True
   pose_predict: False
   pose_predict_index: 1.00    # default: 1
 
