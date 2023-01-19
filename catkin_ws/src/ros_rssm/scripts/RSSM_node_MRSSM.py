@@ -34,7 +34,7 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_3"
+        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_4"
         model_idx = 2
         cfg_device = "cuda:0"
 
@@ -81,7 +81,8 @@ class RSSM_ros():
         self.pose_predict_loc = []
         self.pose_predict_scale = []
         self.past_belief = torch.zeros(1, self.model.cfg.rssm.belief_size, device=self.model.cfg.main.device)
-        self.past_state = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
+        self.past_state_without_pose = torch.zeros(1, self.model.cfg.rssm.state_size, device=self.model.cfg.main.device)
+        self.pose_dummy = torch.zeros((1, 1, self.model.cfg.env.observation_shapes["Pose"][0]), device=self.model.cfg.main.device)
         self.i=1
 
         self.eval_data = dict()
@@ -194,24 +195,55 @@ class RSSM_ros():
         return roll_x, pitch_y, yaw_z # in radians
 
 
+
     def PredictPosition_RSSM(self, req):
-        sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
+        if self.i > 1:
+            sub_data = dict(image=self.img.transpose(2, 0, 1), pose=self.pose, grand_pose=self.grand_pose_receiver)
+        else:
+            sub_data = dict(image=self.img.transpose(2, 0, 1), grand_pose=self.grand_pose_receiver)
         print(sub_data["image"].shape)
-        normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        normalized_img = (
+            normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        )
         action = torch.zeros([1, 1, 1], device=self.model.device)
-        predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        if "pose" in sub_data.keys():  # 時刻t=0では動かないような条件
+            predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+            normalized_past_img = (
+                normalize_image(np2tensor(self.past_image), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+            )
+            past_observations_seq = dict(image_hsr_256=normalized_past_img, Pose=predict_pose)
 
+            # # 1. s^q_t-1~q(s^q_t-1|h_t-1, s_t-1,o_t-1,x_t-1) 全ての観測から現在の状態を推論
+            # past_state = self.model.estimate_state_online(
+            #     past_observations_seq, action, self.past_state_without_pose, self.past_belief
+            # )
 
-        observations_seq = dict(image_hsr_256 = normalized_img, Pose = predict_pose)
-        state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
+            # 1. s^q_t-1~q(s^q_t-1|h_t-1, o_t-1,x_t-1) 全ての観測から1時刻前の状態を推論
+            obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq)
+            past_state = self.model.transition_model.obs_encoder.sample(h_t=self.past_belief, o_t=obs_emb_posterior[0])[0]
+        else:
+            past_state = self.past_state_without_pose
 
-        self.past_belief, self.past_state = state["beliefs"][0], state["posterior_states"][0]
-        
-        locandscale = self.model.observation_model.observation_models["Pose"](s_t=state["posterior_states"], h_t=state["beliefs"])
-        print("tensor2np(locandscale['loc'])[0].tolist()",tensor2np(locandscale["loc"])[0].tolist())
+        # 2. h_t=f(s^q_t-1,h_t-1)
+        # 3. s_t~q(s_t|h_t,o_t) imageだけで状態推論
+        observations_seq = dict(
+            image_hsr_256=normalized_img, Pose=self.pose_dummy
+        )  # Poseは状態の推論には使用しないが、何らかの値がないとエラーが出る
+        print("past_state.shape",past_state.shape)
+        print("self.past_belief.shape",self.past_belief.shape)
+        state = self.model.estimate_state_online(observations_seq, action, past_state, self.past_belief, subset_index=1)
+        self.past_belief, self.past_state_without_pose = state["beliefs"][0], state["posterior_states"][0]
+
+        # 4. x_t~p(x_t|s_t,h_t) imageだけで推論した状態からxtを予測
+        locandscale = self.model.observation_model.observation_models["Pose"](
+            s_t=state["posterior_states"], h_t=state["beliefs"]
+        )
+        print("tensor2np(locandscale['loc'])[0].tolist()", tensor2np(locandscale["loc"])[0].tolist())
 
         self.pose_predict_loc.append(tensor2np(locandscale["loc"])[0][0].tolist())
         self.pose_predict_scale.append(tensor2np(locandscale["scale"])[0][0].tolist())
+
+        self.past_image = sub_data["image"]
 
         resp = SendRssmPredictPositionResponse()
 
@@ -227,17 +259,23 @@ class RSSM_ros():
         if self.mode == True:
             print("---------------------------")
             print("HF-PGM (RSSM SERBER) | t = ", self.i)
-            print("x_{t-1}        :", np.round(sub_data["pose"], decimals= 2).tolist())
+            if self.i != 1:
+                print("x_{t-1}        :", np.round(sub_data["pose"], decimals=2).tolist())
             print("p(x_t|h_t)[loc]:", [round(t, 2) for t in self.pose_predict_loc[-1]])
-            print("Grand x_t      :", np.round(sub_data["grand_pose"], decimals= 2).tolist())
-            print("Grand x_t_now  :", np.round(self.grand_pose_receiver, decimals= 2).tolist())
-            self.i += 1
-
+            print("Grand x_t      :", np.round(sub_data["grand_pose"], decimals=2).tolist())
+            print("Grand x_t_now  :", np.round(self.grand_pose_receiver, decimals=2).tolist())
+            
+            
             self.eval_data["image_t"].append(sub_data["image"])
-            self.eval_data["pose_t-1"].append(sub_data["pose"])
+            if self.i != 1:
+                self.eval_data["pose_t-1"].append(sub_data["pose"])
+            else:
+                self.eval_data["pose_t-1"].append(np.array([1000,1000,1,1]))
             self.eval_data["grand_pose_t"].append(sub_data["grand_pose"])
             self.eval_data["predict_pose_loc"].append(np.array(self.pose_predict_loc[-1]))
             self.eval_data["predict_pose_scale"].append(np.array(self.pose_predict_scale[-1]))
+
+            self.i += 1
         else:
             print("fin")
             quit()
