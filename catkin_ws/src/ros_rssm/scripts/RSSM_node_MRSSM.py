@@ -200,7 +200,7 @@ class RSSM_ros():
         print(sub_data["image"].shape)
         normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
         action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-
+        predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
         observations_seq = dict(image_hsr_256 = normalized_img)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
 
