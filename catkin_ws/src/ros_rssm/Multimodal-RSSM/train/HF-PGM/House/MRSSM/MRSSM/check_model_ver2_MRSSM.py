@@ -81,7 +81,7 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_3"
+path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_4"
 model_idx = 2
 cfg_device = "cuda:1"
 #cfg_device = "cpu"
@@ -359,7 +359,6 @@ def plot_rcon(t):
             continue
         else:
             plot_nparray_recon_ht = np.array(plot_array_recon_ht[j])
-            print("plot_array_recon_ht[{}] = {}".format(j, plot_nparray_recon_ht.shape))
             ax3.scatter(plot_nparray_recon_ht[:, 0], plot_nparray_recon_ht[:, 1], color = color_list[j], label="h")
 
     ax3.plot(hx_recon_2d[0:t], hy_recon_2d[0:t], alpha=0.4)

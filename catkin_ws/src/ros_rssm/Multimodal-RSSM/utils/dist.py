@@ -100,6 +100,7 @@ def calc_subset_states(expert_means,
     subset_means, subset_std_devs = _calc_subset_states(expert_means, expert_std_devs)
     means = []
     std_devs = []
+    print(subset_means.keys())
     for key in subset_means.keys():
         means.append(subset_means[key])
         std_devs.append(subset_std_devs[key])
