@@ -151,7 +151,6 @@ class RSSM(RSSM_base):
         estimate_stateのオンライン版
         
         """
-        batch_size = 1
         det = False
         nonterminals = torch.ones(1, 1, 1, device=self.cfg.main.device)
 

@@ -11,7 +11,7 @@ from algos.MRSSM.MRSSM.train import get_dataset_loader
 
 def tensor2numpy_state(state):
     for key in state.keys():
-        #仮の修正
+        #仮の修正(koko)
         if key=='expert_means' or key=='expert_std_devs':
             continue
 

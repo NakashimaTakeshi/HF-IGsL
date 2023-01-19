@@ -181,6 +181,7 @@ def gmm_component(subset_means,
                   subset_std_devs,
                   equal_division=True,
                   num_components=None,
+                  subset_index = None,
                   ):
     subset_means = torch.stack(subset_means, axis=-1)
     subset_std_devs = torch.stack(subset_std_devs, axis=-1)
@@ -216,22 +217,38 @@ def gmm_component(subset_means,
     posterior_std_devs = (subset_std_devs * mask.detach()).sum(dim=-1)    
     return posterior_means, posterior_std_devs
 
+def crossmodal_inference(subset_means,
+                        subset_std_devs,
+                        subset_index=None,
+                        ):
+    subset_means = torch.stack(subset_means, axis=-1)
+    subset_std_devs = torch.stack(subset_std_devs, axis=-1)
+    # T, B, num_samples, num_subset = subset_means.shape
+    
+    posterior_means = subset_means[:,:,:,subset_index]
+    posterior_std_devs = subset_std_devs[:,:,:,subset_index]
+    return posterior_means, posterior_std_devs
+
 def get_mopoe_params(expert_means,
                     expert_std_devs,
                     fusion_method="MoPoE",
                     num_components=None,
+                    subset_index = None
                     ):
     subset_means, subset_std_devs = calc_subset_states(expert_means, expert_std_devs)
-    if fusion_method == "MoPoE":
-        return gmm_component(subset_means, subset_std_devs, equal_division=False, num_components=1)
-    elif fusion_method == "MoPoE_gmm_component":
-        return gmm_component(subset_means, subset_std_devs, num_components=num_components)
-    elif fusion_method == "MoPoE_select":
-        return mixture_component_selection(subset_means, subset_std_devs)
-    elif fusion_method == "MoPoE_mean":
-        return arithmetic_mean(subset_means, subset_std_devs)
+    if subset_index != None:
+        return crossmodal_inference(subset_means, subset_std_devs, subset_index = subset_index)
     else:
-        raise NotImplementedError("{} is not implemented".format(fusion_method))
+        if fusion_method == "MoPoE":
+            return gmm_component(subset_means, subset_std_devs, equal_division=False, num_components=1, subset_index = subset_index)
+        elif fusion_method == "MoPoE_gmm_component":
+            return gmm_component(subset_means, subset_std_devs, num_components=num_components, subset_index = subset_index)
+        elif fusion_method == "MoPoE_select":
+            return mixture_component_selection(subset_means, subset_std_devs)
+        elif fusion_method == "MoPoE_mean":
+            return arithmetic_mean(subset_means, subset_std_devs)
+        else:
+            raise NotImplementedError("{} is not implemented".format(fusion_method))
 
 def get_mopoe_state(expert_means,
                     expert_std_devs,

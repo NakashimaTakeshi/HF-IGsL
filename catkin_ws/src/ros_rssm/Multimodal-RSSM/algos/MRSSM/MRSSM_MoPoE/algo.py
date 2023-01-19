@@ -90,7 +90,7 @@ class MRSSM_obs_emb_MoPoE(MRSSM_obs_emb_base):
         super().__init__(cfg, device)
         print("Multimodal RSSM (fusion obs_emb by MoPoE)")
 
-    def get_obs_emb_posterior(self, observations, use_mean=False):
+    def get_obs_emb_posterior(self, observations, use_mean=False, subset_index = None):
         _obs_emb = bottle_tupele_multimodal(self.encoder, observations)
         expert_means = dict()
         expert_std_devs = dict()
@@ -100,6 +100,7 @@ class MRSSM_obs_emb_MoPoE(MRSSM_obs_emb_base):
         means, std_devs = get_mopoe_params(expert_means, expert_std_devs, 
                                            fusion_method=self.cfg.rssm.multimodal_params.fusion_method, 
                                            num_components=self.cfg.rssm.multimodal_params.num_components,
+                                           subset_index = subset_index
                                            )
         if use_mean:
             obs_emb = means
@@ -113,7 +114,8 @@ class MRSSM_obs_emb_MoPoE(MRSSM_obs_emb_base):
                         rewards, 
                         nonterminals,
                         batch_size=None,
-                        det=False):
+                        det=False,
+                        subset_index = None):
         T,B = actions.shape[:2]
         if batch_size == None:
             batch_size = actions.shape[1]
@@ -122,7 +124,7 @@ class MRSSM_obs_emb_MoPoE(MRSSM_obs_emb_base):
         init_belief, init_state = torch.zeros(batch_size, self.cfg.rssm.belief_size, device=self.cfg.main.device), torch.zeros(batch_size, self.cfg.rssm.state_size, device=self.cfg.main.device)
         # Update belief/state using posterior from previous belief/state, previous action and current observation (over entire sequence at once)
         
-        obs_emb_posterior = self.get_obs_emb_posterior(observations)
+        obs_emb_posterior = self.get_obs_emb_posterior(observations, subset_index = subset_index)
 
         beliefs, prior_states, prior_means, prior_std_devs, posterior_states, posterior_means, posterior_std_devs, expert_means, expert_std_devs = self.transition_model(
             init_state, actions, init_belief, obs_emb_posterior, nonterminals, det=det)
@@ -162,6 +164,32 @@ class MRSSM_obs_emb_MoPoE(MRSSM_obs_emb_base):
                      posterior_means_subset=posterior_means_subset,
                      posterior_std_devs_subset=posterior_std_devs_subset,
                      )
+        return states
+    
+    def estimate_state_online(self, observations, actions, past_state, past_belief, subset_index = None):
+        """
+        estimate_state(MoPoE)のオンライン版
+        """
+        det = False
+        nonterminals = torch.ones(1, 1, 1, device=self.cfg.main.device)
+
+
+        # Update belief/state using posterior from previous belief/state, previous action and current observation (over entire sequence at once)
+        obs_emb_posterior = self.get_obs_emb_posterior(observations, subset_index = subset_index)
+
+        beliefs, prior_states, prior_means, prior_std_devs, posterior_states, posterior_means, posterior_std_devs, expert_means, expert_std_devs = self.transition_model(
+            past_state, actions, past_belief, obs_emb_posterior, nonterminals, det=det)
+
+        states = dict(beliefs=beliefs,
+                        prior_states=prior_states,
+                        prior_means=prior_means,
+                        prior_std_devs=prior_std_devs,
+                        posterior_states=posterior_states,
+                        posterior_means=posterior_means,
+                        posterior_std_devs=posterior_std_devs,
+                        expert_means=expert_means, 
+                        expert_std_devs=expert_std_devs,
+                        ) 
         return states
 
     def _calc_kl(self,

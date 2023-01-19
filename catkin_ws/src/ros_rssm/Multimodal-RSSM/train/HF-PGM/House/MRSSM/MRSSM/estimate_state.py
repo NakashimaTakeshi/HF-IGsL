@@ -19,7 +19,7 @@ def multi_run(path):
     print(files, foders_dir)
 
     # device = "cpu"
-    device = "cuda:0"
+    device = "cuda:1"
     itr = 3_000
     # itr = 2_000
 

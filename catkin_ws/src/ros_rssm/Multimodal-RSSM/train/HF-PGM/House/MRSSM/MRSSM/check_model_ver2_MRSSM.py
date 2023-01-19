@@ -178,7 +178,8 @@ pca_st_q_2d = get_pca_model(st_q, 2)
 
 #再構成
 observations_target = model._clip_obs(observations, idx_start=1)
-state = model.estimate_state(observations_target, actions[:-1], rewards, nonterminals[:-1])
+#estimate_state   subset_index(0:空集合、1:image、2:Pose、3:両方)
+state = model.estimate_state(observations_target, actions[:-1], rewards, nonterminals[:-1], subset_index = 1)
 recon = model.observation_model(h_t=state["beliefs"], s_t=state["posterior_means"])
 recon["state"]={"beliefs":state["beliefs"],"posterior_means":state["posterior_means"]}
 
