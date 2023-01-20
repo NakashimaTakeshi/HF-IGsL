@@ -308,7 +308,7 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
     
 
     RSSM_likelihood = 0;
-    for(i = 0; i < 4; i++){
+    for(i = 0; i < 2; i++){
       RSSM_likelihood += gaussian_likelihood(particle_pose[i], res[i], res[i+1]);
     }
     p_HF_PGM = p + RSSM_likelihood*RSSM_likelihood*RSSM_likelihood;
