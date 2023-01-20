@@ -201,7 +201,6 @@ class RSSM_ros():
             sub_data = dict(image=self.img.transpose(2, 0, 1), pose=self.pose, grand_pose=self.grand_pose_receiver)
         else:
             sub_data = dict(image=self.img.transpose(2, 0, 1), grand_pose=self.grand_pose_receiver)
-        print(sub_data["image"].shape)
         normalized_img = (
             normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
         )
@@ -229,8 +228,6 @@ class RSSM_ros():
         observations_seq = dict(
             image_hsr_256=normalized_img, Pose=self.pose_dummy
         )  # Poseは状態の推論には使用しないが、何らかの値がないとエラーが出る
-        print("past_state.shape",past_state.shape)
-        print("self.past_belief.shape",self.past_belief.shape)
         state = self.model.estimate_state_online(observations_seq, action, past_state, self.past_belief, subset_index=1)
         self.past_belief, self.past_state_without_pose = state["beliefs"][0], state["posterior_states"][0]
 
