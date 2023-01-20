@@ -49,7 +49,7 @@ hidden_size: 200                # default: 200
 belief_size: 200                # default: 200
 state_size:  30                # default: 30
 normalization: BatchNorm # BatchNorm, InstanceNorm, GroupNorm, None # default: None
-
+use_ResNet: True
 
 # -- observation loss --
 worldmodel_LogProbLoss: False   # default: False
@@ -75,4 +75,4 @@ adam_epsilon: 1e-7                # default: 1e-7
 # Note that original has a linear learning rate decay, but it seems unlikely that this makes a significant difference
 grad_clip_norm: 100.0             # default: 100.0
 
-model_learning_rate: 1e-3         # default: 1e-3
+model_learning_rate: 1e-4         # default: 1e-3

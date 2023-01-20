@@ -67,6 +67,7 @@ rssm:
   belief_size: 200
   state_size: 30
   normalization: BatchNorm
+  use_ResNet: false
   worldmodel_LogProbLoss: false
   overshooting_distance: 0
   overshooting_kl_beta: 0

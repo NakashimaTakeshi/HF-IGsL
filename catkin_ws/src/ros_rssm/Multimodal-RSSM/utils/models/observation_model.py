@@ -5,6 +5,7 @@ from torch.nn import functional as F
 import torch.distributions
 
 from torch.distributions import Normal
+from utils.models.ResidualBlocks import ResidualBlock2dTransposeConv
 
 
 class ObservationModel_base(nn.Module):
@@ -215,6 +216,201 @@ class ImageDecoder(nn.Module):
     def forward(self, hidden: torch.Tensor) -> torch.Tensor:
         hidden = hidden.reshape(-1, self.embedding_size, 1, 1)
         return self.conv(hidden)
+
+def res_block_gen(in_channels, out_channels, kernelsize, stride, padding, o_padding, dilation, a_val=1.0, b_val=1.0):
+    upsample = None
+    if (kernelsize != 1 and stride != 1) or (in_channels != out_channels):
+        upsample = nn.Sequential(nn.ConvTranspose2d(in_channels, out_channels,
+                                                    kernel_size=kernelsize,
+                                                    stride=stride,
+                                                    padding=padding,
+                                                    dilation=dilation,
+                                                    output_padding=o_padding),
+                                 nn.BatchNorm2d(out_channels))
+    layers = []
+    layers.append(ResidualBlock2dTransposeConv(in_channels, out_channels,
+                                               kernelsize=kernelsize,
+                                               stride=stride,
+                                               padding=padding,
+                                               dilation=dilation,
+                                               o_padding=o_padding,
+                                               upsample=upsample,
+                                               a=a_val, b=b_val))
+    return nn.Sequential(*layers)
+
+
+class ImageDecoder_ResNet_64(nn.Module):
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
+                 normalization=None,
+                 DIM_img=128,
+                 a=2.0,
+                 b=0.3):
+        super(ImageDecoder_ResNet_64, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.fc = nn.Linear(embedding_size, 5*DIM_img, bias=True)
+        self.resblock1 = res_block_gen(
+            5*DIM_img, 4*DIM_img, kernelsize=4, stride=1, padding=0, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock2 = res_block_gen(
+            4*DIM_img, 3*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock3 = res_block_gen(
+            3*DIM_img, 2*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock4 = res_block_gen(
+            2*DIM_img, 1*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.conv = nn.ConvTranspose2d(DIM_img, image_dim,
+                                       kernel_size=3,
+                                       stride=2,
+                                       padding=1,
+                                       dilation=1,
+                                       output_padding=1)
+        self.modules = [self.fc, self.resblock1, self.resblock2,
+                        self.resblock3, self.resblock4, self.conv]
+
+    def forward(self, feats):
+        d = self.fc(feats)
+        d = d.view(d.size(0), d.size(1), 1, 1)
+        d = self.resblock1(d)
+        d = self.resblock2(d)
+        d = self.resblock3(d)
+        d = self.resblock4(d)
+        d = self.conv(d)
+        return d
+
+
+class ImageDecoder_ResNet_84(nn.Module):
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
+                 normalization=None,
+                 DIM_img=128,
+                 a=2.0,
+                 b=0.3):
+        super(ImageDecoder_ResNet_84, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.fc = nn.Linear(embedding_size, 5*DIM_img, bias=True)
+        self.resblock1 = res_block_gen(
+            5*DIM_img, 4*DIM_img, kernelsize=4, stride=2, padding=0, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock2 = res_block_gen(
+            4*DIM_img, 3*DIM_img, kernelsize=5, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock3 = res_block_gen(
+            3*DIM_img, 2*DIM_img, kernelsize=6, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock4 = res_block_gen(
+            2*DIM_img, 1*DIM_img, kernelsize=6, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.conv = nn.ConvTranspose2d(DIM_img, image_dim,
+                                       kernel_size=3,
+                                       stride=2,
+                                       padding=1,
+                                       dilation=1,
+                                       output_padding=1)
+        self.modules = [self.fc, self.resblock1, self.resblock2,
+                        self.resblock3, self.resblock4, self.conv]
+
+    def forward(self, feats):
+        d = self.fc(feats)
+        d = d.view(d.size(0), d.size(1), 1, 1)
+        d = self.resblock1(d)
+        d = self.resblock2(d)
+        d = self.resblock3(d)
+        d = self.resblock4(d)
+        d = self.conv(d)
+        return d
+
+
+class ImageDecoder_ResNet_128(nn.Module):
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
+                 normalization=None,
+                 DIM_img=128,
+                 a=2.0,
+                 b=0.3):
+        super(ImageDecoder_ResNet_128, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.fc = nn.Linear(embedding_size, 6*DIM_img, bias=True)
+        self.resblock1 = res_block_gen(
+            6*DIM_img, 5*DIM_img, kernelsize=4, stride=1, padding=0, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock2 = res_block_gen(
+            5*DIM_img, 4*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock3 = res_block_gen(
+            4*DIM_img, 3*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock4 = res_block_gen(
+            3*DIM_img, 2*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock5 = res_block_gen(
+            2*DIM_img, 1*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.conv = nn.ConvTranspose2d(DIM_img, image_dim,
+                                       kernel_size=3,
+                                       stride=2,
+                                       padding=1,
+                                       dilation=1,
+                                       output_padding=1)
+        self.modules = [self.fc, self.resblock1, self.resblock2,
+                        self.resblock3, self.resblock4, self.resblock5, self.conv]
+
+    def forward(self, feats):
+        d = self.fc(feats)
+        d = d.view(d.size(0), d.size(1), 1, 1)
+        d = self.resblock1(d)
+        d = self.resblock2(d)
+        d = self.resblock3(d)
+        d = self.resblock4(d)
+        d = self.resblock5(d)
+        d = self.conv(d)
+        return d
+
+
+class ImageDecoder_ResNet_256(nn.Module):
+    def __init__(self,
+                 embedding_size: int,
+                 image_dim=3,
+                 normalization=None,
+                 DIM_img=64,
+                 a=2.0,
+                 b=0.3):
+        super(ImageDecoder_ResNet_256, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.fc = nn.Linear(embedding_size, 5*DIM_img, bias=True)
+        self.resblock1 = res_block_gen(
+            5*DIM_img, 5*DIM_img, kernelsize=4, stride=1, padding=0, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock2 = res_block_gen(
+            5*DIM_img, 5*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock3 = res_block_gen(
+            5*DIM_img, 4*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock4 = res_block_gen(
+            4*DIM_img, 3*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock5 = res_block_gen(
+            3*DIM_img, 2*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+        self.resblock6 = res_block_gen(
+            2*DIM_img, 1*DIM_img, kernelsize=4, stride=2, padding=1, dilation=1, o_padding=0, a_val=a, b_val=b)
+
+        self.conv = nn.ConvTranspose2d(DIM_img, image_dim,
+                                       kernel_size=3,
+                                       stride=2,
+                                       padding=1,
+                                       dilation=1,
+                                       output_padding=1)
+        self.modules = [self.fc, self.resblock1, self.resblock2, self.resblock3,
+                        self.resblock4, self.resblock5, self.resblock6, self.conv]
+
+    def forward(self, feats):
+        d = self.fc(feats)
+        d = d.view(d.size(0), d.size(1), 1, 1)
+        d = self.resblock1(d)
+        d = self.resblock2(d)
+        d = self.resblock3(d)
+        d = self.resblock4(d)
+        d = self.resblock5(d)
+        d = self.resblock6(d)
+        d = self.conv(d)
+        return d
 
 
 class ImageDecoder_84(nn.Module):
@@ -501,41 +697,67 @@ class SoundDecoder_v2(nn.Module):
         observation = self.out(x)
         return observation.squeeze(1)
 
-
-def build_ObservationModel(name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, mode, normalization=None):
+def build_ObservationModel(name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, mode, normalization=None, use_ResNet=False):
     if "image" in name:
         image_size = observation_shapes[name][1:]
         image_dim = observation_shapes[name][0]
-        if image_size == [256, 256]:
-            decoder = ImageDecoder_256(
-                embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(
-                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
-        elif image_size == [128, 128]:
-            decoder = ImageDecoder_128(
-                embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(
-                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
-        elif image_size == [84, 84]:
-            decoder = ImageDecoder_84(
-                embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(
-                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
-        elif image_size == [64, 64]:
-            decoder = ImageDecoder(
-                embedding_size["image"], image_dim=image_dim, normalization=normalization)
-            observation_models = ObservationModel_base(
-                belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+        if use_ResNet:
+            if image_size == [256, 256]:
+                decoder = ImageDecoder_ResNet_256(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [128, 128]:
+                decoder = ImageDecoder_ResNet_128(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [84, 84]:
+                decoder = ImageDecoder_ResNet_84(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [64, 64]:
+                decoder = ImageDecoder_ResNet_64(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+        else:
+            if image_size == [256, 256]:
+                decoder = ImageDecoder_256(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [128, 128]:
+                decoder = ImageDecoder_128(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [84, 84]:
+                decoder = ImageDecoder_84(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
+            elif image_size == [64, 64]:
+                decoder = ImageDecoder(
+                    embedding_size["image"], image_dim=image_dim, normalization=normalization)
+                observation_models = ObservationModel_base(
+                    belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["cnn"])
     elif "sound" in name:
         decoder = SoundDecoder_v2(
-            embedding_size["image"], normalization=normalization)
+            embedding_size["sound"], normalization=normalization)
         observation_models = ObservationModel_base(
             belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["cnn"])
+    elif "melody" in name:
+        decoder = MelodyDecoder(
+            observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
+        observation_models = ObservationModel_base(
+            belief_size=belief_size, state_size=state_size, decoder=decoder, activation_function=activation_function["dense"])
     elif "Pose" == name:
         decoder = PoseDecoder(
             observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
         observation_models = ObservationModel_with_scale_base(
-            belief_size=belief_size, state_size=state_size, decoder=decoder,mode=mode, activation_function=activation_function["cnn"])
+            belief_size=belief_size, state_size=state_size, decoder=decoder, mode=mode, activation_function=activation_function["dense"])
     else:
         decoder = DenseDecoder(
             observation_shapes[name][0], embedding_size["other"], activation_function["dense"])
@@ -557,14 +779,14 @@ class MultimodalObservationModel:
                  activation_function,
                  normalization=None,
                  device=torch.device("cpu"),
-                 HFPGM_mode = False):
+                 HFPGM_mode=False):
         self.observation_names_rec = observation_names_rec
 
         self.observation_models = dict()
         self.modules = []
         for name in self.observation_names_rec:
             self.observation_models[name] = build_ObservationModel(
-                name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, normalization=normalization, mode = HFPGM_mode).to(device)
+                name, observation_shapes, belief_size, state_size, hidden_size, embedding_size, activation_function, normalization=normalization, mode=HFPGM_mode).to(device)
             self.modules += self.observation_models[name].modules
 
     def __call__(self, h_t: torch.Tensor, s_t: torch.Tensor):

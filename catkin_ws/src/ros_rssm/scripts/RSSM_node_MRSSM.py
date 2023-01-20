@@ -64,7 +64,7 @@ class RSSM_ros():
         print("model_pathes: ")
 
         self.model = build_RSSM(cfg, device)
-        model_path = model_paths[0]
+        model_path = model_paths[model_idx]
         self.model.load_model(model_path)
         self.model.eval()
 
@@ -222,11 +222,12 @@ class RSSM_ros():
 
             # 1. s^q_t-1~q(s^q_t-1|h_t-1, o_t-1,x_t-1) 全ての観測から1時刻前の状態を推論
             obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq)
-            past_state = self.model.transition_model.obs_encoder.sample(h_t=self.past_belief, o_t=obs_emb_posterior[0])[0]
+            past_state = self.model.transition_model.obs_encoder.sample(h_t=self.past_belief, o_t=obs_emb_posterior[0])
         else:
             past_state = self.past_state_without_pose
 
         # 2. h_t=f(s^q_t-1,h_t-1)
+        print("past_state.shape", past_state.shape)
         # 3. s_t~q(s_t|h_t,o_t) imageだけで状態推論
         observations_seq = dict(
             image_hsr_256=normalized_img, Pose=self.pose_dummy
@@ -238,7 +239,11 @@ class RSSM_ros():
         locandscale = self.model.observation_model.observation_models["Pose"](
             s_t=state["posterior_states"], h_t=state["beliefs"]
         )
-        print("tensor2np(locandscale['loc'])[0].tolist()", tensor2np(locandscale["loc"])[0].tolist())
+
+        locandscale_past = self.model.observation_model.observation_models["Pose"](
+            s_t=past_state.unsqueeze(0), h_t=self.past_belief.unsqueeze(0)
+        )
+        locandscale_past = tensor2np(locandscale_past["loc"])[0][0].tolist()
 
         self.pose_predict_loc.append(tensor2np(locandscale["loc"])[0][0].tolist())
         self.pose_predict_scale.append(tensor2np(locandscale["scale"])[0][0].tolist())
@@ -261,6 +266,7 @@ class RSSM_ros():
             print("HF-PGM (RSSM SERBER) | t = ", self.i)
             if self.i != 1:
                 print("x_{t-1}        :", np.round(sub_data["pose"], decimals=2).tolist())
+            print("再構成[loc]    :", [round(t, 2) for t in locandscale_past])
             print("p(x_t|h_t)[loc]:", [round(t, 2) for t in self.pose_predict_loc[-1]])
             print("Grand x_t      :", np.round(sub_data["grand_pose"], decimals=2).tolist())
             print("Grand x_t_now  :", np.round(self.grand_pose_receiver, decimals=2).tolist())

@@ -4,6 +4,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from torch.distributions import Normal
+from utils.models.ResidualBlocks import ResidualBlock2dConv
 
 def bottle_tupele(f, x_tuple, var_name: str = '', kwargs={}):
     x_tuple = list(x_tuple.values())[0]
@@ -41,6 +42,164 @@ def bottle_tupele_multimodal(f, x_tuples, var_name: str = '', kwargs={}):
                 y_size = y[name][k].size()
                 output[name][k] = y[name][k].reshape(xs_size[0][0], xs_size[0][1], *y_size[1:])
     return output
+
+def make_res_block_feature_extractor(in_channels, out_channels, kernelsize, stride, padding, dilation, a_val=2.0, b_val=0.3):
+    downsample = None
+    if  (kernelsize != 1 and stride != 1) or (in_channels != out_channels):
+        downsample = nn.Sequential(nn.Conv2d(in_channels, out_channels,
+                                             kernel_size=kernelsize,
+                                             padding=padding,
+                                             stride=stride,
+                                             dilation=dilation),
+                                   nn.BatchNorm2d(out_channels))
+    layers = []
+    layers.append(ResidualBlock2dConv(in_channels, out_channels, kernelsize, stride, padding, dilation, downsample,a=a_val, b=b_val))
+    return nn.Sequential(*layers)
+
+
+# inspired by https://github.com/thomassutter/MoPoE/blob/0ad2d564e0dc10704334f62ac2f45de57c56b2ab/celeba/networks/FeatureExtractorImg.py#L20
+class ImageEncoder_ResNet_64(nn.Module):
+    def __init__(self, embedding_size: int, activation_function: str = 'relu', image_dim=3, normalization=None, DIM_img=128, a=2.0, b=0.3):
+        super(ImageEncoder_ResNet_64, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.conv1 = nn.Conv2d(image_dim, DIM_img,
+                              kernel_size=3,
+                              stride=2,
+                              padding=2,
+                              dilation=1,
+                              bias=False)
+        self.resblock1 = make_res_block_feature_extractor(DIM_img, 2 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=a, b_val=b)
+        self.resblock2 = make_res_block_feature_extractor(2 * DIM_img, 3 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock3 = make_res_block_feature_extractor(3 * DIM_img, 4 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock4 = make_res_block_feature_extractor(4 * DIM_img, 5 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=0, dilation=1, a_val=self.a, b_val=self.b)
+        self.fc = nn.Linear(5 * DIM_img, embedding_size, bias=True)
+        self.modules = [self.conv1, self.resblock1, self.resblock2, self.resblock3, self.resblock4, self.fc]
+        
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.resblock1(out)
+        out = self.resblock2(out)
+        out = self.resblock3(out)
+        out = self.resblock4(out)
+        out = out.view(out.shape[0], -1)
+        out = self.fc(out)
+        return out
+
+class ImageEncoder_ResNet_84(nn.Module):
+    def __init__(self, embedding_size: int, activation_function: str = 'relu', image_dim=3, normalization=None, DIM_img=128, a=2.0, b=0.3):
+        super(ImageEncoder_ResNet_84, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.conv1 = nn.Conv2d(image_dim, DIM_img,
+                              kernel_size=3,
+                              stride=2,
+                              padding=2,
+                              dilation=1,
+                              bias=False)
+        self.resblock1 = make_res_block_feature_extractor(DIM_img, 2 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=a, b_val=b)
+        self.resblock2 = make_res_block_feature_extractor(2 * DIM_img, 3 * DIM_img, kernelsize=5, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock3 = make_res_block_feature_extractor(3 * DIM_img, 4 * DIM_img, kernelsize=5, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock4 = make_res_block_feature_extractor(4 * DIM_img, 5 * DIM_img, kernelsize=6, stride=2,
+                                                          padding=0, dilation=1, a_val=self.a, b_val=self.b)
+        self.fc = nn.Linear(5 * DIM_img, embedding_size, bias=True)
+        self.modules = [self.conv1, self.resblock1, self.resblock2, self.resblock3, self.resblock4, self.fc]
+        
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.resblock1(out)
+        out = self.resblock2(out)
+        out = self.resblock3(out)
+        out = self.resblock4(out)
+        out = out.view(out.shape[0], -1)
+        out = self.fc(out)
+        return out
+
+class ImageEncoder_ResNet_128(nn.Module):
+    def __init__(self, embedding_size: int, activation_function: str = 'relu', image_dim=3, normalization=None, DIM_img=128, a=2.0, b=0.3):
+        super(ImageEncoder_ResNet_128, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.conv1 = nn.Conv2d(image_dim, DIM_img,
+                              kernel_size=3,
+                              stride=2,
+                              padding=2,
+                              dilation=1,
+                              bias=False)
+        self.resblock1 = make_res_block_feature_extractor(DIM_img, 2 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=a, b_val=b)
+        self.resblock2 = make_res_block_feature_extractor(2 * DIM_img, 3 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock3 = make_res_block_feature_extractor(3 * DIM_img, 4 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock4 = make_res_block_feature_extractor(4 * DIM_img, 5 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock5 = make_res_block_feature_extractor(5 * DIM_img, 6 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=0, dilation=1, a_val=self.a, b_val=self.b)
+        self.fc = nn.Linear(6 * DIM_img, embedding_size, bias=True)
+        self.modules = [self.conv1, self.resblock1, self.resblock2, self.resblock3, self.resblock4, self.resblock5, self.fc]
+        
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.resblock1(out)
+        out = self.resblock2(out)
+        out = self.resblock3(out)
+        out = self.resblock4(out)
+        out = self.resblock5(out)
+        out = out.view(out.shape[0], -1)
+        out = self.fc(out)
+        return out
+
+class ImageEncoder_ResNet_256(nn.Module):
+    def __init__(self, embedding_size: int, activation_function: str = 'relu', image_dim=3, normalization=None, DIM_img=64, a=2.0, b=0.3):
+        super(ImageEncoder_ResNet_256, self).__init__()
+        self.embedding_size = embedding_size
+        self.a = a
+        self.b = b
+        self.conv1 = nn.Conv2d(image_dim, DIM_img,
+                              kernel_size=3,
+                              stride=2,
+                              padding=2,
+                              dilation=1,
+                              bias=False)
+        self.resblock1 = make_res_block_feature_extractor(DIM_img, 2 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=a, b_val=b)
+        self.resblock2 = make_res_block_feature_extractor(2 * DIM_img, 3 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock3 = make_res_block_feature_extractor(3 * DIM_img, 4 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock4 = make_res_block_feature_extractor(4 * DIM_img, 5 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock5 = make_res_block_feature_extractor(5 * DIM_img, 5 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=1, dilation=1, a_val=self.a, b_val=self.b)
+        self.resblock6 = make_res_block_feature_extractor(5 * DIM_img, 5 * DIM_img, kernelsize=4, stride=2,
+                                                          padding=0, dilation=1, a_val=self.a, b_val=self.b)
+        self.fc = nn.Linear(5 * DIM_img, embedding_size, bias=True)
+        self.modules = [self.conv1, self.resblock1, self.resblock2, self.resblock3, self.resblock4, self.resblock5, self.resblock6, self.fc]
+    
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.resblock1(out)
+        out = self.resblock2(out)
+        out = self.resblock3(out)
+        out = self.resblock4(out)
+        out = self.resblock5(out)
+        out = self.resblock6(out)
+        out = out.view(out.shape[0], -1)
+        out = self.fc(out)
+        return out
+
+
 
 class StochasticStateModel(nn.Module):
     """p(s_t | h_t)"""
@@ -632,18 +791,30 @@ class SoundEncoder_v2(nn.Module):
     def get_model_params(self):
         return list(self.parameters())
 
-def build_ImageEncoder(observation_shape, visual_embedding_size, cnn_activation_function, normalization=None):
+def build_ImageEncoder(observation_shape, visual_embedding_size, cnn_activation_function, normalization=None, use_ResNet=False):
     image_size = observation_shape[1:]
     image_dim = observation_shape[0]
-    if image_size == [256,256]:
-        encoder = ImageEncoder_256(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
-    elif image_size == [128,128]:
-        encoder = ImageEncoder_128(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
-    elif image_size == [84,84]:
-        encoder = ImageEncoder_84(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
-    elif image_size == [64,64]:
-        encoder = ImageEncoder(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+    if use_ResNet:
+        if image_size == [256,256]:
+            encoder = ImageEncoder_ResNet_256(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [128,128]:
+            encoder = ImageEncoder_ResNet_128(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [84,84]:
+            encoder = ImageEncoder_ResNet_84(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [64,64]:
+            encoder = ImageEncoder_ResNet_64(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)    
+    else:
+        if image_size == [256,256]:
+            encoder = ImageEncoder_256(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [128,128]:
+            encoder = ImageEncoder_128(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [84,84]:
+            encoder = ImageEncoder_84(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
+        elif image_size == [64,64]:
+            encoder = ImageEncoder(visual_embedding_size, cnn_activation_function, image_dim=image_dim, normalization=normalization)
     return encoder
+
+
 
 def build_Encoder(name, observation_shapes, embedding_size, activation_function, normalization=None):
     observation_shape = observation_shapes[name]
