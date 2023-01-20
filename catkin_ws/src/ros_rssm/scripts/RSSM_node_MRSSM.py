@@ -28,13 +28,15 @@ from sensor_msgs.msg import Image, CompressedImage
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from std_srvs.srv import *
+import tf
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
 class RSSM_ros():
     def __init__(self):
         # 勾配を計算しない
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_4"
+        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_3"
         model_idx = 2
         cfg_device = "cuda:0"
 
@@ -62,7 +64,7 @@ class RSSM_ros():
         print("model_pathes: ")
 
         self.model = build_RSSM(cfg, device)
-        model_path = model_paths[model_idx]
+        model_path = model_paths[0]
         self.model.load_model(model_path)
         self.model.eval()
 
@@ -108,6 +110,7 @@ class RSSM_ros():
         self.image_subscriber()
         self.grand_pose_subscriber()
         self.PredictPosition_RSSM_server()
+        self.PredictPosition_RSSM_publisher()
         self.save_data_subscriber()
         rospy.on_shutdown(self.save_eval_data)
         print("Ready to PredictPosition_RSSM.")
@@ -273,6 +276,7 @@ class RSSM_ros():
             self.eval_data["predict_pose_scale"].append(np.array(self.pose_predict_scale[-1]))
 
             self.i += 1
+            self.pub_rssm_predict_position.publish(resp2PoseWithCovariance(resp))
         else:
             print("fin")
             quit()
@@ -302,6 +306,22 @@ def tensor2np(tensor):
     else:
         return tensor
 
+def resp2PoseWithCovariance(resp):
+    euler = np.arctan2(resp.cos_loc,resp.sin_loc)
+    rot = tf.transformations.quaternion_from_euler(0, 0, euler)
+
+    rssm_estimate_pose = PoseWithCovarianceStamped()
+    rssm_estimate_pose.header.stamp = rospy.get_rostime()
+    rssm_estimate_pose.header.frame_id = "map"
+    rssm_estimate_pose.pose.pose = Pose(Point(resp.x_loc, resp.y_loc, 0.0), Quaternion(rot[0], rot[1], rot[2], rot[3]))
+    print("Quaternion :", rot[0], rot[1], rot[2], rot[3])
+    rssm_estimate_pose.pose.covariance = [resp.x_scale,0.0,0.0,0.0,0.0,0.0,
+                                          0.0,resp.y_scale,0.0,0.0,0.0,0.0,
+                                          0.0,0.0,0.00000,0.0,0.0,0.0,
+                                          0.0,0.0,0.0,0.00000,0.0,0.0,
+                                          0.0,0.0,0.0,0.0,0.00000,0.0,
+                                          0.0,0.0,0.0,0.0,0.0,0.0001]
+    return rssm_estimate_pose
 
 
 if __name__ == "__main__":
