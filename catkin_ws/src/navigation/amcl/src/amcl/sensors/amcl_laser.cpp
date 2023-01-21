@@ -313,10 +313,14 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
     }
     p_HF_PGM = p + RSSM_likelihood*RSSM_likelihood*RSSM_likelihood;
 
-    // printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
+    if(!isfinite(p_HF_PGM)){
+      sample->weight *= p;
+      printf("RSSM_likelihood is %lf p = %lf\n",  RSSM_likelihood, p);
+    }else{
+      sample->weight *= p_HF_PGM;
+      printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
+    }
 
-    // sample->weight *= p_HF_PGM;
-    sample->weight *= p_HF_PGM;
     total_weight += sample->weight;
 //    printf("i=%d, samples=%u ,sample->weight= %lf ,total_weight= %lf \n",j, sample,sample->weight,total_weight);
 //*********  add RSSM update *******//
