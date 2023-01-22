@@ -1,13 +1,12 @@
 main:
-  experiment_name: HF-PGM_Multimodal_experiment_1-seed_0
-  tags:
-  - RSSM
-  log_dir: /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/HF-PGM_Multimodal_experiment_1-seed_0/2023-01-21/run_2
-  seed: 0
+  experiment_name: HF-PGM_Multimodal_experiment_1
+  tags: []
+  log_dir: null
+  seed: 1
   disable_cuda: false
   device: cuda:0
   wandb: true
-  git_hash: aeb0e84
+  git_hash: null
 env:
   env_config:
     env_name: House
@@ -86,7 +85,7 @@ train:
   - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/train
   validation_data_path:
   - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/validation
-  experience_size: 400000
+  experience_size: 500000
   train_iteration: 8000
   checkpoint_interval: 1000
   validation_interval: 10

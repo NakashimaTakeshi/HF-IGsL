@@ -37,7 +37,11 @@ if __name__ == '__main__':
     in_bag = rosbag.Bag(bag_path)
 
     t_s = in_bag.get_start_time()
-    t_e = in_bag.get_end_time()
+    # t_e = in_bag.get_end_time()+3000
+    t_e = t_s+3000
+
+    print("t_s=",t_s)
+    print("t_e=",t_e)
 
     read_msg_list = []
     for key in target_topics.keys():
@@ -57,7 +61,7 @@ if __name__ == '__main__':
     sys.stdout.flush()
     recoder.obs_complement()
 
-    out_path = os.path.splitext(bag_path)[0]+".npy"
+    out_path = os.path.splitext(bag_path)[0]+"_1.npy"
     recoder.save_dataset(out_path)
     
 

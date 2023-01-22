@@ -86,7 +86,8 @@ train:
   - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/train
   validation_data_path:
   - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/validation
-  experience_size: 400000
+  # experience_size: 400000
+  experience_size: 300000
   train_iteration: 8000
   checkpoint_interval: 1000
   validation_interval: 10
