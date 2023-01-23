@@ -46,8 +46,8 @@ embedding_size:
   other:   128                  # default:  128
 
 hidden_size: 200                # default: 200
-belief_size: 64                # default: 200
-state_size:  64                # default: 30
+belief_size: 200                # default: 200
+state_size:  30                # default: 30
 normalization: BatchNorm # BatchNorm, InstanceNorm, GroupNorm, None # default: None
 use_ResNet: False
 

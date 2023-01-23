@@ -36,9 +36,9 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-18/run_3"
+        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-22/run_0"
         model_idx = 2
-        cfg_device = "cuda:0"
+        cfg_device = "cuda:1"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
         model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
