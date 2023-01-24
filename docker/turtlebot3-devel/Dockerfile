@@ -114,7 +114,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-noetic-rosserial-msgs=0.9.2-1focal.20220926.182437 \
 #  ros-noetic-amcl=1.17.2-1focal.20221209.205932 \
   ros-noetic-map-server=1.17.2-1focal.20221124.024257 \
-#  ros-noetic-move-base=1.17.2-1focal.20221210.073719 \
+  ros-noetic-move-base=1.17.2-1focal.20221210.073719 \
   ros-noetic-urdf=1.13.2-1focal.20221124.024333 \
   ros-noetic-xacro=1.14.14-1focal.20221124.030411 \
   ros-noetic-compressed-image-transport=1.14.0-1focal.20221124.035248 \
@@ -149,7 +149,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Gather the dependencies from the Ubuntu repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip=20.0.2-5ubuntu1.6 \
-  python3-setuptools=45.2.0-1 \
+  python3-setuptools=45.2.0-1ubuntu0.1\
   python3-tk=3.8.10-0ubuntu1~20.04 \
   && rm -rf /var/lib/apt/lists/*
 
