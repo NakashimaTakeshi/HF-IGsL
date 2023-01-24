@@ -24,8 +24,10 @@
 
   <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
 
-  <arg name="path" default="/root/TurtleBot3/dataset/" />
-  <arg name="file_1" default="2023-01-20-15-06-47.bag" />
-  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg path)$(arg file_1)"/>
+  <arg name="path" default="/root/TurtleBot3/" />
+  <arg name="file_1" default="dataset_1_test.bag" />
+  <node pkg="rosbag" type="play" name="player" output="screen" args="-q --clock $(arg path)$(arg file_1)"/>
+  <!-- <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM"/> -->
+
 
 </launch>
