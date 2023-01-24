@@ -39,7 +39,7 @@ class RSSM_ros():
         cfg_device = "cuda:0"
 
         # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-        model_folder = os.path.join("results", path_name)
+        model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
 
 
 
@@ -67,17 +67,7 @@ class RSSM_ros():
         self.model.load_model(model_path)
         self.model.eval()
 
-        # # load states
-        state_path = model_path.replace("models", "states_models").replace(".pth", ".npy")
-        print("state_path:", state_path)
-
-        states_np = np.load(state_path, allow_pickle=True).item()
-        print("-- dataset --")
-        for key in states_np.keys():
-            print(key)
-
-        print("-- key of states --")
-        print(states_np[key].keys())
+ 
 
         self.pose_predict_loc = []
         self.pose_predict_scale = []
@@ -86,7 +76,7 @@ class RSSM_ros():
         self.i=1
 
         self.eval_data = dict()
-        eval_data_key = ["image_t", "pose_t-1", "grand_pose_t","predict_pose_loc", "predict_pose_scale"]
+        eval_data_key = ["image_t", "pose_t-1", "grand_pose_t","predict_pose_loc", "predict_pose_scale","posterior_states","belief" ,"past_state_prams"]
 
         for key in eval_data_key:  
             self.eval_data[key] = []
@@ -234,6 +224,10 @@ class RSSM_ros():
             self.eval_data["grand_pose_t"].append(sub_data["grand_pose"])
             self.eval_data["predict_pose_loc"].append(np.array(self.pose_predict_loc[-1]))
             self.eval_data["predict_pose_scale"].append(np.array(self.pose_predict_scale[-1]))
+            self.eval_data["posterior_states"].append(tensor2np(state["posterior_states"]))
+            self.eval_data["belief"].append(tensor2np( state["beliefs"]))
+            self.eval_data["past_state_prams"].append(dict(loc=tensor2np(state["posterior_means"]), scale = tensor2np(state["posterior_std_devs"])))
+
         else:
             print("fin")
             quit()

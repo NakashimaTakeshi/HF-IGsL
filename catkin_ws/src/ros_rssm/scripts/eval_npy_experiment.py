@@ -25,6 +25,7 @@ sys.path.append(module_path)
 
 #pythonpathの追加
 os.environ['PYTHONPATH'] = module_path
+sys.path.append(os.path.join(Path().resolve(), '../Multimodal-RSSM'))
 
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
@@ -81,7 +82,7 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-22/run_1"
+path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-22/run_0"
 model_idx = 2
 cfg_device = "cuda:1"
 #cfg_device = "cpu"
@@ -89,7 +90,7 @@ data="validation"
 
 
 cwd = "."
-model_folder = os.path.join("results", path_name)
+model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
 folder_name = os.path.join("figs_out_dir/save_folda", path_name)
 
 with initialize(config_path=model_folder):
@@ -118,54 +119,54 @@ model.eval()
 
 # use_validation_data = False
 
-#load data
-if data=="train":
-    D = get_dataset_loader(cfg, cwd, device, cfg.train.train_data_path)
-elif data=="validation":
-    D = get_dataset_loader(cfg, cwd, device, cfg.train.validation_data_path)
-else:
-    raise NotImplementedError
+# #load data
+# if data=="train":
+#     D = get_dataset_loader(cfg, cwd, device, cfg.train.train_data_path)
+# elif data=="validation":
+#     D = get_dataset_loader(cfg, cwd, device, cfg.train.validation_data_path)
+# else:
+#     raise NotImplementedError
 
-# D_test = get_dataset_loader(cfg, cwd, device, cfg.train.test_data_path)
+# # D_test = get_dataset_loader(cfg, cwd, device, cfg.train.test_data_path)
 
 
-# # Reconstruction
-epi_idx = 0
-crop_idx = 0
-observations, actions, rewards, nonterminals = get_episode_data(D, epi_idx = epi_idx, crop_idx = crop_idx)
+# # # Reconstruction
+# epi_idx = 0
+# crop_idx = 0
+# observations, actions, rewards, nonterminals = get_episode_data(D, epi_idx = epi_idx, crop_idx = crop_idx)
 
-for name in observations.keys():
-    if "image_horizon" in name:
-        if "bin" in name:
-            image_name_horizon_bin = name
-            print(name)
-        else:
-            image_name_horizon = name
-            print(name)
+# for name in observations.keys():
+#     if "image_horizon" in name:
+#         if "bin" in name:
+#             image_name_horizon_bin = name
+#             print(name)
+#         else:
+#             image_name_horizon = name
+#             print(name)
             
-    if "image_vertical" in name:
-        if "bin" in name:
-            image_name_vertical_bin = name
-            print(name)
-        else:
-            image_name_vertical = name
-            print(name)
+#     if "image_vertical" in name:
+#         if "bin" in name:
+#             image_name_vertical_bin = name
+#             print(name)
+#         else:
+#             image_name_vertical = name
+#             print(name)
     
 
 
 size = (256,256)
 
 # load states
-state_path = model_path.replace("models", "states_models").replace(".pth", ".npy")
+state_path = "eval_data/log_20230124_142056" + ".npy"
 print("state_path:", state_path)
 
 states_np = np.load(state_path, allow_pickle=True).item()
 print("-- dataset --")
 for key in states_np.keys():
-    print(key)
+    print("key:{}, shape:{}".format(key, np.array(states_np[key]).shape))
 
 print("-- key of states --")
-print(states_np[key].keys())
+print(np.array(states_np[key]).shape)
 
 ht = [states_np[key]["beliefs"] for key in states_np.keys()]
 ht = np.vstack(ht)
