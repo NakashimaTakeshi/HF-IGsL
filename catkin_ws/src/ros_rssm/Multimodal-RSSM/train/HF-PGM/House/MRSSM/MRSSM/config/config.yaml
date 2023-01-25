@@ -1,5 +1,5 @@
 defaults:
 - main: main
 - env: House
-- rssm: HF-PGM_Multimodal
+- rssm: HF-PGM_model1
 - train: train

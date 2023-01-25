@@ -10,7 +10,7 @@ predict_reward: False
 
 multimodal: True
 multimodal_params: # if multimodal is True, multimodal_params are used
-  fusion_timing: obs_emb   # stochastic_state, obs_emb
+  fusion_timing: obs_emb  # stochastic_state, obs_emb
   fusion_method: MoPoE     # NN, PoE, MoPoE, MoPoE_mean, MoPoE_select. MoPoE_mean calculate the expected value as posterior dist.
   num_components: 
 
