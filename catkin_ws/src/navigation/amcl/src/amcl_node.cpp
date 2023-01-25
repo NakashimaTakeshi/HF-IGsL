@@ -25,6 +25,7 @@
 #include <map>
 #include <cmath>
 #include <memory>
+#include <time.h>
 
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
@@ -1058,6 +1059,7 @@ AmclNode::uniformPoseGenerator(void* arg)
 {
   map_t* map = (map_t*)arg;
 #if NEW_UNIFORM_SAMPLING
+
   unsigned int rand_index = drand48() * free_space_indices.size();
   std::pair<int,int> free_point = free_space_indices[rand_index];
   pf_vector_t p;

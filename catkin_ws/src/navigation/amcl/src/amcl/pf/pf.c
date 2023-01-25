@@ -152,6 +152,8 @@ void pf_init(pf_t *pf, pf_vector_t mean, pf_matrix_t cov)
   // Compute the new sample poses
   for (i = 0; i < set->sample_count; i++)
   {
+      // 下、一行追加
+    srand48((unsigned int)time(NULL)+i);
     sample = set->samples + i;
     sample->weight = 1.0 / pf->max_samples;
     sample->pose = pf_pdf_gaussian_sample(pdf);
