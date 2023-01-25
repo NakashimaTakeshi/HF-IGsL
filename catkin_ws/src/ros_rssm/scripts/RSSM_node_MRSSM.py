@@ -100,7 +100,7 @@ class RSSM_ros():
         filename = 'log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
 
 
-        self.out_path = os.path.join("eval_data", filename)
+        self.out_path = os.path.join("eval_data/test", filename)
 
 
 
