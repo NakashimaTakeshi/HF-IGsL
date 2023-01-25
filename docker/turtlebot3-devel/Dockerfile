@@ -88,7 +88,7 @@ ARG ros_desktop_version
 ENV ROS_DESKTOP_VERSION=${ros_desktop_version}
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-noetic-desktop-full=${ROS_DESKTOP_VERSION} \
-  python3-catkin-tools=0.9.0-1 \
+  python3-catkin-tools=0.9.2-1 \
   python3-rosdep=0.22.1-1 \
   && rm -rf /var/lib/apt/lists/*
 
@@ -112,7 +112,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-noetic-rosserial-python=0.9.2-1focal.20221124.022835 \
   ros-noetic-rosserial-client=0.9.2-1focal.20221209.220903 \
   ros-noetic-rosserial-msgs=0.9.2-1focal.20220926.182437 \
-  ros-noetic-amcl=1.17.2-1focal.20221209.205932 \
+#  ros-noetic-amcl=1.17.2-1focal.20221209.205932 \
   ros-noetic-map-server=1.17.2-1focal.20221124.024257 \
   ros-noetic-move-base=1.17.2-1focal.20221210.073719 \
   ros-noetic-urdf=1.13.2-1focal.20221124.024333 \
@@ -121,7 +121,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-noetic-rqt=0.5.3-1focal.20221124.024215 \
   ros-noetic-rviz=1.14.19-1focal.20221209.214937 \
   ros-noetic-gmapping=1.4.2-1focal.20221209.220317 \
-  ros-noetic-navigation=1.17.2-1focal.20221210.074054 \
+#  ros-noetic-navigation=1.17.2-1focal.20221210.074054 \
   ros-noetic-interactive-markers=1.12.0-1focal.20221209.210024 \
   ros-noetic-multirobot-map-merge=2.1.4-1focal.20221209.214728 \
   && rm -rf /var/lib/apt/lists/*
@@ -149,7 +149,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Gather the dependencies from the Ubuntu repositories.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip=20.0.2-5ubuntu1.6 \
-  python3-setuptools=45.2.0-1 \
+  python3-setuptools=45.2.0-1ubuntu0.1\
   python3-tk=3.8.10-0ubuntu1~20.04 \
   && rm -rf /var/lib/apt/lists/*
 
