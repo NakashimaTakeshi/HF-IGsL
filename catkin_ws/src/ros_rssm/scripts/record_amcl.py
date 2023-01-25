@@ -48,7 +48,7 @@ class RSSM_ros():
         now = datetime.datetime.now()
         filename = 'amcl_log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
 
-
+        #ここのパスに保存されます。ファイル名は日時が入る。
         self.out_path = os.path.join("eval_data/amcl/dataset3", filename)
 
 
@@ -113,7 +113,7 @@ class RSSM_ros():
 
     def posewithcovariancestamped_converter(self, msg):
         pose_list = self.pose_converter(msg.pose.pose)
-        pose_list_oira = self.quaternion2euler_numpy(pose_list[3], pose_list[4], pose_list[5], pose_list[6])
+        pose_list_oira = self.quaternion_to_euler([pose_list[3], pose_list[4], pose_list[5], pose_list[6]])
         pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2], )]
         return np.array(pose_data)
     
@@ -146,6 +146,18 @@ class RSSM_ros():
         t4 = +1.0 - 2.0 * (y * y + z * z)
         yaw_z = np.degrees(np.arctan2(t3, t4))
         return roll_x, pitch_y, yaw_z # in radians
+    
+
+
+    def quaternion_to_euler(self, quaternion):
+        """Convert Quaternion to Euler Angles
+
+        quarternion: geometry_msgs/Quaternion
+        euler: geometry_msgs/Vector3
+        """
+        e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        return e
+
 
 
 
