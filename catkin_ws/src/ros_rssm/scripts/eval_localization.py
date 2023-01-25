@@ -81,7 +81,7 @@ def room_clustering(position):
 #パラーメーター設定
 import glob
 
-file_dir = "eval_data/test"
+file_dir = "eval_data/amcl/dataset1"
 files = glob.glob("./"+ file_dir +"/*")
 data_np = np.load(files[0], allow_pickle=True).item()
 num = len(data_np["pose_t-1"])-1

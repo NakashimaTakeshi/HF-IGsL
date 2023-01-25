@@ -49,7 +49,7 @@ class RSSM_ros():
         filename = 'amcl_log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
 
 
-        self.out_path = os.path.join("eval_data/test", filename)
+        self.out_path = os.path.join("eval_data/amcl/dataset3", filename)
 
 
 
@@ -114,7 +114,7 @@ class RSSM_ros():
     def posewithcovariancestamped_converter(self, msg):
         pose_list = self.pose_converter(msg.pose.pose)
         pose_list_oira = self.quaternion2euler_numpy(pose_list[3], pose_list[4], pose_list[5], pose_list[6])
-        pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
+        pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2], )]
         return np.array(pose_data)
     
     def pose_converter(self, msg):
@@ -161,8 +161,8 @@ class RSSM_ros():
             print("---------------------------")
             print("HF-PGM (AMCL_RECORD SERBER) | t = ", self.i)
             if self.i != 1:
-                print("x_(t-1)        :{}   {}".format( np.round(sub_data["pose"], decimals=2).tolist(), np.degrees(np.arctan(sub_data["pose"][3]/sub_data["pose"][2]))))
-            print("Grand x_t      :{}   {}".format(np.round(sub_data["grand_pose"], decimals=2).tolist(), np.degrees(np.arctan(sub_data["grand_pose"][3]/sub_data["grand_pose"][2]))))
+                print("x_(t-1)        :{}   {}".format( np.round(sub_data["pose"], decimals=2).tolist(), np.degrees(np.arctan2(sub_data["pose"][3], sub_data["pose"][2]))))
+            print("Grand x_t      :{}   {}".format(np.round(sub_data["grand_pose"], decimals=2).tolist(), np.degrees(np.arctan2(sub_data["grand_pose"][3], sub_data["grand_pose"][2]))))
             
 
     # "predict_pose_scale","beliefs", "posterior_means", "recon_posterior_means"

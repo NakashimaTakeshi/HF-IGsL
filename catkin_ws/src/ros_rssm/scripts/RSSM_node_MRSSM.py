@@ -100,7 +100,7 @@ class RSSM_ros():
         filename = 'log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
 
 
-        self.out_path = os.path.join("eval_data/test", filename)
+        self.out_path = os.path.join("eval_data/test_subset_1", filename)
 
 
 
@@ -220,7 +220,7 @@ class RSSM_ros():
             # )
 
             # 1. s^q_t-1~q(s^q_t-1|h_t-1, o_t-1,x_t-1) 全ての観測から1時刻前の状態を推論
-            obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq)
+            obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq, subset_index = 1)
             past_state_loc_and_scale = self.model.transition_model.obs_encoder(
                 h_t=self.past_belief, o_t=obs_emb_posterior[0])
             past_state = Normal(past_state_loc_and_scale['loc'], past_state_loc_and_scale['scale']).rsample()
