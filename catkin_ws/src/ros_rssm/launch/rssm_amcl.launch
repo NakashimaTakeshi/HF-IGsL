@@ -9,7 +9,7 @@
   <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset3_2023-01-24-14-55-20-002.bag" />
 
-  <node pkg="ros_rssm" type="record_amcl.py" name="RSSM" args="$(arg file_1)" output="screen"/> 
+  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> 
 <!--  <param name="robot_description" command="$(find xacro)/xacro &#45;&#45;inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />-->
 
 <!--  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />-->

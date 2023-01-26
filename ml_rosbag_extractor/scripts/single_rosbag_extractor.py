@@ -37,8 +37,7 @@ if __name__ == '__main__':
     in_bag = rosbag.Bag(bag_path)
 
     t_s = in_bag.get_start_time()
-    # t_e = in_bag.get_end_time()+3000
-    t_e = t_s+3000
+    t_e = in_bag.get_end_time()
 
     print("t_s=",t_s)
     print("t_e=",t_e)

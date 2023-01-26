@@ -16,8 +16,8 @@ do
 	echo "Processing bag file ${bag}"
 	INPUT_DATASET_FILE="${bag}"
 
-	rosrun ml_rosbag_extractor single_rosbag_extractor.py ${bag}
-    rosrun ml_rosbag_extractor waveform_converter.py ${bag}
+	python3 single_rosbag_extractor.py ${bag}
+    # rosrun ml_rosbag_extractor waveform_converter.py ${bag}
 
 	echo "==============================================================================="
 	sleep 1

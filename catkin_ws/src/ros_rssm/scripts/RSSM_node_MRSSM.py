@@ -16,6 +16,7 @@ import datetime
 from torch.distributions import Normal
 
 # sys.path.append(os.path.join(Path().resolve(), 'catkin_ws/src/ros_rssm/Multimodal-RSSM'))
+sys.path.append(os.path.join(Path().resolve(), '../TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM'))
 sys.path.append(os.path.join(Path().resolve(), '../Multimodal-RSSM'))
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
@@ -37,14 +38,16 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-22/run_0"
+        path_name = "HF-PGM_model2-seed_0/2023-01-25/run_0"
         model_idx = 2
         cfg_device = "cuda:1"
 
-        # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-        model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
+        # 相対パス（ここを変えれば、コマンドを実行するdirを変更できる、必ず"config_path"は相対パスで渡すこと！！）
+        model_folder =  os.path.join("./../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
+        #launch用のパス（絶対パス）
+        model_folder_launch =  os.path.join("../TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
 
-
+        # print("model_folder",model_folder)
         with initialize(config_path=model_folder):
             cfg = compose(config_name="hydra_config")
 
@@ -60,7 +63,7 @@ class RSSM_ros():
         device = torch.device(cfg.main.device)
 
         # # # Load Model, Data and States
-        model_paths = glob.glob(os.path.join(model_folder, '*.pth'))
+        model_paths = glob.glob(os.path.join(model_folder_launch, '*.pth'))
         print(model_paths)
         print("model_pathes: ")
 
@@ -97,11 +100,9 @@ class RSSM_ros():
         self.mode = True
 
         now = datetime.datetime.now()
-        filename = 'log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
-
-
-        self.out_path = os.path.join("eval_data/test_subset_1", filename)
-
+        args = sys.argv
+        filename = './../TurtleBot3/ex_data/log_model2_2_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        self.out_path = filename
 
 
 
@@ -135,8 +136,8 @@ class RSSM_ros():
     def save_eval_data(self):
         self.mode = False
 
-        if os.path.exists(os.path.dirname(self.out_path)) == False:
-            os.mkdir(os.path.dirname(self.out_path))
+        # if os.path.exists(os.path.dirname(self.out_path)) == False:
+        #     os.mkdir(os.path.dirname(self.out_path))
 
         np.save(self.out_path, self.eval_data, allow_pickle=True, fix_imports=True)
         print("Save eval data Dir=:", self.out_path)
@@ -164,7 +165,7 @@ class RSSM_ros():
 
     def posewithcovariancestamped_converter(self, msg):
         pose_list = self.pose_converter(msg.pose.pose)
-        pose_list_oira = self.quaternion2euler_numpy(pose_list[3], pose_list[4], pose_list[5], pose_list[6])
+        pose_list_oira = self.quaternion_to_euler([pose_list[3], pose_list[4], pose_list[5], pose_list[6]])
         pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
         return np.array(pose_data)
     
@@ -179,24 +180,33 @@ class RSSM_ros():
     def geometry_msgs_quaternion_converter(self, msg):
         return [msg.x, msg.y, msg.z, msg.w]
 
-    def quaternion2euler_numpy(self, x, y, z, w):
+    # def quaternion2euler_numpy(self, x, y, z, w):
+    #     """
+    #     Convert a quaternion into euler angles (roll, pitch, yaw)
+    #     roll is rotation around x in radians (counterclockwise)
+    #     pitch is rotation around y in radians (counterclockwise)
+    #     yaw is rotation around z in radians (counterclockwise)
+    #     """
+    #     t0 = +2.0 * (w * x + y * z)
+    #     t1 = +1.0 - 2.0 * (x * x + y * y)
+    #     roll_x = np.degrees(np.arctan2(t0, t1))
+    #     t2 = +2.0 * (w * y - z * x)
+    #     t2 = np.where(t2>+1.0,+1.0,t2)
+    #     t2 = np.where(t2<-1.0, -1.0, t2)
+    #     pitch_y = np.degrees(np.arcsin(t2))
+    #     t3 = +2.0 * (w * z + x * y)
+    #     t4 = +1.0 - 2.0 * (y * y + z * z)
+    #     yaw_z = np.degrees(np.arctan2(t3, t4))
+    #     return roll_x, pitch_y, yaw_z # in radians
+    
+    def quaternion_to_euler(self, quaternion):
+        """Convert Quaternion to Euler Angles
+
+        quarternion: geometry_msgs/Quaternion
+        euler: geometry_msgs/Vector3
         """
-        Convert a quaternion into euler angles (roll, pitch, yaw)
-        roll is rotation around x in radians (counterclockwise)
-        pitch is rotation around y in radians (counterclockwise)
-        yaw is rotation around z in radians (counterclockwise)
-        """
-        t0 = +2.0 * (w * x + y * z)
-        t1 = +1.0 - 2.0 * (x * x + y * y)
-        roll_x = np.degrees(np.arctan2(t0, t1))
-        t2 = +2.0 * (w * y - z * x)
-        t2 = np.where(t2>+1.0,+1.0,t2)
-        t2 = np.where(t2<-1.0, -1.0, t2)
-        pitch_y = np.degrees(np.arcsin(t2))
-        t3 = +2.0 * (w * z + x * y)
-        t4 = +1.0 - 2.0 * (y * y + z * z)
-        yaw_z = np.degrees(np.arctan2(t3, t4))
-        return roll_x, pitch_y, yaw_z # in radians
+        e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        return e
 
 
 
@@ -220,7 +230,7 @@ class RSSM_ros():
             # )
 
             # 1. s^q_t-1~q(s^q_t-1|h_t-1, o_t-1,x_t-1) 全ての観測から1時刻前の状態を推論
-            obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq, subset_index = 1)
+            obs_emb_posterior = self.model.get_obs_emb_posterior(past_observations_seq)
             past_state_loc_and_scale = self.model.transition_model.obs_encoder(
                 h_t=self.past_belief, o_t=obs_emb_posterior[0])
             past_state = Normal(past_state_loc_and_scale['loc'], past_state_loc_and_scale['scale']).rsample()
@@ -255,8 +265,9 @@ class RSSM_ros():
         resp.sin_loc = self.pose_predict_loc[-1][3]
         resp.x_scale = self.pose_predict_scale[-1][0]
         resp.y_scale = self.pose_predict_scale[-1][1]
-        resp.cos_scale = self.pose_predict_scale[-1][2]
-        resp.sin_scale = self.pose_predict_scale[-1][3]
+        resp.cos_scale = self.pose_predict_scale[-1][2]*4
+        resp.sin_scale = self.pose_predict_scale[-1][3]*4
+        resp.weight = min(1.0, 0.1* (self.i - 1))
 
 
         if self.mode == True:

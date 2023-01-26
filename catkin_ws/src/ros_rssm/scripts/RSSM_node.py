@@ -84,10 +84,9 @@ class RSSM_ros():
         self.mode = True
 
         now = datetime.datetime.now()
-        filename = 'log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
-
-
-        self.out_path = os.path.join("eval_data", filename)
+        args = sys.argv
+        filename = './../TurtleBot3/ex_data/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        self.out_path = filename
 
 
 

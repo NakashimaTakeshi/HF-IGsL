@@ -3,6 +3,7 @@ import numpy as np
 import numpy as np
 import torch
 import cv2
+import tf
 
 
 #################################################################################
@@ -152,6 +153,19 @@ def wav2mlsp_converter(wav_list, library="librosa", device="cpu"):
 #################################################################################
 #                                   messages                                    #
 #################################################################################
+def quaternion_to_euler(quaternion):
+
+    """
+    Convert Quaternion to Euler Angles
+
+    quarternion: geometry_msgs/Quaternion
+    euler: geometry_msgs/Vector3
+    """
+    e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+    return e
+
+
+
 def convert_quaternion2euler(array):
     idx_start = 3
     result = np.zeros(shape=(array.shape[0], array.shape[1]-1))
@@ -235,7 +249,7 @@ def posestamped_converter(msg):
 def posewithcovariancestamped_converter(msg):
     time_stamp = stdheader_converter(msg.header)
     pose_list = pose_converter(msg.pose.pose)
-    pose_list_oira = quaternion2euler_numpy(*pose_list[3:7])
+    pose_list_oira = quaternion_to_euler(pose_list[3:7])
     pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
     return dict(
         time_stamp = time_stamp,

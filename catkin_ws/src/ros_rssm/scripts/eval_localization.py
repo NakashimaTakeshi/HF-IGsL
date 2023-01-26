@@ -80,8 +80,8 @@ def room_clustering(position):
 
 #パラーメーター設定
 import glob
-
-file_dir = "eval_data/amcl/dataset1"
+args = sys.argv
+file_dir = args[1]
 files = glob.glob("./"+ file_dir +"/*")
 data_np = np.load(files[0], allow_pickle=True).item()
 num = len(data_np["pose_t-1"])-1
@@ -111,7 +111,9 @@ culc_data.mean(axis=0)
 plt.plot(np.arange(len(culc_data.mean(axis=0))),culc_data.mean(axis=0), color = "red", lw=3)
 
 plt.savefig("test.png")
-    
+
+data = np.arange(9).reshape(3,3)
+np.savetxt("./"+file_dir+"/locaization.csv", culc_data, delimiter=",")
 
     # #部屋ラベル分け
     # room_label = []
