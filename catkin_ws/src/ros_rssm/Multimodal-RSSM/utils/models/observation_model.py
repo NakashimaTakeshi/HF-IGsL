@@ -78,6 +78,7 @@ class ObservationModel_base(nn.Module):
         # print("loc:",loc_and_scale['loc'])
         mse = F.mse_loss(loc_and_scale['loc'], o_t, reduction='none')
         return mse
+    
 
 
 class ObservationModel_with_scale_base(ObservationModel_base):
@@ -116,6 +117,9 @@ class ObservationModel_with_scale_base(ObservationModel_base):
         loc = loc.reshape(T, B, *features_shape)
         scale = scale.reshape(T, B, *features_shape)
         return {'loc': loc, 'scale': scale}
+    
+    def get_mse(self, h_t, s_t, o_t):
+        return -super().get_log_prob(h_t, s_t, o_t)
 
 
 class ObservationModel_dummy(ObservationModel_base):
@@ -169,6 +173,7 @@ class PoseDecoder(nn.Module):
         loc, scale = torch.chunk(x, 2, dim=1)
         scale = F.softplus(scale) + self.min_std_dev
         return loc, scale
+
 
 
 class ImageDecoder(nn.Module):
