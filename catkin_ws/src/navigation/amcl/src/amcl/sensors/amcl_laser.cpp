@@ -307,18 +307,18 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
     
 
-    RSSM_likelihood = 0;
+    RSSM_likelihood = 1;
     for(i = 0; i < 4; i++){
-      RSSM_likelihood += gaussian_likelihood(particle_pose[i], res[i], res[i+1]);
+      RSSM_likelihood *= gaussian_likelihood(particle_pose[i], res[2*i], res[2*i+1]);
     }
-    p_HF_PGM = p * RSSM_likelihood;
+    p_HF_PGM = p * pow(RSSM_likelihood, res[8]);
 
     if(!isfinite(p_HF_PGM)){
       sample->weight *= p;
       printf("RSSM_likelihood is %lf p = %lf\n",  RSSM_likelihood, p);
     }else{
-      sample->weight *= pow(p_HF_PGM,res[i+1]);
-      printf("p(%lf) * RSSM_likelihood(%lf) = %lf\n", p, RSSM_likelihood, p_HF_PGM);
+      sample->weight *= p_HF_PGM;
+      printf("p(%lf) * RSSM_likelihood(%lf)^(%lf) = %lf\n", p, RSSM_likelihood, res[8], p_HF_PGM);
     }
 
     total_weight += sample->weight;

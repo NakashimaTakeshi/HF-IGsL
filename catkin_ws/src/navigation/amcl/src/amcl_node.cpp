@@ -1349,7 +1349,7 @@ AmclNode::laserReceived(const sensor_msgs::LaserScanConstPtr& laser_scan)
       ROS_ERROR("Failed to call service RSSM");
     }
     double response[9] = {(double)srv.response.x_loc, (double)srv.response.x_scale, (double)srv.response.y_loc, (double)srv.response.y_scale, (double)srv.response.cos_loc, (double)srv.response.cos_scale, (double)srv.response.sin_loc, (double)srv.response.sin_scale, (double)srv.response.weight};
-    printf(response);
+    // printf(response);
     lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata, response);
 //    lasers_[laser_index]->UpdateSensor(pf_, (AMCLSensorData*)&ldata);
 

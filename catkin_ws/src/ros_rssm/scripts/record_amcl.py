@@ -54,7 +54,7 @@ class RSSM_ros():
         # self.out_path = os.path.join("./../Teval_data/amcl/[0]", filename)
 
         print(args[1])
-        filename = './../TurtleBot3/ex_data/log_amcl_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/log_model12_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 

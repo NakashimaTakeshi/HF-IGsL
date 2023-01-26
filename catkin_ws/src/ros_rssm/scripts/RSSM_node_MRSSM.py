@@ -40,7 +40,7 @@ class RSSM_ros():
         # #パラーメーター設定
         path_name = "HF-PGM_model2-seed_0/2023-01-25/run_0"
         model_idx = 2
-        cfg_device = "cuda:1"
+        cfg_device = "cuda:0"
 
         # 相対パス（ここを変えれば、コマンドを実行するdirを変更できる、必ず"config_path"は相対パスで渡すこと！！）
         model_folder =  os.path.join("./../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
@@ -101,7 +101,7 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/log_model2_2_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/log_model22_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 
@@ -267,7 +267,9 @@ class RSSM_ros():
         resp.y_scale = self.pose_predict_scale[-1][1]
         resp.cos_scale = self.pose_predict_scale[-1][2]*4
         resp.sin_scale = self.pose_predict_scale[-1][3]*4
-        resp.weight = min(1.0, 0.1* (self.i - 1))
+        resp.weight = min(0.1, 0.01* (self.i - 1))
+        print(resp.weight)
+        # resp.weight = 0
 
 
         if self.mode == True:

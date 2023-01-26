@@ -13,8 +13,11 @@ import glob
 from scipy.spatial.transform import Rotation as R
 import cv2
 import datetime
+import tf
+
 
 # sys.path.append(os.path.join(Path().resolve(), 'catkin_ws/src/ros_rssm/Multimodal-RSSM'))
+sys.path.append(os.path.join(Path().resolve(), '../TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM'))
 sys.path.append(os.path.join(Path().resolve(), '../Multimodal-RSSM'))
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
@@ -34,14 +37,14 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_experiment_1-seed_0/2023-01-17/run_1"
+        path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
         model_idx = 2
         cfg_device = "cuda:0"
 
-        # model_folder = "/root/TurtleBot3/catkin_ws/src/ros_rssm/scripts/results/HF-PGM_Predicter_0-seed_0/2022-12-15/run_12"
-        model_folder =  os.path.join("../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
-
-
+        # 相対パス（ここを変えれば、コマンドを実行するdirを変更できる、必ず"config_path"は相対パスで渡すこと！！）
+        model_folder =  os.path.join("./../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
+        #launch用のパス（絶対パス）
+        model_folder_launch =  os.path.join("../TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
 
         with initialize(config_path=model_folder):
             cfg = compose(config_name="hydra_config")
@@ -58,7 +61,7 @@ class RSSM_ros():
         device = torch.device(cfg.main.device)
 
         # # # Load Model, Data and States
-        model_paths = glob.glob(os.path.join(model_folder, '*.pth'))
+        model_paths = glob.glob(os.path.join(model_folder_launch, '*.pth'))
         print(model_paths)
         print("model_pathes: ")
 
@@ -149,7 +152,7 @@ class RSSM_ros():
 
     def posewithcovariancestamped_converter(self, msg):
         pose_list = self.pose_converter(msg.pose.pose)
-        pose_list_oira = self.quaternion2euler_numpy(pose_list[3], pose_list[4], pose_list[5], pose_list[6])
+        pose_list_oira = self.quaternion_to_euler([pose_list[3], pose_list[4], pose_list[5], pose_list[6]])
         pose_data = [pose_list[0], pose_list[1], np.cos(pose_list_oira[2]), np.sin(pose_list_oira[2])]
         return np.array(pose_data)
     
@@ -164,24 +167,14 @@ class RSSM_ros():
     def geometry_msgs_quaternion_converter(self, msg):
         return [msg.x, msg.y, msg.z, msg.w]
 
-    def quaternion2euler_numpy(self, x, y, z, w):
+    def quaternion_to_euler(self, quaternion):
+        """Convert Quaternion to Euler Angles
+
+        quarternion: geometry_msgs/Quaternion
+        euler: geometry_msgs/Vector3
         """
-        Convert a quaternion into euler angles (roll, pitch, yaw)
-        roll is rotation around x in radians (counterclockwise)
-        pitch is rotation around y in radians (counterclockwise)
-        yaw is rotation around z in radians (counterclockwise)
-        """
-        t0 = +2.0 * (w * x + y * z)
-        t1 = +1.0 - 2.0 * (x * x + y * y)
-        roll_x = np.degrees(np.arctan2(t0, t1))
-        t2 = +2.0 * (w * y - z * x)
-        t2 = np.where(t2>+1.0,+1.0,t2)
-        t2 = np.where(t2<-1.0, -1.0, t2)
-        pitch_y = np.degrees(np.arcsin(t2))
-        t3 = +2.0 * (w * z + x * y)
-        t4 = +1.0 - 2.0 * (y * y + z * z)
-        yaw_z = np.degrees(np.arctan2(t3, t4))
-        return roll_x, pitch_y, yaw_z # in radians
+        e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        return e
 
 
     def PredictPosition_RSSM(self, req):
@@ -206,8 +199,9 @@ class RSSM_ros():
         resp.sin_loc = self.pose_predict_loc[-1][3]
         resp.x_scale = self.pose_predict_scale[-1][0]
         resp.y_scale = self.pose_predict_scale[-1][1]
-        resp.cos_scale = self.pose_predict_scale[-1][2]
-        resp.sin_scale = self.pose_predict_scale[-1][3]
+        resp.cos_scale = self.pose_predict_scale[-1][2]*4
+        resp.sin_scale = self.pose_predict_scale[-1][3]*4
+        resp.weight = min(0.1, 0.01* (self.i - 1))
 
         if self.mode == True:
             print("---------------------------")
