@@ -22,6 +22,7 @@ do
     do
         roslaunch ros_rssm rssm_amcl.launch file_1:=${bag}
         # roslaunch record.launch src_bag:=$(printf "%02d.bag" $i) dst_bag:=$(printf "%02d.bag" $i)
+        sleep 3
     done
 
 	echo "==============================================================================="
