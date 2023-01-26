@@ -15,8 +15,9 @@ import cv2
 import datetime
 from torch.distributions import Normal
 
-# sys.path.append(os.path.join(Path().resolve(), 'catkin_ws/src/ros_rssm/Multimodal-RSSM'))
+sys.path.append(os.path.join(Path().resolve(), '../TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM'))
 sys.path.append(os.path.join(Path().resolve(), '../Multimodal-RSSM'))
+print(sys.path)
 from algos.MRSSM.MRSSM.algo import build_RSSM
 from algos.MRSSM.MRSSM.train import get_dataset_loader
 from utils.evaluation.estimate_states import get_episode_data
@@ -33,6 +34,7 @@ import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
 class RSSM_ros():
     def __init__(self):
+        args = sys.argv
 
 
         self.i=1
@@ -46,11 +48,14 @@ class RSSM_ros():
         self.mode = True
 
         now = datetime.datetime.now()
-        filename = 'amcl_log_' + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+
 
         #ここのパスに保存されます。ファイル名は日時が入る。
-        self.out_path = os.path.join("eval_data/amcl/dataset3", filename)
+        # self.out_path = os.path.join("./../Teval_data/amcl/[0]", filename)
 
+        print(args[1])
+        filename = './../TurtleBot3/ex_data/log_amcl_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        self.out_path = filename
 
 
 
@@ -84,8 +89,8 @@ class RSSM_ros():
     def save_eval_data(self):
         self.mode = False
 
-        if os.path.exists(os.path.dirname(self.out_path)) == False:
-            os.mkdir(os.path.dirname(self.out_path))
+        # if os.path.exists(os.path.dirname(self.out_path)) == False:
+        #     os.mkdir(os.path.dirname(self.out_path))
 
         np.save(self.out_path, self.eval_data, allow_pickle=True, fix_imports=True)
         print("Save eval data Dir=:", self.out_path)
@@ -128,24 +133,24 @@ class RSSM_ros():
     def geometry_msgs_quaternion_converter(self, msg):
         return [msg.x, msg.y, msg.z, msg.w]
 
-    def quaternion2euler_numpy(self, x, y, z, w):
-        """
-        Convert a quaternion into euler angles (roll, pitch, yaw)
-        roll is rotation around x in radians (counterclockwise)
-        pitch is rotation around y in radians (counterclockwise)
-        yaw is rotation around z in radians (counterclockwise)
-        """
-        t0 = +2.0 * (w * x + y * z)
-        t1 = +1.0 - 2.0 * (x * x + y * y)
-        roll_x = np.degrees(np.arctan2(t0, t1))
-        t2 = +2.0 * (w * y - z * x)
-        t2 = np.where(t2>+1.0,+1.0,t2)
-        t2 = np.where(t2<-1.0, -1.0, t2)
-        pitch_y = np.degrees(np.arcsin(t2))
-        t3 = +2.0 * (w * z + x * y)
-        t4 = +1.0 - 2.0 * (y * y + z * z)
-        yaw_z = np.degrees(np.arctan2(t3, t4))
-        return roll_x, pitch_y, yaw_z # in radians
+    # def quaternion2euler_numpy(self, x, y, z, w):
+    #     """
+    #     Convert a quaternion into euler angles (roll, pitch, yaw)
+    #     roll is rotation around x in radians (counterclockwise)
+    #     pitch is rotation around y in radians (counterclockwise)
+    #     yaw is rotation around z in radians (counterclockwise)
+    #     """
+    #     t0 = +2.0 * (w * x + y * z)
+    #     t1 = +1.0 - 2.0 * (x * x + y * y)
+    #     roll_x = np.degrees(np.arctan2(t0, t1))
+    #     t2 = +2.0 * (w * y - z * x)
+    #     t2 = np.where(t2>+1.0,+1.0,t2)
+    #     t2 = np.where(t2<-1.0, -1.0, t2)
+    #     pitch_y = np.degrees(np.arcsin(t2))
+    #     t3 = +2.0 * (w * z + x * y)
+    #     t4 = +1.0 - 2.0 * (y * y + z * z)
+    #     yaw_z = np.degrees(np.arctan2(t3, t4))
+    #     return roll_x, pitch_y, yaw_z # in radians
     
 
 
