@@ -7,27 +7,23 @@
 <!--  <arg name="y_pos" default="0.0"/>-->
 <!--  <arg name="z_pos" default="0.0"/>-->
 
-
+  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" output="screen"/> 
 <!--  <param name="robot_description" command="$(find xacro)/xacro &#45;&#45;inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />-->
 
 <!--  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />-->
 
+
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
-    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_bookstore_world/map.yaml"/> -->
-    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_hospital_world/map.yaml"/> -->
-    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_racetrack_world/map.yaml"/> -->
     <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_small_house_world/map.yaml"/>
-    <!-- <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_small_warehouse_world/map.yaml"/> -->
     <arg name="open_rviz" default="false"/>
     <arg name="move_forward_only" default="false"/>
   </include>
 
-  <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
-
+  
   <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset3_2023-01-24-14-55-20-002.bag" />
-  <node pkg="rosbag" type="play" name="player" output="screen" args="-r 2.0 -q --clock $(arg path)$(arg file_1)"/>
-  <!-- <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM"/> -->
+  <node pkg="rosbag" type="play" name="player" args="-r 2.0 -q --clock $(arg path)$(arg file_1)" required="true"/>
+  <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
 
 
 </launch>
