@@ -42,8 +42,10 @@ from scipy.spatial.transform import Rotation as R
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-state_path = "dataset_1_test.bag20230126_204953" + ".npy"
-path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
+state_path = "dataset6_2023-01-24-15-27-12.bag20230126_185137" + ".npy"
+# path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
+# path_name =  "HF-PGM_model2-seed_0/2023-01-25/run_0"
+path_name = "HF-PGM_singlemodal-seed_0/2023-01-26/run_0"
 cfg_device = "cuda:0"
 #cfg_device = "cpu"
 model_idx = 2
@@ -82,11 +84,15 @@ def imagination(h_t, s_t, actions, step):
     """
     action : t-1 -> T-1
     """
+    h_t = np2tensor(h_t).to(device = model.device).squeeze(0)
+    s_t = np2tensor(s_t).to(device = model.device).squeeze(0)
+    actions = np2tensor(np.array(actions)).to(device = model.device)
     h_t_img = [h_t]
     s_t_img = [s_t]
     
     for t in range(step):
-        belief, _, prior_mean, _ = model.transition_model(s_t_img[t], actions[t].unsqueeze(dim=0), h_t_img[t], det=True)
+        print("ht:{},st:{},at:{}".format(h_t_img[t].shape, s_t_img[t].shape, actions[t].shape))
+        belief, _, prior_mean, _ = model.transition_model(s_t_img[t], actions[t].unsqueeze(dim=0).unsqueeze(dim=0), h_t_img[t], det=True)
         h_t_img.append(belief.squeeze(dim=0))
         s_t_img.append(prior_mean.squeeze(dim=0))
 
@@ -98,7 +104,59 @@ def imagination(h_t, s_t, actions, step):
 
     return recon_imag
 
+
+def imagination_model2(h_t, s_t, actions, step):
+    """
+    action : t-1 -> T-1
+    """
+    h_t = np2tensor(h_t).to(device = model.device)
+    s_t = np2tensor(s_t).to(device = model.device)
+    actions = torch.zeros([1, 1, 1], device = model.device)
+    h_t_img = [h_t]
+    s_t_img = [s_t]
+    
+    for t in range(step):
+        print("ht:{},st:{},at:{}".format(h_t_img[t].shape, s_t_img[t].shape, actions.shape))
+        belief, _, prior_mean, _ = model.transition_model(s_t_img[t], actions, h_t_img[t], det=True)
+        h_t_img.append(belief.squeeze(dim=0))
+        s_t_img.append(prior_mean.squeeze(dim=0))
+
+    h_t_img = torch.stack(h_t_img)
+    s_t_img = torch.stack(s_t_img)
+
+    recon_imag = model.observation_model(h_t=h_t_img, s_t=s_t_img)
+    recon_imag["state"]={"beliefs":h_t_img,"posterior_means":s_t_img}
+
+    return recon_imag
+
+
+def imagination_rssm(h_t, s_t, actions, step):
+    """
+    action : t-1 -> T-1
+    """
+    h_t = np2tensor(h_t).to(device = model.device).squeeze(0)
+    s_t = np2tensor(s_t).to(device = model.device).squeeze(0)
+    actions = np2tensor(np.array(actions)).to(device = model.device)
+    h_t_img = [h_t]
+    s_t_img = [s_t]
+    
+    for t in range(step):
+        print("ht:{},st:{},at:{}".format(h_t_img[t].shape, s_t_img[t].shape, actions[t].shape))
+        belief, _, prior_mean, _ = model.transition_model(s_t_img[t], actions[t].unsqueeze(dim=0).unsqueeze(dim=0), h_t_img[t], det=True)
+        h_t_img.append(belief.squeeze(dim=0))
+        s_t_img.append(prior_mean.squeeze(dim=0))
+
+    h_t_img = torch.stack(h_t_img)
+    s_t_img = torch.stack(s_t_img)
+
+    recon_imag = model.observation_model(h_t=h_t_img, s_t=s_t_img)
+    recon_imag["state"]={"beliefs":h_t_img,"posterior_means":s_t_img}
+
+    return recon_imag
+
+
 def reconstruction_single_Rssm(o_t):
+
     normed_image = []
     for t in range(len(o_t)):
         normed_image.append(normalize_image(np2tensor(o_t[t]), 5).unsqueeze(0).to(device = model.device))
@@ -138,7 +196,7 @@ def crossmodal_recon(past_belief, past_state, x_t, step):
 
     for t in range(step):
         observations_seq = dict(image_hsr_256 = img_dummy, Pose = np2tensor(x_t[t]).unsqueeze(0).unsqueeze(0).to(device = model.device))  # Poseは状態の推論には使用しないが、何らかの値がないとエラーが出る
-        print("ht:{},st:{},at:{}".format(h_t[-1].shape, s_t[-1].shape, actions.shape))
+        
         state = model.estimate_state_online(observations_seq, actions, s_t[-1], h_t[-1], subset_index = 2)
 
         h_t.append(state["beliefs"].squeeze(0))
@@ -159,10 +217,10 @@ def reconstruction_single_Rssm(o_t):
     for t in range(len(o_t)):
         normed_image.append(normalize_image(np2tensor(o_t[t]), 5).unsqueeze(0).to(device = model.device))
     
-    o_t = torch.stack(normed_image)
+    o_t = dict(image_hsr_256=torch.stack(normed_image))
 
     observations_target = model._clip_obs(o_t, idx_start=1)
-    T = observations_target.size(0)
+    T = observations_target['image_hsr_256'].size(0)
 
     actions = torch.zeros([T, 1, 1], device = model.device)
     rewards = torch.zeros([T, 1, 1], device = model.device)
@@ -170,7 +228,7 @@ def reconstruction_single_Rssm(o_t):
 
     state = model.estimate_state(observations_target, actions[:-1], rewards, nonterminals[:-1])
     recon = model.observation_model(h_t=state["beliefs"], s_t=state["posterior_means"])
-    recon["state"] = {"beliefs":state["beliefs"],"posterior_means":state["posterior_means"]}
+    recon["state"] = {"beliefs":state["beliefs"],"posterior_means":state["posterior_means"],"posterior_states":state["posterior_states"]}
 
     return recon
 
@@ -205,15 +263,30 @@ def reverse_normalized_image(observation, bit_depth=5):
 
 
 
+def singlemodal_rssm(o_t, img_start, step):
+    recon = reconstruction_single_Rssm(o_t)
+    print(recon['state'].keys())
+
+    imgnation = imagination_model2(recon['state']['beliefs'][img_start], recon['state']['posterior_states'][img_start], states_np['pose_t-1'][img_start+1:img_start+step+1], step)
+    print(imgnation.keys())
+    im = imgnation["loc"][step, 0][[2, 1, 0]].detach().cpu().numpy()
+    return im
 
 
+#model
+# imgnation = imagination(states_np['belief'][5], states_np['posterior_states'][5], states_np['pose_t-1'][7:17], 10)
+# print(imgnation.keys())
+# im = imgnation["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
 
+#model2 img 
+# imgination_result = imagination_model2(states_np['past_belief'][5], states_np['past_posterior_states'][5], states_np['pose_t-1'][7:17], 10)
+# im = imgination_result["image_hsr_256"]["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
 
 #model2
-
 # recon = crossmodal_recon(states_np['past_belief'][5], states_np['past_posterior_states'][5], states_np['pose_t-1'][7:17], 10)
-
 # im = recon["image_hsr_256"]["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
+
+im = singlemodal_rssm(states_np['image_t'], 10, 5)
 
 im = reverse_image_observation(im)
 im = cv2.resize(im, size, interpolation=cv2.INTER_LINEAR)
