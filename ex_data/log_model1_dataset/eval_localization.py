@@ -103,7 +103,7 @@ for file in range(len(files)):
     ax.plot(np.arange(num), culc_data[file], alpha=0.15,  lw=1)
 culc_data.mean(axis=0)
 
-ax.set_title(file_dir+" (Model:2)")
+ax.set_title(file_dir+" (Model:1)")
 ax.set_xlabel("Step")
 ax.set_ylabel("Root Mean Squared Error")
 ax.set_ylim(0,13)

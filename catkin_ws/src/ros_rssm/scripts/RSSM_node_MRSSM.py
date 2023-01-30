@@ -38,7 +38,7 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_model2-seed_0/2023-01-25/run_0"
+        path_name = "HF-PGM_model2-seed_0/2023-01-26/run_2"
         model_idx = 2
         cfg_device = "cuda:0"
 
@@ -101,7 +101,7 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/log_model22_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/log_model2_2_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 
@@ -221,6 +221,8 @@ class RSSM_ros():
 
         if "pose" in sub_data.keys():  # 時刻t=0では動かないような条件
             predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+            # predict_pose = np2tensor(sub_data["grand_pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+
             normalized_past_img = (normalize_image(np2tensor(self.past_image), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device))
             past_observations_seq = dict(image_hsr_256=normalized_past_img, Pose=predict_pose)
 
@@ -265,9 +267,9 @@ class RSSM_ros():
         resp.sin_loc = self.pose_predict_loc[-1][3]
         resp.x_scale = self.pose_predict_scale[-1][0]
         resp.y_scale = self.pose_predict_scale[-1][1]
-        resp.cos_scale = self.pose_predict_scale[-1][2]*4
-        resp.sin_scale = self.pose_predict_scale[-1][3]*4
-        resp.weight = min(0.1, 0.01* (self.i - 1))
+        resp.cos_scale = self.pose_predict_scale[-1][2]*10
+        resp.sin_scale = self.pose_predict_scale[-1][3]*10
+        resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
         print(resp.weight)
         # resp.weight = 0
 

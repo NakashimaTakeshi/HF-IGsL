@@ -88,7 +88,7 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/log_model1_2_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 
@@ -181,7 +181,9 @@ class RSSM_ros():
         sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
         print(sub_data["image"].shape)
         normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        # action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
         action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+
 
         observations_seq = dict(image_hsr_256 = normalized_img)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
@@ -199,9 +201,9 @@ class RSSM_ros():
         resp.sin_loc = self.pose_predict_loc[-1][3]
         resp.x_scale = self.pose_predict_scale[-1][0]
         resp.y_scale = self.pose_predict_scale[-1][1]
-        resp.cos_scale = self.pose_predict_scale[-1][2]*4
-        resp.sin_scale = self.pose_predict_scale[-1][3]*4
-        resp.weight = min(0.1, 0.01* (self.i - 1))
+        resp.cos_scale = self.pose_predict_scale[-1][2]*10
+        resp.sin_scale = self.pose_predict_scale[-1][3]*10
+        resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
 
         if self.mode == True:
             print("---------------------------")

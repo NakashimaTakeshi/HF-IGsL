@@ -41,19 +41,22 @@ from scipy.spatial.transform import Rotation as R
 # 勾配を計算しない
 torch.set_grad_enabled(False)
 
+args = sys.argv
 #パラーメーター設定
-state_path = "dataset6_2023-01-24-15-27-12.bag20230126_185137" + ".npy"
+state_path = args[1]
 # path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
 # path_name =  "HF-PGM_model2-seed_0/2023-01-25/run_0"
 path_name = "HF-PGM_singlemodal-seed_0/2023-01-26/run_0"
+# path_name = "HF-PGM_model2-seed_0/2023-01-26/run_2"
 cfg_device = "cuda:0"
 #cfg_device = "cpu"
 model_idx = 2
 #イマジネーションスタート時刻
-t_imag_start = 30
+# t_imag_start = 30
 model_folder = os.path.join("results", path_name)
 folder_name = os.path.join("figs_out_dir/save_folda", path_name)
 size = (256, 256)
+fig_path = "patern1/"+args[1]+"patern1"
 
 
 with initialize(config_path=model_folder):
@@ -78,7 +81,7 @@ model.eval()
 states_np = np.load(state_path, allow_pickle=True).item()
 
 #イマジネーション
-print(states_np.keys())
+print(state_path)
 
 def imagination(h_t, s_t, actions, step):
     """
@@ -274,21 +277,30 @@ def singlemodal_rssm(o_t, img_start, step):
 
 
 #model
-# imgnation = imagination(states_np['belief'][5], states_np['posterior_states'][5], states_np['pose_t-1'][7:17], 10)
+# imgnation = imagination(states_np['belief'][18], states_np['posterior_states'][18], states_np['pose_t-1'][18:23], 5)
 # print(imgnation.keys())
 # im = imgnation["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
 
 #model2 img 
-# imgination_result = imagination_model2(states_np['past_belief'][5], states_np['past_posterior_states'][5], states_np['pose_t-1'][7:17], 10)
+# imgination_result = imagination_model2(states_np['past_belief'][18], states_np['past_posterior_states'][18], states_np['pose_t-1'][18:23], 5)
 # im = imgination_result["image_hsr_256"]["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
 
 #model2
-# recon = crossmodal_recon(states_np['past_belief'][5], states_np['past_posterior_states'][5], states_np['pose_t-1'][7:17], 10)
+# recon = crossmodal_recon(states_np['past_belief'][18], states_np['past_posterior_states'][18], states_np['pose_t-1'][18:23], 5)
 # im = recon["image_hsr_256"]["loc"][5, 0][[2, 1, 0]].detach().cpu().numpy()
 
-im = singlemodal_rssm(states_np['image_t'], 10, 5)
+im = singlemodal_rssm(states_np['image_t'], 18, 5)
 
 im = reverse_image_observation(im)
 im = cv2.resize(im, size, interpolation=cv2.INTER_LINEAR)
+
+#観測
+# im = states_np['image_t'][23].transpose(1, 2, 0)[:,:,[2, 1, 0]]
+
+
+plt.xticks([])
+plt.yticks([])
 plt.imshow(im)
-plt.savefig("test.png")
+plt.subplots_adjust(left=0, right=1, bottom=0, top=1) #この1行を入れる
+plt.savefig(fig_path+'.png')
+plt.savefig(fig_path+'.pdf')

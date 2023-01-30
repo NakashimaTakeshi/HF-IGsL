@@ -4,7 +4,7 @@
 observation_names_enc: ["image_hsr_256"]
 observation_names_rec: ["image_hsr_256"]
 
-condition_names: ["Pose"]
+condition_names: ["action"]
 predict_reward: False
 
 
@@ -16,8 +16,8 @@ multimodal_params: # if multimodal is True, multimodal_params are used
 
 #Using HF-PGM model (Proposed model 1)
 HF_PGM:
-  use: True
-  pose_predict: True
+  use: False
+  pose_predict: False
   pose_predict_index: 1.00    # default: 1
 
 # contrastive_learning: we can use CL when observation is single-modal or fusion timing is obs_emb

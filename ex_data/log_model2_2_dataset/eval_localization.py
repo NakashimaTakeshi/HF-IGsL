@@ -75,9 +75,9 @@ def room_clustering(position):
 import glob
 args = sys.argv
 file_dir = args[1]
-files = glob.glob("./"+ file_dir +"/*")
+files = glob.glob("./"+ file_dir +"/*"+".npy")
 data_np = np.load(files[0], allow_pickle=True).item()
-num = len(data_np["pose_t-1"])-1
+num = len(data_np["pose_t-1"])-2
 print(num)
 
 culc_data = np.zeros((len(files), num))
@@ -99,23 +99,32 @@ for file in range(len(files)):
         data_grand_pose = data_np["grand_pose_t"][i]
         # print("{}-{}={}\n".format(data_grand_pose,data_pose,data_grand_pose-data_pose))
 
-        culc_data[file][i] = round(np.sqrt(np.mean((data_grand_pose - data_pose) ** 2)),2)
+        culc_data[file][i] = np.sqrt(np.mean((data_grand_pose - data_pose) ** 2))
     ax.plot(np.arange(num), culc_data[file], alpha=0.15,  lw=1)
-culc_data.mean(axis=0)
 
-ax.set_title(file_dir+" (Model:2)")
+average_array = culc_data.mean(axis=1)
+average = average_array.mean(axis = 0)
+std = np.std(average_array, ddof=1) 
+std_error = np.std(average_array, ddof=1) / np.sqrt(len(average_array))
+
+print("Average",round(average,2))
+print("std:", round(std,2))
+print("std_error", round(std_error, 2))
+
+
+ax.set_title(file_dir+" (Model2)")
 ax.set_xlabel("Step")
-ax.set_ylabel("Root Mean Squared Error")
-ax.set_ylim(0,13)
+ax.set_ylabel("Root Mean Squared Error[m]")
+ax.set_ylim(0,7)
 ax.plot(np.arange(len(culc_data.mean(axis=0))),culc_data.mean(axis=0), color = "red", lw=3, label="Average")
-result = 'Time average='+str(round(np.average(culc_data.mean(axis=0)),2))
+result = 'Time average error='+str(round(np.average(culc_data.mean(axis=0)),2))
 ax.text(0.99, 0.99, result, va='top', ha='right', transform=ax.transAxes)
 ax.legend(loc="upper left")
-plt.savefig("./"+file_dir+"_graph.pdf")
-plt.savefig("./"+file_dir+"_graph.png", dpi=400)
+plt.savefig("./model2_"+file_dir+"_graph.pdf")
+plt.savefig("./model2_"+file_dir+"_graph.png", dpi=400)
 
-data = np.arange(9).reshape(3,3)
-# np.savetxt("./"+file_dir+"/"+file_dir+"locaization.csv", culc_data, delimiter=",")
+# data = np.arange(9).reshape(3,3)
+# np.savetxt(file_dir+"locaization.csv", culc_data, delimiter=",")
 
     # #部屋ラベル分け
     # room_label = []

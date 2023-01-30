@@ -11,17 +11,17 @@ IFS=$'\n';
 # Recursively loop through all bag files in the specified directory
 BAG_DIRECTORY=$1
 #Command -maxdepth 1 makes sure it only searches in the folder and not subfolders
-for bag in $(find ${BAG_DIRECTORY} -maxdepth 1 -name '*.bag'); 
+for bag in $(find ${BAG_DIRECTORY} -maxdepth 1 -name '*.npy'); 
 do
 	echo "Processing bag file ${bag}"
 	INPUT_DATASET_FILE="${bag}"
 
+	# python3 single_rosbag_extractor.py ${bag}
     # record_all2.sh
-    for((i=0; i<20; i++)); 
+    for((i=0; i<1; i++)); 
     do
-        roslaunch ros_rssm rssm_amcl.launch file_1:=${bag}
+        python3 ex_making_img.py ${bag}
         # roslaunch record.launch src_bag:=$(printf "%02d.bag" $i) dst_bag:=$(printf "%02d.bag" $i)
-        sleep 3
     done
 
 	echo "==============================================================================="
