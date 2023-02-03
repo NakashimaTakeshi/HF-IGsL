@@ -79,7 +79,7 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_experiment_1-seed_0/2023-01-17/run_1"
+path_name = "HF-PGM_singlemodal-seed_0/2023-01-26/run_0"
 model_idx = 2
 cfg_device = "cuda:0"
 #cfg_device = "cpu"
@@ -132,6 +132,8 @@ epi_idx = 0
 crop_idx = 0
 observations, actions, rewards, nonterminals = get_episode_data(D, epi_idx = epi_idx, crop_idx = crop_idx)
 
+print(observations["image_hsr_256"].shape)
+
 for name in observations.keys():
     if "image_horizon" in name:
         if "bin" in name:
@@ -180,22 +182,24 @@ state = model.estimate_state(observations_target, actions[:-1], rewards, nonterm
 recon = model.observation_model(h_t=state["beliefs"], s_t=state["posterior_means"])
 recon["state"]={"beliefs":state["beliefs"],"posterior_means":state["posterior_means"]}
 
-#位置尤度計算
-pose_predict_loc = []
-pose_predict_scale = []
+# # 位置尤度計算
+# pose_predict_loc = []
+# pose_predict_scale = []
 
-for t in range(len(actions)-1):
-    pose_predict_loc.append(tensor2np(model.pose_poredict_model(state["beliefs"][t])["loc"]))
-    pose_predict_scale.append(tensor2np(model.pose_poredict_model(state["beliefs"][t])["scale"]))
 
-pose_predict_loc = np.stack(pose_predict_loc)
+# print(len(actions))
+# for t in range(len(actions)-1):
+#     pose_predict_loc.append(tensor2np(model.pose_poredict_model(state["beliefs"][t])["loc"]))
+#     pose_predict_scale.append(tensor2np(model.pose_poredict_model(state["beliefs"][t])["scale"]))
 
-#部屋ラベル分け
-room_label = []
-for t in range(len(actions)-1):
-    room_label.append(room_clustering(actions.detach().cpu().numpy()[t, 0]))
-room_label = np.stack(room_label)
-print(room_label)
+# pose_predict_loc = np.stack(pose_predict_loc)
+# print(pose_predict_loc.shape)
+# #部屋ラベル分け
+# room_label = []
+# for t in range(len(actions)-1):
+#     room_label.append(room_clustering(actions.detach().cpu().numpy()[t, 0]))
+# room_label = np.stack(room_label)
+# print(room_label)
 
 #潜在空間表現(再構成)(PCA)
 ht_recon = recon["state"]["beliefs"]
@@ -217,7 +221,7 @@ feat_pca = pca_st_q_2d.transform(feat)
 sx_recon_2d, sy_recon_2d = get_xy(feat_pca)
 
 #潜在空間表現(再構成)(T-SNE)
-tsne = TSNE(n_components = 3)
+tsne = TSNE(n_components = 2)
 
 
 ht_tsne = tsne.fit_transform(ht_recon.detach().cpu().numpy()[:,0])
@@ -237,9 +241,10 @@ cmap = plt.get_cmap("tab10")
 #     ax2.plot(hx_recon_2d[i:i+2],hy_recon_2d[i:i+2], color = cmap(room_label[i]))
 # fig_tsne.savefig("tsne_ep{}.png".format(epi_idx))
 
-np.save("ht_tsne.npy",ht_tsne, allow_pickle=True)
-np.save("ht_pca.npy",[hx_recon, hy_recon, hz_recon], allow_pickle=True)
-np.save("room.npy", room_label, allow_pickle=True)
+np.save("ht_tsne_model0.npy",ht_tsne, allow_pickle=True)
+# np.save("ht_pca.npy",[hx_recon, hy_recon, hz_recon], allow_pickle=True)
+np.save("ht_pca_model0.npy",[hx_recon_2d, hy_recon_2d], allow_pickle=True)
+# np.save("room_model1.npy", room_label, allow_pickle=True)
 
 #イマジネーション
 t_imag_start = 30

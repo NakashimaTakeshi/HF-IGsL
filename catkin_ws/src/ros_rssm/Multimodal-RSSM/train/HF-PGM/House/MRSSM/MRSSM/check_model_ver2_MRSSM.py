@@ -81,7 +81,7 @@ def room_clustering(position):
 torch.set_grad_enabled(False)
 
 #パラーメーター設定
-path_name = "HF-PGM_Multimodal_experiment_1-seed_0/2023-01-22/run_1"
+path_name = "HF-PGM_model2-seed_0/2023-01-26/run_2"
 model_idx = 2
 cfg_device = "cuda:1"
 #cfg_device = "cpu"
@@ -226,7 +226,7 @@ feat_pca = pca_st_q_2d.transform(feat)
 sx_recon_2d, sy_recon_2d = get_xy(feat_pca)
 
 #潜在空間表現(再構成)(T-SNE)
-tsne = TSNE(n_components = 3)
+tsne = TSNE(n_components = 2)
 
 
 ht_tsne = tsne.fit_transform(ht_recon.detach().cpu().numpy()[:,0])
@@ -246,9 +246,10 @@ cmap = plt.get_cmap("tab10")
 #     ax2.plot(hx_recon_2d[i:i+2],hy_recon_2d[i:i+2], color = cmap(room_label[i]))
 # fig_tsne.savefig("tsne_ep{}.png".format(epi_idx))
 
-np.save("ht_tsne.npy",ht_tsne, allow_pickle=True)
-np.save("ht_pca.npy",[hx_recon, hy_recon, hz_recon], allow_pickle=True)
-np.save("room.npy", room_label, allow_pickle=True)
+np.save("ht_tsne_model2.npy",ht_tsne, allow_pickle=True)
+np.save("ht_pca_model2.npy",[hx_recon_2d, hy_recon_2d], allow_pickle=True)
+# np.save("ht_pca_model2.npy",[hx_recon, hy_recon, hz_recon], allow_pickle=True)
+np.save("room_model2.npy", room_label, allow_pickle=True)
 
 #イマジネーション
 t_imag_start = 30

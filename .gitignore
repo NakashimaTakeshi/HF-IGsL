@@ -28,6 +28,8 @@ catkin_ws/install/
 
 # 'rosbag' files.
 *.bag
+*.pdf
+*.gif
 *.pth
 *.npy
 *.log

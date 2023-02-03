@@ -1,13 +1,12 @@
 main:
-  experiment_name: HF-PGM_model1-seed_0
-  tags:
-  - RSSM
-  log_dir: /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/HF-PGM_model1-seed_0/2023-01-25/run_1
-  seed: 0
+  experiment_name: HF-PGM_model2
+  tags: []
+  log_dir: null
+  seed: 1
   disable_cuda: false
-  device: cuda:0
+  device: cuda:1
   wandb: true
-  git_hash: ae06511
+  git_hash: null
 env:
   env_config:
     env_name: House
@@ -19,27 +18,29 @@ env:
     - 256
     Pose:
     - 4
-  action_name: Pose
-  action_size: 4
+  action_name: action
+  action_size: 1
   action_repeat: 1
   bit_depth: 5
   max_episode_length: null
 rssm:
   observation_names_enc:
   - image_hsr_256
+  - Pose
   observation_names_rec:
   - image_hsr_256
-  condition_names:
   - Pose
+  condition_names:
+  - action
   predict_reward: false
-  multimodal: false
+  multimodal: true
   multimodal_params:
     fusion_timing: obs_emb
-    fusion_method: PoE
+    fusion_method: MoPoE
     num_components: null
   HF_PGM:
-    use: true
-    pose_predict: true
+    use: false
+    pose_predict: false
     pose_predict_index: 1.0
   MuMMI:
     use: false
@@ -81,9 +82,9 @@ rssm:
   model_learning_rate: 0.001
 train:
   train_data_path:
-  - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/train
+  - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/train
   validation_data_path:
-  - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230116/validation
+  - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/validation
   experience_size: 400000
   train_iteration: 8000
   checkpoint_interval: 1000

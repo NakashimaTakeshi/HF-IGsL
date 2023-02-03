@@ -2,12 +2,12 @@ main:
   experiment_name: HF-PGM_model2-seed_0
   tags:
   - RSSM
-  log_dir: /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/HF-PGM_model2-seed_0/2023-01-25/run_0
+  log_dir: /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/HF-PGM_model2-seed_0/2023-01-26/run_2
   seed: 0
   disable_cuda: false
   device: cuda:1
   wandb: true
-  git_hash: ae06511
+  git_hash: 47ebc88
 env:
   env_config:
     env_name: House
