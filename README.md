@@ -85,14 +85,14 @@ Set up the environment of the development machine with the following instruction
 2.   Clone the TurtleBot3 project repository in your home folder:
 
      ```shell
-     cd ~/ && git clone -b HF-PGM_MRSSM-otake https://gitlab.com/emlab/TurtleBot3.git
+     git clone -b HF-PGM_MRSSM-otake https://gitlab.com/emlab/TurtleBot3.git
      ```
 
      Enter your GitLab developer credentials if prompted.
 3.   Configure the system environment:
 
      ```shell
-     cd ~/TurtleBot3/ && bash ./SETUP-DEVEL-MACHINE.bash
+     cd ./TurtleBot3/ && bash ./SETUP-DEVEL-MACHINE.bash
      ```
 
      The execution of `SETUP-DEVEL-MACHINE.bash` requires `sudo` permissions to install the tools that allow virtualization, i.e., Docker, [Docker Compose](https://github.com/docker/compose), and [Nvidia Docker 2](https://github.com/NVIDIA/nvidia-docker).
@@ -120,7 +120,7 @@ Create a virtual environment using Docker (= Docker image) on the development ma
 1.   Build the Docker image:
 
      ```shell
-     cd ~/TurtleBot3/ && bash ./BUILD-DOCKER-IMAGE.bash gitlab-ci
+     cd ./TurtleBot3/ && bash ./BUILD-DOCKER-IMAGE.bash gitlab-ci
      ```
 
      This script builds the image following the instructions found in `~/TurtleBot3/docker/turtlebot3-devel/Dockerfile`.
