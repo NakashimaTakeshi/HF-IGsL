@@ -87,6 +87,11 @@ Set up the environment of the development machine with the following instruction
      ```shell
      git clone -b HF-PGM_MRSSM-otake https://gitlab.com/emlab/TurtleBot3.git
      ```
+     if you clone with ssh, use following command and if [neccesary](https://forum.gitlab.com/t/git-gitlab-com-permission-denied-publickey-keyboard-interactive-since-today-only/50362),set --config option.
+
+     ```shell
+     git clone -b HF-PGM_MRSSM-otake git@gitlab.com:emlab/TurtleBot3.git
+     ```
 
      Enter your GitLab developer credentials if prompted.
 3.   Configure the system environment:
