@@ -379,6 +379,8 @@ void pf_update_resample(pf_t *pf)
   set_a = pf->sets + pf->current_set;
   set_b = pf->sets + (pf->current_set + 1) % 2;
 
+
+  // ここのif文はpf->selective_resampling=0により実行されていない
   if (pf->selective_resampling != 0)
   {
     if (set_a->n_effective > 0.5*(set_a->sample_count))
@@ -397,6 +399,8 @@ void pf_update_resample(pf_t *pf)
 
   // Build up cumulative probability table for resampling.
   // TODO: Replace this with a more efficient procedure
+  // 再サンプリングのための累積確率表cを構築する。
+  // TODO: より効率的な手順でこれを置き換える
   // (e.g., http://www.network-theory.co.uk/docs/gslref/GeneralDiscreteDistributions.html)
   c = (double*)malloc(sizeof(double)*(set_a->sample_count+1));
   c[0] = 0.0;
