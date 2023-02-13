@@ -156,6 +156,8 @@ class AMCLLaser : public AMCLSensor
 
 double gaussian_likelihood(double x, double mu, double sigma);
 
+double sample_gaussian(double mean, double stddev);
+
 }
 
 #endif
