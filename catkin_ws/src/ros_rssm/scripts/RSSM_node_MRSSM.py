@@ -270,6 +270,7 @@ class RSSM_ros():
         resp.cos_scale = self.pose_predict_scale[-1][2]*10
         resp.sin_scale = self.pose_predict_scale[-1][3]*10
         resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
+        resp.integration_mode = 2.0
         print(resp.weight)
         # resp.weight = 0
 

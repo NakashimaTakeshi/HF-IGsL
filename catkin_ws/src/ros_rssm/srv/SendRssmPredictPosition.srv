@@ -9,3 +9,4 @@ float64 y_scale
 float64 cos_scale
 float64 sin_scale
 float64 weight
+float64 integration_mode

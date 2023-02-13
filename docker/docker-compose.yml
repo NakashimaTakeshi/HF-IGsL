@@ -7,7 +7,7 @@ services:
     hostname: HF-PGM
     runtime: ${DOCKER_RUNTIME}
     privileged: true
-    container_name: otakeshunsuke_hf-pgm_turtlebot3_1
+    container_name: otakeshunsuke_hf-pgm_turtlebot3_2
     environment:
       # Display X Server GUIs.
       - DISPLAY=${DISPLAY}

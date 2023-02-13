@@ -17,7 +17,7 @@ do
 	INPUT_DATASET_FILE="${bag}"
 
     # record_all2.sh
-    for((i=0; i<20; i++)); 
+    for((i=0; i<1; i++)); 
     do
         roslaunch ros_rssm rssm_amcl.launch file_1:=${bag##*/}
         # roslaunch record.launch src_bag:=$(printf "%02d.bag" $i) dst_bag:=$(printf "%02d.bag" $i)

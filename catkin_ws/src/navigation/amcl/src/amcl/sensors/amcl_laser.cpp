@@ -38,6 +38,7 @@
 
 #include "amcl/sensors/amcl_laser.h"
 #include <random>
+// #include <cmath>
 
 using namespace amcl;
 
@@ -236,11 +237,21 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
   // printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
   // printf("\ncos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf\n", res[4], res[5], res[6], res[7]);
-  printf("Measurement Model\nx_loc= %lf\n", res[0]);
+  printf("set->sample_count = %d\n",set->sample_count);
   // Compute the sample weights
   for (j = 0; j < set->sample_count; j++)
   {
     sample = set->samples + j;
+    
+    if(res[9] == 2.0 && j%50 == 0){
+      printf("書き換え前: sample->pose.v[0] = %lf\n",  sample->pose.v[2]);
+      sample->pose.v[0] = sample_gaussian(res[0], res[1]);
+      sample->pose.v[1] = sample_gaussian(res[2], res[3]);
+      sample->pose.v[2] = atan2(sample_gaussian(res[6], res[7]), sample_gaussian(res[4], res[5]));
+      printf("書き換え後: sample->pose.v[0] = %lf\n",  sample->pose.v[2]);
+      printf("sample_gaussian(res[0], res[1]) = %lf\n", sample_gaussian(res[0], res[1]));
+    }
+
     pose = sample->pose;
 
     // Take account of the laser pose relative to the robot
@@ -304,9 +315,8 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
       p += pz*pz*pz;
     }
 
-    double particle_pose[4] = {sample->pose.v[0], sample->pose.v[1], cos(sample->pose.v[2]), sin(sample->pose.v[2])};
 
-    
+    double particle_pose[4] = {sample->pose.v[0], sample->pose.v[1], cos(sample->pose.v[2]), sin(sample->pose.v[2])};
 
     RSSM_likelihood = 1;
     for(i = 0; i < 4; i++){
@@ -314,10 +324,19 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
     }
     p_HF_PGM = p * pow(RSSM_likelihood, res[8]);
 
-    if(!isfinite(p_HF_PGM)){
+    // if(!isfinite(p_HF_PGM)){
+    //   sample->weight *= p;
+    //   printf("RSSM_likelihood is %lf p = %lf\n",  RSSM_likelihood, p);
+    // }else{
+    //   sample->weight *= p_HF_PGM;
+    //   printf("p(%lf) * RSSM_likelihood(%lf)^(%lf) = %lf\n", p, RSSM_likelihood, res[8], p_HF_PGM);
+    // }
+
+    if(res[9] == 0.0 || res[9] == 2.0){
       sample->weight *= p;
-      printf("RSSM_likelihood is %lf p = %lf\n",  RSSM_likelihood, p);
-    }else{
+      // printf("AMCL_likelihood = %lf\n", p);
+    }
+    else if(res[9] == 1.0 ){
       sample->weight *= p_HF_PGM;
       printf("p(%lf) * RSSM_likelihood(%lf)^(%lf) = %lf\n", p, RSSM_likelihood, res[8], p_HF_PGM);
     }
