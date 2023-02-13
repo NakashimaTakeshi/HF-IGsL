@@ -37,6 +37,7 @@
 #endif
 
 #include "amcl/sensors/amcl_laser.h"
+#include <random>
 
 using namespace amcl;
 
@@ -539,7 +540,20 @@ void AMCLLaser::reallocTempData(int new_max_samples, int new_max_obs){
   }
 }
 
+//正規分布から尤度を計算する関数
 double amcl::gaussian_likelihood(double x, double mu, double sigma) {
     double exponent = -0.5 * pow((x - mu) / sigma, 2);
     return (1 / (sigma * sqrt(2 * M_PI))) * exp(exponent);
+}
+
+// ボックス＝ミュラー法を用いて、任意の平均・標準偏差を持つガウス分布からサンプリングを行う関数
+double amcl::sample_gaussian(double mean, double stddev) {
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
+  static std::uniform_real_distribution<> dis(0.0, 1.0);
+
+  double u1 = dis(gen);
+  double u2 = dis(gen);
+  double z0 = sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
+  return mean + stddev * z0;
 }
