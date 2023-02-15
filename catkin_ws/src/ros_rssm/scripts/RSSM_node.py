@@ -178,12 +178,17 @@ class RSSM_ros():
 
 
     def PredictPosition_RSSM(self, req):
-        sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
+        if self.i > 1:
+            sub_data = dict(image = self.img.transpose(2, 0, 1), pose = self.pose, grand_pose = self.grand_pose_receiver)
+            action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+        else:
+            sub_data = dict(image = self.img.transpose(2, 0, 1), grand_pose = self.grand_pose_receiver)
+            action = np2tensor(np.array([0, 0, 0, 0])).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
+            
         print(sub_data["image"].shape)
         normalized_img = normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
         # action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-        action = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
-
+        
 
         observations_seq = dict(image_hsr_256 = normalized_img)
         state = self.model.estimate_state_online(observations_seq, action, self.past_state, self.past_belief)
@@ -204,28 +209,37 @@ class RSSM_ros():
         resp.cos_scale = self.pose_predict_scale[-1][2]*10
         resp.sin_scale = self.pose_predict_scale[-1][3]*10
         resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
+        resp.integration_mode = 2.0
+
 
         if self.mode == True:
             print("---------------------------")
             print("HF-PGM (RSSM SERBER) | t = ", self.i)
-            print("x_{t-1}        :", np.round(sub_data["pose"], decimals= 2).tolist())
+            if self.i != 1:
+                print("x_{t-1}        :", np.round(sub_data["pose"], decimals= 2).tolist())
             print("p(x_t|h_t)[loc]:", [round(t, 2) for t in self.pose_predict_loc[-1]])
             print("Grand x_t      :", np.round(sub_data["grand_pose"], decimals= 2).tolist())
             print("Grand x_t_now  :", np.round(self.grand_pose_receiver, decimals= 2).tolist())
-            self.i += 1
 
             self.eval_data["image_t"].append(sub_data["image"])
-            self.eval_data["pose_t-1"].append(sub_data["pose"])
+            if self.i != 1:
+                self.eval_data["pose_t-1"].append(sub_data["pose"])
+            else:
+                self.eval_data["pose_t-1"].append(np.array([1000,1000,1,1]))
+                
             self.eval_data["grand_pose_t"].append(sub_data["grand_pose"])
             self.eval_data["predict_pose_loc"].append(np.array(self.pose_predict_loc[-1]))
             self.eval_data["predict_pose_scale"].append(np.array(self.pose_predict_scale[-1]))
             self.eval_data["posterior_states"].append(tensor2np(state["posterior_states"]))
             self.eval_data["belief"].append(tensor2np( state["beliefs"]))
             self.eval_data["past_state_prams"].append(dict(loc=tensor2np(state["posterior_means"]), scale = tensor2np(state["posterior_std_devs"])))
+            self.i += 1
 
         else:
             print("fin")
             quit()
+
+            
         return resp
 
 
