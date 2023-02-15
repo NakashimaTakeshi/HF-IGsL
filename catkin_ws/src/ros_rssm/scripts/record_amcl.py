@@ -54,7 +54,7 @@ class RSSM_ros():
         # self.out_path = os.path.join("./../Teval_data/amcl/[0]", filename)
 
         print(args[1])
-        filename = './../TurtleBot3/ex_data/log_amcl_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/log_amcl_3_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 
@@ -173,6 +173,17 @@ class RSSM_ros():
             sub_data = dict(image=self.img.transpose(2, 0, 1), grand_pose=self.grand_pose_receiver)
         
         resp = SendRssmPredictPositionResponse()
+
+        resp.x_loc = 0
+        resp.y_loc = 0
+        resp.cos_loc = 0
+        resp.sin_loc = 0
+        resp.x_scale = 0
+        resp.y_scale = 0
+        resp.cos_scale = 0
+        resp.sin_scale = 0
+        resp.weight = 0
+        resp.integration_mode = 0.0
 
         if self.mode == True:
             print("---------------------------")

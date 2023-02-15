@@ -222,7 +222,7 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 {
   AMCLLaser *self;
   int i, j, step;
-  double z, pz;
+  double z, pz, test;
   double p;
   double obs_range, obs_bearing;
   double total_weight;
@@ -237,19 +237,17 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
 
   // printf("x_loc= %lf,x_scale= %lf,y_loc= %lf,y_scale= %lf", res[0], res[1], res[2], res[3]);
   // printf("\ncos_loc= %lf,cos_scale= %lf,sin_loc= %lf,sin_scale= %lf\n", res[4], res[5], res[6], res[7]);
-  printf("set->sample_count = %d\n",set->sample_count);
+
   // Compute the sample weights
   for (j = 0; j < set->sample_count; j++)
   {
     sample = set->samples + j;
     
-    if(res[9] == 2.0 && j%50 == 0){
-      printf("書き換え前: sample->pose.v[0] = %lf\n",  sample->pose.v[2]);
+    //パーティクルの位置情報書き換えによるRSSM統合処理
+    if(res[9] == 2.0 && j%4 == 0){
       sample->pose.v[0] = sample_gaussian(res[0], res[1]);
       sample->pose.v[1] = sample_gaussian(res[2], res[3]);
       sample->pose.v[2] = atan2(sample_gaussian(res[6], res[7]), sample_gaussian(res[4], res[5]));
-      printf("書き換え後: sample->pose.v[0] = %lf\n",  sample->pose.v[2]);
-      printf("sample_gaussian(res[0], res[1]) = %lf\n", sample_gaussian(res[0], res[1]));
     }
 
     pose = sample->pose;
