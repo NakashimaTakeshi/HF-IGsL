@@ -6,11 +6,11 @@
 <!--  <arg name="x_pos" default="0.0"/>-->
 <!--  <arg name="y_pos" default="0.0"/>-->
 <!--  <arg name="z_pos" default="0.0"/>-->
-  <arg name="path" default="/root/TurtleBot3/dataset/" />
+  <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
 
 <!--  <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
-  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)"/>
+  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/>
 
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
@@ -19,10 +19,11 @@
     <arg name="move_forward_only" default="false"/>
   </include>
 
-  
-
-  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -q --clock $(arg path)$(arg file_1)" required="true"/>
   <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
+  
+  <arg name="node_start_delay" default="5.5" /> 
+  <node pkg="rosbag" type="play" name="player" args="-r  3.0 -q --clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+  
 
 
 </launch>
