@@ -101,7 +101,7 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/log_model2_particle_1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/JSAI/log_model2_particle_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 

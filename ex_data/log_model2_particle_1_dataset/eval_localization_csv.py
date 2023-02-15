@@ -78,7 +78,7 @@ args = sys.argv
 folders = glob.glob("./Path*")
 print(folders)
 
-save_data = [["Path", "Average", "std", "std_error"]]
+save_data = [["Path", "Average", "std", "std_error", "Num", "平均(標準偏差)"]]
 
 for folder in folders:
     file_dir = folder
@@ -118,7 +118,7 @@ for folder in folders:
     print("std:", round(std,2))
     print("std_error", round(std_error, 2))
 
-    save_data.append([folder, average, std, std_error])
+    save_data.append([folder, average, std, std_error, num, str(round(average,2))+'±'+str(round(std,2))])
 
 with open('save_data.csv', 'w') as f:
  
