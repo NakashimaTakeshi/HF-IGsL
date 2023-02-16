@@ -31,6 +31,8 @@ from sensor_msgs.msg import Image, CompressedImage
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from std_srvs.srv import *
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+
 class RSSM_ros():
     def __init__(self):
         # 勾配を計算しない
@@ -88,7 +90,7 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/log_model1_2_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/ex_data/JSAI/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
         self.out_path = filename
 
 
@@ -100,6 +102,7 @@ class RSSM_ros():
         self.image_subscriber()
         self.grand_pose_subscriber()
         self.PredictPosition_RSSM_server()
+        self.PredictPosition_RSSM_publisher()
         self.save_data_subscriber()
         rospy.on_shutdown(self.save_eval_data)
         print("Ready to PredictPosition_RSSM.")
@@ -113,7 +116,7 @@ class RSSM_ros():
 
     def grand_pose_subscriber(self):
         rospy.Subscriber("/tracker", Odometry, self.callback_grand_pose)
-
+    
     def PredictPosition_RSSM_publisher(self):
         self.pub_rssm_predict_position = rospy.Publisher("PredictPosition_RSSM_topic", PoseWithCovarianceStamped)
 
@@ -234,6 +237,7 @@ class RSSM_ros():
             self.eval_data["belief"].append(tensor2np( state["beliefs"]))
             self.eval_data["past_state_prams"].append(dict(loc=tensor2np(state["posterior_means"]), scale = tensor2np(state["posterior_std_devs"])))
             self.i += 1
+            self.pub_rssm_predict_position.publish(resp2PoseWithCovariance(resp))
 
         else:
             print("fin")
@@ -265,7 +269,22 @@ def tensor2np(tensor):
         return tensor.cpu().detach().numpy().copy()
     else:
         return tensor
+def resp2PoseWithCovariance(resp):
+    euler = np.arctan2(resp.cos_loc,resp.sin_loc)
+    rot = tf.transformations.quaternion_from_euler(0, 0, euler)
 
+    rssm_estimate_pose = PoseWithCovarianceStamped()
+    rssm_estimate_pose.header.stamp = rospy.get_rostime()
+    rssm_estimate_pose.header.frame_id = "map"
+    rssm_estimate_pose.pose.pose = Pose(Point(resp.x_loc, resp.y_loc, 0.0), Quaternion(rot[0], rot[1], rot[2], rot[3]))
+    print("Quaternion :", rot[0], rot[1], rot[2], rot[3])
+    rssm_estimate_pose.pose.covariance = [resp.x_scale,0.0,0.0,0.0,0.0,0.0,
+                                          0.0,resp.y_scale,0.0,0.0,0.0,0.0,
+                                          0.0,0.0,0.00000,0.0,0.0,0.0,
+                                          0.0,0.0,0.0,0.00000,0.0,0.0,
+                                          0.0,0.0,0.0,0.0,0.00000,0.0,
+                                          0.0,0.0,0.0,0.0,0.0,0.0001]
+    return rssm_estimate_pose
 
 
 if __name__ == "__main__":
