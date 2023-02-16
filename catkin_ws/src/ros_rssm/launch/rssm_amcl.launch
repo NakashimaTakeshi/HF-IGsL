@@ -10,7 +10,7 @@
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
 
 <!--  <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
-  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/>
+  <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/>
 
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
