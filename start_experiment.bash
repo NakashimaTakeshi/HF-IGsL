@@ -22,7 +22,7 @@ do
         roslaunch ros_rssm rssm_amcl.launch file_1:=${bag}
         # roslaunch ros_rssm rssm_amcl.launch file_1:=${bag##*/}
 
-        sleep 3
+        sleep 1.5
     done
 
 	echo "==============================================================================="
