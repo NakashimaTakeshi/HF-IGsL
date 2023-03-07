@@ -81,7 +81,7 @@ Complete the environment setup following the [README.md](README.md).
 1.   Build package:
 
      ```shell
-     bash sde-build-catkin-workspace
+     sde-build-catkin-workspace
      ```
 
 1.   execute:
