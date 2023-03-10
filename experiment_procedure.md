@@ -8,31 +8,25 @@ Complete the environment setup following the [README.md](README.md).
 ## Training
 1.   Download rosbag data for training:
      ```shell
-     wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw" -O MCL+MRSSM_model2.zip\
-     && rm -rf ./tmp/cookies.txt \
-     && unzip -o ./MCL+MRSSM_model2.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results \
-     && rm -rf ./MCL+MRSSM_model2.zip
+     TBD
 
      ```
 1.   Transform:
      ```shell
-     wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw" -O MCL+MRSSM_model2.zip\
-     && rm -rf ./tmp/cookies.txt \
-     && unzip -o ./MCL+MRSSM_model2.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results \
-     && rm -rf ./MCL+MRSSM_model2.zip
+TBD
 
      ```
-1.   Transform:
+1.   download npy files for training:
      ```shell
-     wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1QWerhv0VN-_PGYYa3jimLW1_FDk2qIqw" -O MCL+MRSSM_model2.zip\
+     wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj" -O training_and_validation_data.zip\
      && rm -rf ./tmp/cookies.txt \
-     && unzip -o ./MCL+MRSSM_model2.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results \
-     && rm -rf ./MCL+MRSSM_model2.zip
+     && unzip -o ./training_and_validation_data.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125 \
+     && rm -rf ./training_and_validation_data.zip
 
      ```
 
 
-## Evaluation
+## Execution
 1.   If you use pre-trained models, please download parameters of a neural network (weights) and config files([hydra](https://hydra.cc/docs/intro/) format):
      ```shell
      cd ./TurtleBot3
@@ -71,7 +65,6 @@ Complete the environment setup following the [README.md](README.md).
      && rm -rf ./eval_dataset.zip
      ```
 
-1.   You can also conveniently run multiple terminals simultaneously using Terminator by running:
 
      ```shell
      cd ./TurtleBot3/ && bash ./RUN-TERMINATOR-TERMINAL.bash simulation
@@ -89,5 +82,19 @@ Complete the environment setup following the [README.md](README.md).
      ```shell
      bash start_experiment.bash dataset
      ```
+     You can change integration mode [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L272). (1: /2:)
+     You can change model 1 or model 2 [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/launch/rssm_amcl.launch#L12). model detail is described in the paper.(coming soon)
 
 
+     Then npy files that include beleief h_t and states s_t are saved in the directory specified in the [RSSM_node.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node.py#L93) or [RSSM_node_MRSSM.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L104).
+
+## Evaluation
+1.   copy bash and python files for evaluation from [this directory](https://gitlab.com/emlab/TurtleBot3/-/tree/HF-PGM_MRSSM-otake/ex_data/JSAI/log_model2_particle_dataset) to directory  that log npy files are
+1.   execute bash twice in above directory.
+
+     ```shell
+       cd <YOURE DIRECTORY>
+       bash prepare_eval.bash
+       bash make_graph.bash 
+       python3 eval_localization_csv.py
+     ```
