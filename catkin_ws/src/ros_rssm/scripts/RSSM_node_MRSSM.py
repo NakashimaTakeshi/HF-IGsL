@@ -65,10 +65,11 @@ class RSSM_ros():
         # # # Load Model, Data and States
         model_paths = glob.glob(os.path.join(model_folder_launch, '*.pth'))
         print(model_paths)
-        print("model_pathes: ")
 
         self.model = build_RSSM(cfg, device)
+        model_paths.sort()
         model_path = model_paths[model_idx]
+        print(f"model_path:{model_path} ")
         self.model.load_model(model_path)
         self.model.eval()
 

@@ -68,7 +68,9 @@ class RSSM_ros():
         print("model_pathes: ")
 
         self.model = build_RSSM(cfg, device)
+        model_paths.sort()
         model_path = model_paths[model_idx]
+        print(f"model_path:{model_path} ")
         self.model.load_model(model_path)
         self.model.eval()
 
@@ -212,7 +214,7 @@ class RSSM_ros():
         resp.cos_scale = self.pose_predict_scale[-1][2]*10
         resp.sin_scale = self.pose_predict_scale[-1][3]*10
         resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
-        resp.integration_mode = 2.0
+        resp.integration_mode = 1.0
 
 
         if self.mode == True:
