@@ -26,7 +26,7 @@ catkin_ws/build/
 catkin_ws/devel/
 catkin_ws/install/
 
-# 'rosbag' files.
+# files.
 *.bag
 *.pdf
 *.gif
@@ -35,5 +35,11 @@ catkin_ws/install/
 *.log
 *.wandb
 *.json
+*.mp4
+
+catkin_ws/src/turtlebot3.deff
+
+# directories.
 ffmpeg/
 catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/figs_out_dir/
+ex_data/
