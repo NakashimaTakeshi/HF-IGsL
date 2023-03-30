@@ -7,7 +7,7 @@ services:
     hostname: HF-PGM
     runtime: ${DOCKER_RUNTIME}
     privileged: true
-    container_name: otakeshunsuke_hf-pgm_turtlebot3_2
+#    container_name: otakeshunsuke_hf-pgm_turtlebot3_2
     environment:
       # Display X Server GUIs.
       - DISPLAY=${DISPLAY}
@@ -25,6 +25,7 @@ services:
       dockerfile: ./docker/turtlebot3-devel/Dockerfile
       args: 
         - DOCKERFILE_COMMIT_SHORT_SHA
+    # user: root
     volumes:
       # Map repository root for convenient access.
       - ../:/root/TurtleBot3/
