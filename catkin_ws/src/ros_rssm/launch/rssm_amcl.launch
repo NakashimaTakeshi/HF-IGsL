@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <launch>
+  <param name="use_sim_time" value="true" />
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find sde_launch)/config/rviz/turtlebot3_simulation_rviz_default.rviz"/>
 
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
 <!--  <arg name="x_pos" default="0.0"/>-->
@@ -9,7 +11,7 @@
   <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
 
-<!--  <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
+<!--  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
   <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/>
 
 
@@ -22,7 +24,7 @@
   <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
   
   <arg name="node_start_delay" default="5.5" /> 
-  <node pkg="rosbag" type="play" name="player" args="-r  3.0 -q --clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -q --clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
   
 
 
