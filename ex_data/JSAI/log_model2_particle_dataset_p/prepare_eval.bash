@@ -9,7 +9,7 @@ mkdir -p "Path G"
 mkdir -p "Path H"
 mkdir -p "Path I"
 
-mv dataset_1_* "Path A"/
+mv dataset1_* "Path A"/
 mv dataset2_* "Path B"/
 mv dataset4_* "Path C"/
 mv dataset5_* "Path D"/
