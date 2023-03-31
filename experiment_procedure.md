@@ -22,7 +22,19 @@ TBD
      && rm -rf ./tmp/cookies.txt \
      && unzip -o ./training_and_validation_data.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125 \
      && rm -rf ./training_and_validation_data.zip
+     ```
+1.   Start training
+     ```shell
+     cd /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/
+     python3 main.py
+     ```
+1.   Check training agent 
+     ```shell
+     cp <TRAINING_RESULT_PATH>/hydra_config.yaml /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/eval_targets/hoge/
+     python3 estimate_state.py
 
+     "before run following python script you have to change hard cording PATH"
+     python3 check_model_ver2_MRSSM.py
      ```
 
 
@@ -82,7 +94,7 @@ TBD
      ```shell
      bash start_experiment.bash dataset
      ```
-     You can change integration mode [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L272). (1: /2:)
+     You can change integration mode [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L272). (1:[use RSSM likelihopod](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L337) /2:[replase 25% particle](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L247) based on RSSM estimation )
      You can change model 1 or model 2 [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/launch/rssm_amcl.launch#L12). model detail is described in the paper.(coming soon)
 
 
