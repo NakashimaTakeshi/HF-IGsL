@@ -10,9 +10,12 @@
 <!--  <arg name="z_pos" default="0.0"/>-->
   <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
-
-<!--  <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
-  <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/>
+  <arg name="rssm_model" default=" " />
+  <group if="$(eval rssm_model=='RSSM_node_MRSSM.py' or rssm_model=='RSSM_node.py')">
+    <node pkg="ros_rssm" type="$(arg rssm_model)" name="RSSM" args="$(arg file_1)" output="screen"/>
+  </group>
+  <!-- <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
+  <!-- <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
 
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
