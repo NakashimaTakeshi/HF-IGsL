@@ -31,15 +31,18 @@ catkin_ws/install/
 *.pdf
 *.gif
 *.pth
-*.npy
+# *.npy
 *.log
 *.wandb
 *.json
 *.mp4
 
-catkin_ws/src/turtlebot3.deff
+# catkin_ws/src/turtlebot3.deff
 
 # directories.
 ffmpeg/
 catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/figs_out_dir/
 ex_data/
+
+#others
+catkin_ws/utils/check_npy.py
