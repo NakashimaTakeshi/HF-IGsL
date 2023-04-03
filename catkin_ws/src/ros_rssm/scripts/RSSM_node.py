@@ -92,7 +92,11 @@ class RSSM_ros():
 
         now = datetime.datetime.now()
         args = sys.argv
-        filename = './../TurtleBot3/ex_data/JSAI/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        # filename = './../TurtleBot3/ex_data/JSAI/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/catkin_ws/result/eval/npy/'+ Path(args[1]).stem +"_"+ now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+
         self.out_path = filename
 
 
