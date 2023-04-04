@@ -11,9 +11,9 @@
   <arg name="path" default="/root/TurtleBot3/" />
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
   <arg name="rssm_model" default=" " />
-  <group if="$(eval rssm_model=='RSSM_node_MRSSM.py' or rssm_model=='RSSM_node.py')">
-    <node pkg="ros_rssm" type="$(arg rssm_model)" name="RSSM" args="$(arg file_1)" output="screen"/>
-  </group>
+  <!-- <group if="$(eval rssm_model=='RSSM_node_MRSSM.py' or rssm_model=='RSSM_node.py')"> -->
+  <node pkg="ros_rssm" type="$(arg rssm_model)" name="RSSM" args="$(arg file_1)" output="screen"/>
+  <!-- </group> -->
   <!-- <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
   <!-- <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
 
@@ -27,7 +27,10 @@
   <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
   
   <arg name="node_start_delay" default="5.5" /> 
-  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -q --clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/>
+
+<!-- How to set delay before starting nodes https://answers.ros.org/question/233353/set-delay-between-starting-nodes-within-launch-file/ -->
+  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -d $(arg node_start_delay) --clock --hz=100 $(arg path)$(arg file_1) " required="true"/>
+  <!-- <node pkg="rosbag" type="play" name="player" args="-r 3.0 -q -clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/> -->
   
 
 
