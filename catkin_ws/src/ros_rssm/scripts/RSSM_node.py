@@ -93,7 +93,7 @@ class RSSM_ros():
         now = datetime.datetime.now()
         args = sys.argv
         # filename = './../TurtleBot3/ex_data/JSAI/log_model1_'+ args[1] + now.strftime('%Y%m%d_%H%M%S') + '.npy'
-        filename = './../TurtleBot3/catkin_ws/result/eval/npy/'+ Path(args[1]).stem +"_"+ now.strftime('%Y%m%d_%H%M%S') + '.npy'
+        filename = './../TurtleBot3/catkin_ws/result/eval/npy/'+"rssm_"+ Path(args[1]).stem +"_"+ now.strftime('%Y%m%d_%H%M%S') + '.npy'
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
 
@@ -218,7 +218,7 @@ class RSSM_ros():
         resp.cos_scale = self.pose_predict_scale[-1][2]*10
         resp.sin_scale = self.pose_predict_scale[-1][3]*10
         resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
-        resp.integration_mode = 1.0
+        resp.integration_mode = 2.0
 
 
         if self.mode == True:
