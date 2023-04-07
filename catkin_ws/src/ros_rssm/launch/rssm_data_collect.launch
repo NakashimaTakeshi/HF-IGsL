@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <param name="use_sim_time" value="true" />
+
+  <include file="$(find sde_launch)/launch/turtlebot3_simulation_gazebo_default.launch">
+    <arg name="open_rviz" default="true"/>
+    <arg name="launch_amcl" default="false"/>
+    <arg name="launch_move_base" default="false"/>    
+  </include>
+
+  <!-- Turtlebot3 teleop-->
+  <include file="$(find turtlebot3_teleop)/launch/turtlebot3_teleop_key.launch">
+    <!-- <arg name="model" value="$(env TURTLEBOT3_MODEL)"/> -->
+  </include>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 0 0 0  map odom"/>
+
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 0 0 0  map odom"/> -->
+
+  <!-- # following line is not working in roslaunch file -->
+  <!-- <arg name="node_start_delay" default="17.0" />  -->
+  <!-- # https://classic.gazebosim.org/tutorials?tut=ros_comm&cat=connect_ros -->
+  <!-- <node pkg="rosservice" type="rosservice" name="kid_napp" args="call /gazebo/set_model_state model_state:model_name:'turtlebot3_waffle_pi' pose:position:x: 5.,y: 0.,z: 0." launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@'"/> -->
+ 
+
+
+</launch>
