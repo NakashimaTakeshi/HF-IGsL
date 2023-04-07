@@ -4,8 +4,8 @@
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 RESULT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/result/eval/'
 MODEL_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/src/ros_rssm/scripts/'
-VALDATA_PATH='dataset'
-ANALYSIS_FILEPATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/utils/'
+VALDATA_PATH='dataset/experiment_target'
+ANALYSIS_TOOL_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/utils/analysis_tools/'
 
 # Delete the result file
 rm -rf ${RESULT_PATH}npy
@@ -42,10 +42,13 @@ for RSSM_MODEL in record_amcl RSSM_node_MRSSM RSSM_node ;do
         mkdir -p ${NPY_PATH}
         mv ${RESULT_PATH}npy/*.npy ${NPY_PATH}
 
-        cp ${ANALYSIS_FILEPATH}/analyse_result/* ${NPY_PATH}
+        cd ${ANALYSIS_TOOL_PATH}
+        cp eval_localization.py eval_localization_csv.py prepare_eval.bash make_graph.bash ${NPY_PATH}
         cd ${NPY_PATH}
         bash prepare_eval.bash
         bash make_graph.bash
+        python3 eval_localization_csv.py
+        rm eval_localization.py eval_localization_csv.py prepare_eval.bash make_graph.bash 
         # # rm ${RESULT_PATH}/result.npy
 
 
@@ -54,8 +57,8 @@ for RSSM_MODEL in record_amcl RSSM_node_MRSSM RSSM_node ;do
         cd ${RESULT_PATH}/movie/
         ls *.mp4| sed "p;s/[.]mp4/_${INTEGRATION_MODE}.mp4/"|xargs -n2 mv
         mv ${RESULT_PATH}movie/*mp4 ${MOVIE_PATH}   
-        # cp ${ANALYSIS_FILEPATH}/join_mp4.bash ${MOVIE_PATH}
-        # cp ${ANALYSIS_FILEPATH}/rename_mp4.bash ${MOVIE_PATH}
+        # cp ${ANALYSIS_TOOL_PATH}/join_mp4.bash ${MOVIE_PATH}
+        # cp ${ANALYSIS_TOOL_PATH}/rename_mp4.bash ${MOVIE_PATH}
         # cd ${MOVIE_PATH}
         # bash rename_mp4.bash ${RSSM_MODEL}_${INTEGRATION_MODE}
 

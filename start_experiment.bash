@@ -31,9 +31,9 @@ do
 	INPUT_DATASET_FILE="${bag}"
 
     # record_all2.sh
-    for((i=0; i<2; i++)); 
+    for((i=0; i<20; i++)); 
     do
-        # rosclean purge -y
+        rosclean purge -y
         roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} rssm_model:=${RSSM_MODEL} &
         echo "roslaunch ros_rssm rssm_amcl.launch file_1:=${bag}"
         # roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} &
