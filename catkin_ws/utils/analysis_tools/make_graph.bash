@@ -12,6 +12,8 @@ python3 eval_localization.py "Path F"
 python3 eval_localization.py "Path G"
 python3 eval_localization.py "Path H"
 python3 eval_localization.py "Path I"
+python3 eval_localization.py "Path J"
+python3 eval_localization.py "Path K"
 
 mv *.png Graph$(basename $(pwd))_png/
 mv *.pdf Graph$(basename $(pwd))_pdf/

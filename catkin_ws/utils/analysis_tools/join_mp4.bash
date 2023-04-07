@@ -5,6 +5,7 @@ SUFFIX_2=model2_likelihood
 SUFFIX_3=model2_replase
 SUFFIX_4=mcl
 
+
 # PREFIX=Path_A_
 # ffmpeg -i ${PREFIX}${SUFFIX_1}.mp4 -i ${PREFIX}${SUFFIX_2}.mp4 -i ${PREFIX}${SUFFIX_3}.mp4 -i ${PREFIX}${SUFFIX_4}.mp4 -filter_complex "[0:v][1:v]hstack[top];[2:v][3:v]hstack[bottom];[top][bottom]vstack" ${PREFIX}.mp4
 

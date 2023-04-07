@@ -72,17 +72,22 @@ def room_clustering(position):
 
     return room
 
+
+
+
 #パラーメーター設定
 import glob
 args = sys.argv
-folders = glob.glob("./Path*")
+folders = sorted(glob.glob("./Path*"))
 print(folders)
 
-save_data = [["Path", "Average", "std", "std_error", "Num", "平均(標準偏差)"]]
+save_data = [["Path", "Average", "std", "std_error", "Num", "平均(標準偏差)","best", "worst","median"]]
 
 for folder in folders:
     file_dir = folder
     files = glob.glob("./"+ file_dir +"/*"+".npy")
+    if len(files) == 0:
+        continue
     data_np = np.load(files[0], allow_pickle=True).item()
     num = len(data_np["pose_t-1"])-5
     print(folder)
@@ -110,6 +115,13 @@ for folder in folders:
         ax.plot(np.arange(num), culc_data[file], alpha=0.15,  lw=1)
 
     average_array = culc_data.mean(axis=1)
+    final_pose_error = culc_data[:,-1]
+    best_ave_episode = np.argmin(average_array)
+    worst_ave_episode = np.argmax(average_array)
+    median_ave_episode = np.argsort(average_array)[int(len(average_array)/2)]
+    best_final_episode = np.argmin(final_pose_error)
+    worst_final_episode = np.argmax(final_pose_error)
+    median_final_episode = np.argsort(final_pose_error)[int(len(final_pose_error)/2)]
     average = average_array.mean(axis = 0)
     std = np.std(average_array, ddof=1) 
     std_error = np.std(average_array, ddof=1) / np.sqrt(len(average_array))
@@ -118,7 +130,7 @@ for folder in folders:
     print("std:", round(std,2))
     print("std_error", round(std_error, 2))
 
-    save_data.append([folder, average, std, std_error, num, str(round(average,2))+'±'+str(round(std,2))])
+    save_data.append([folder, average, std, std_error, num, str(round(average,2))+'±'+str(round(std,2)),best_final_episode, worst_final_episode, median_final_episode,best_ave_episode, worst_ave_episode, median_ave_episode])
 
 with open('save_data.csv', 'w') as f:
  

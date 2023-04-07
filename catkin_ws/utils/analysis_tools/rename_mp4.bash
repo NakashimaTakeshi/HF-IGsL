@@ -30,9 +30,11 @@ mv dataset7_*.mp4 Path_F_${SUFFIX}.mp4
 mv dataset8_*.mp4 Path_G_${SUFFIX}.mp4
 mv dataset9_*.mp4 Path_H_${SUFFIX}.mp4
 mv dataset10_*.mp4 Path_I_${SUFFIX}.mp4
+mv dataset11_*.mp4 Path_I_${SUFFIX}.mp4
+mv dataset12_*.mp4 Path_I_${SUFFIX}.mp4
 
-# mkdir -p "tmp"
-# mv *.mp4 "tmp"
+mkdir -p "tmp"
+mv *.mp4 "tmp"
 
 
 
