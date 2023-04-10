@@ -132,13 +132,17 @@ class RSSM_base(nn.Module):
                           beliefs,
                           posterior_states,
                           ):
-        if self.cfg.rssm.worldmodel_LogProbLoss:
+        if self.cfg.rssm.worldmodel_observation_loss == "log_prob":
             reward_loss = -self.reward_model.get_log_prob(beliefs, posterior_states, rewards[:-1])
             reward_loss = reward_loss.mean(dim=(0, 1))
-        else:
+        elif self.cfg.rssm.worldmodel_observation_loss == "mse":
             reward_mean = self.reward_model(
                 h_t=beliefs, s_t=posterior_states)['loc']
             reward_loss = F.mse_loss(reward_mean, rewards[:-1], reduction='none').mean(dim=(0, 1))
+        elif self.cfg.rssm.worldmodel_observation_loss == "mae":
+            reward_mean = self.reward_model(
+                h_t=beliefs, s_t=posterior_states)['loc']
+            reward_loss = F.l1_loss(reward_mean, rewards[:-1], reduction='none').mean(dim=(0, 1))
 
         return reward_loss
 
@@ -491,17 +495,24 @@ class MRSSM_base(RSSM_base):
         observations_loss = dict()
         observations_loss["observations_loss_sum"] = torch.tensor(0., device=self.cfg.main.device)
         if len(self.cfg.rssm.observation_names_rec) > 0:
-            if self.cfg.rssm.worldmodel_LogProbLoss:
+            if self.cfg.rssm.worldmodel_observation_loss == "log_prob":
                 log_probs = self.observation_model.get_log_prob(beliefs, posterior_states, observations_target)
                 for name in log_probs.keys():
                     observations_loss["observation_{}_loss".format(name)] = -log_probs[name].mean(dim=(0,1)).sum()
                     observations_loss["observations_loss_sum"] += observations_loss["observation_{}_loss".format(name)]
-            else:
+            elif self.cfg.rssm.worldmodel_observation_loss == "mse":
                 mse = self.observation_model.get_mse(h_t=beliefs, s_t=posterior_states, o_t=observations_target)
-                #print("mse:", mse)
                 for name in mse.keys():
                     observations_loss["observation_{}_loss".format(name)] = mse[name].mean(dim=(0,1)).sum()
                     observations_loss["observations_loss_sum"] += observations_loss["observation_{}_loss".format(name)]
+            elif self.cfg.rssm.worldmodel_observation_loss == "mae":
+                mae = self.observation_model.get_mae(h_t=beliefs, s_t=posterior_states, o_t=observations_target)
+                for name in mae.keys():
+                    observations_loss["observation_{}_loss".format(name)] = mae[name].mean(dim=(0,1)).sum()
+                    observations_loss["observations_loss_sum"] += observations_loss["observation_{}_loss".format(name)]
+            else:
+                raise NotImplementedError
+        
         return observations_loss
 
     def get_obs_emb(self, observations):

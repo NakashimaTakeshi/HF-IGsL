@@ -162,13 +162,19 @@ class ObservationModelLearning(Model_base):
                                ):
         observations_loss = dict()
         if len(self.cfg.additional.observation_names_rec) > 0:
-            if self.cfg.additional.worldmodel_LogProbLoss:
+            if self.cfg.additional.worldmodel_observation_loss == "log_prob":
                 log_probs = self.observation_model.get_log_prob(beliefs, posterior_states, observations_target)
                 for name in log_probs.keys():
                     observations_loss[name] = -log_probs[name].mean(dim=(0,1)).sum()
-            else:
+            elif self.cfg.additional.worldmodel_observation_loss == "mse":
                 mse = self.observation_model.get_mse(h_t=beliefs, s_t=posterior_states, o_t=observations_target)
                 for name in mse.keys():
                     observations_loss[name] = mse[name].mean(dim=(0,1)).sum()
-        
+            elif self.cfg.additional.worldmodel_observation_loss == "mae":
+                mae = self.observation_model.get_mae(h_t=beliefs, s_t=posterior_states, o_t=observations_target)
+                for name in mae.keys():
+                    observations_loss[name] = mae[name].mean(dim=(0,1)).sum()
+            else:
+                raise NotImplementedError
+            
         return observations_loss

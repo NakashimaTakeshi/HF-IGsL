@@ -79,6 +79,10 @@ class ObservationModel_base(nn.Module):
         mse = F.mse_loss(loc_and_scale['loc'], o_t, reduction='none')
         return mse
     
+    def get_mae(self, h_t, s_t, o_t):
+        loc_and_scale = self.forward(h_t, s_t)
+        mae = F.l1_loss(loc_and_scale['loc'], o_t, reduction='none')
+        return mae
 
 
 class ObservationModel_with_scale_base(ObservationModel_base):
@@ -817,6 +821,13 @@ class MultimodalObservationModel:
         observation_mse = dict()
         for name in self.observation_names_rec:
             mse = self.observation_models[name].get_mse(h_t, s_t, o_t[name])
+            observation_mse[name] = mse
+        return observation_mse
+
+    def get_mae(self, h_t, s_t, o_t):
+        observation_mse = dict()
+        for name in self.observation_names_rec:
+            mse = self.observation_models[name].get_mae(h_t, s_t, o_t[name])
             observation_mse[name] = mse
         return observation_mse
 

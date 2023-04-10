@@ -52,7 +52,8 @@ normalization: BatchNorm # BatchNorm, InstanceNorm, GroupNorm, None # default: N
 use_ResNet: False
 
 # -- observation loss --
-worldmodel_LogProbLoss: False   # default: False
+# worldmodel_LogProbLoss: False   # default: False
+worldmodel_observation_loss: mse # mse, log_prob, mae
 
 
 # -- KL divergence --
