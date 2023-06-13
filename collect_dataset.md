@@ -8,14 +8,14 @@ Complete the environment setup following the [README.md](README.md).
 
 ## Setting
 Change following from default setting 
-1. amcl setting
-  Fix number of particles to 2000
-  Fix odom_model_type from "diff" to "diff-corrected"
+1. amcl setting  
+  Fix number of particles to 2000  
+  Fix odom_model_type from "diff" to "diff-corrected"  
   <!-- Add "tf_broadcast" parameter to control publishing tf -->
-1. xacro setting
-　Change odometrySource tab "world" to "encoder" to simulate kidnapped robot problem. 
-  Add gazebo plugin to publish robot pose ground truth(topic name:/tracker)
-  Change camera position of turtlebot3 1m higher.
+1. turtlebot3 (xacro file) setting  
+  Change odometrySource tab "world" to "encoder" to simulate kidnapped robot problem.  
+  Add gazebo plugin to publish robot pose ground truth(topic name:/tracker)  
+  Change camera position of turtlebot3 1m higher.  
 
      ```shell
        bash /root/TurtleBot3/catkin_ws/utils/change_submodule_setting/change_submodule_setting.bash 
