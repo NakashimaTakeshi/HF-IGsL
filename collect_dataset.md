@@ -27,6 +27,7 @@ Change following from default setting
       #  We'll remove tf frame(map to odom) that amcl node published.  
       #  - rosnode kill amcl
       #  - roslaunch turtlebot3_navigation amcl.launch tf_broadcast:=false
+       roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
        rosbag record -a -x "(.*)/compressedDepth(.*)"
 
       #  Excute robot kidnap by calling following rosservice call 
