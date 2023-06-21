@@ -1,0 +1,14 @@
+material Aprilgrid
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture ../textures/calibration_pattern.png
+        scale 1.0 1.0
+      }
+    }
+  }
+}
