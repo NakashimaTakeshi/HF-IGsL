@@ -6,23 +6,28 @@ This document is to describe how to execute HF-PGM experiment.
 Complete the environment setup following the [README.md](README.md).
 
 ## Training
-1.   Download rosbag data for training:
-     ```shell
-     TBD
 
      ```
-1.   Transform:
-     ```shell
-TBD
-
-     ```
-1.   download npy files for training:
+1.   Download npy files for training and validation:
      ```shell
      wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj" -O training_and_validation_data.zip\
      && rm -rf ./tmp/cookies.txt \
      && unzip -o ./training_and_validation_data.zip -d ./catkin_ws/src/ros_rssm/Multimodal-RSSM/dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125 \
      && rm -rf ./training_and_validation_data.zip
      ```
+
+     If you want use original rosbag data for traning. :
+     Download test rosbag data for training
+
+     ```shell
+     TBD
+     ```
+     Transform data from rosbag to npy format:
+     ```shell
+     TBD
+
+     ```
+
 1.   Start training
      ```shell
      cd /root/TurtleBot3/catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/
