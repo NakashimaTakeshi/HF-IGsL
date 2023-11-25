@@ -1,15 +1,15 @@
 # train:
 train_data_path: 
-# - ../../../../../dataset/COBOTTA/SingleHoleDrilling/dataset/train
-- ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/train
+# - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/train
+- ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3_sweethomeEnv/train
 validation_data_path:
-# - ../../../../../dataset/COBOTTA/SingleHoleDrilling/dataset/validation
-- ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/validation
+# - ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3Image_20230125/validation
+- ../../../../../dataset/HF-PGM/MobileRobot_with_Image_Pose/Turtlebot3_sweethomeEnv/validation
 
 # Original implementation has an unlimited buffer size, but 1 million is the max experience collected anyway
 experience_size: 400_000
 
-train_iteration: 8_000
+train_iteration: 10_000
 checkpoint_interval: 1000
 validation_interval: 10
 test: False

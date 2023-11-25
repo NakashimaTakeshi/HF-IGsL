@@ -1,23 +1,23 @@
 # model:
 
 # -- Architecture --
-observation_names_enc: ["image_hsr_256", "Pose"]
-observation_names_rec: ["image_hsr_256", "Pose"]
+observation_names_enc: ["image_hsr_256"]
+observation_names_rec: ["image_hsr_256"]
 
-condition_names: ["action"]
+condition_names: ["Pose"] # ["action"] or ["Pose"]
 predict_reward: False
 
 
-multimodal: True
+multimodal: False
 multimodal_params: # if multimodal is True, multimodal_params are used
   fusion_timing: obs_emb  # stochastic_state, obs_emb
-  fusion_method: MoPoE     # NN, PoE, MoPoE, MoPoE_mean, MoPoE_select. MoPoE_mean calculate the expected value as posterior dist.
+  fusion_method: PoE     # NN, PoE, MoPoE, MoPoE_mean, MoPoE_select. MoPoE_mean calculate the expected value as posterior dist.
   num_components: 
 
 #Using HF-PGM model (Proposed model 1)
 HF_PGM:
-  use: False
-  pose_predict: False
+  use: True
+  pose_predict: True
   pose_predict_index: 1.00    # default: 1
 
 # contrastive_learning: we can use CL when observation is single-modal or fusion timing is obs_emb
@@ -49,7 +49,7 @@ hidden_size: 200                # default: 200
 belief_size: 200                # default: 200
 state_size:  30                # default: 30
 normalization: BatchNorm # BatchNorm, InstanceNorm, GroupNorm, None # default: None
-use_ResNet: False
+use_ResNet: Forse               # default: False
 
 # -- observation loss --
 worldmodel_LogProbLoss: False   # default: False

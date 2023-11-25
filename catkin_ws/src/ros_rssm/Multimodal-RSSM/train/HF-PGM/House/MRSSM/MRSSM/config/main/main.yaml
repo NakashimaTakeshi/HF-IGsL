@@ -1,5 +1,5 @@
 # main:
-experiment_name: HF-PGM_model2
+experiment_name: HF-PGM_model2 # HF-PGM_model1, HF-PGM_model2
 tags: []
 log_dir:
 seed: 1

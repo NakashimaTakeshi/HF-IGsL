@@ -1,5 +1,5 @@
 defaults:
 - main: main
-- env: House
-- rssm: HF-PGM_Multimodal
+- env: SweetHome3D # SweetHome3D, House
+- rssm: HF-PGM_Multimodal # HF-PGM_Unimodal, HF-PGM_Multimodal
 - train: train
