@@ -1,6 +1,6 @@
 # env:
 env_config:
-  env_name: House
+  env_name: SweetHome3D
 taskset_name: HF-PGM
 
 observation_shapes: 
@@ -8,7 +8,7 @@ observation_shapes:
   Pose: [4]
 
 action_name: "action" # Pose or action(dummy)
-action_size: 1      # 4 or 1(dummy)
+action_size: 4      # 4 or 1(dummy)
 action_repeat: 1
 bit_depth: 5
 max_episode_length: 
