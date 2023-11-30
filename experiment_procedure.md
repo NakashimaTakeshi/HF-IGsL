@@ -7,7 +7,6 @@ Complete the environment setup following the [README.md](README.md).
 
 ## Training
 
-     ```
 1.   Download npy files for training and validation:
      ```shell
      wget --load-cookies ./tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies ./tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1AnmvoF3wyUZ0rdBvHn4YXzN9McHeMzlj" -O training_and_validation_data.zip\

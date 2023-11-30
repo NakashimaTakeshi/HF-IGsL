@@ -1,6 +1,6 @@
 # Procedure for the collecting data
 
-This document is to describe how to execute HF-PGM experiment.
+This document is to describe how to collect data for experiment.
 Dataset are collected in Gazebo.
 
 ## Prerequisite
@@ -14,21 +14,78 @@ Change following from default setting
   <!-- Add "tf_broadcast" parameter to control publishing tf -->
 1. turtlebot3 (xacro file) setting  
   Change odometrySource tab "world" to "encoder" to simulate kidnapped robot problem.  
-  Add gazebo plugin to publish robot pose ground truth(topic name:/tracker)  
+  Add gazebo plugin to publish robot pose ground truth for evaluation.(topic name:/tracker)  
   Change camera position of turtlebot3 1m higher.  
 
      ```shell
        bash /root/TurtleBot3/catkin_ws/utils/change_submodule_setting/change_submodule_setting.bash 
      ```
-## Recode rosbag.
+## Create map.
+  Launch gazebo simulator and necessary nodes.
+
      ```shell
+       roslaunch ros_rssm rssm_data_collect_slam.launch
+       roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+     ```
+  Save map after exploreing. 
+
+     ```shell
+        rosrun map_server map_saver -f [map_file_name]
+     ```
+  If necessary, modify the map.(there some useful [tools](https://github.com/naka-lab/ros_navigation) to edit map.)
+
+
+## Recode rosbag.
+   Launch gazebo simulator and necessary nodes.
+   
+       ```shell
        cd /root/TurtleBot3/dataset/recording_ws
        roslaunch ros_rssm rssm_data_collect.launch
+     ```
+
+      #  or
+      #  roslaunch ros_rssm rssm_data_collect_slam.launch
       #  We'll remove tf frame(map to odom) that amcl node published.  
       #  - rosnode kill amcl
       #  - roslaunch turtlebot3_navigation amcl.launch tf_broadcast:=false
+
+  When the robot is operated with teleop.
+
+     ```shell
        roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
-       rosbag record -a -x "(.*)/compressedDepth(.*)"
+     ```
+
+  When the robot is operated with following waypoint.
+  (we use ros [follow_waypoints](http://wiki.ros.org/follow_waypoints) Ros package)
+  If not installed , install package. "apt-get install ros-kinetic-follow-waypoints"  
+  Please follow the instructions displayed in the terminal.
+
+     ```shell
+      roslaunch follow_waypoints follow_waypoints.launch
+     ```
+  Sellect Pose for waypoints by '2D Pose Estimate' and Save waypoints list to csv by following command
+     ```shell
+      rostopic pub /path_ready std_msgs/Empty -1
+     ```
+
+  Record ROS bag data for trainig (M)RSSM
+  Pose estimated amcl and obserbation(image) are necessary.
+     ```shell
+         rosbag record -a -x "(.*)/compressedDepth(.*)"
+         rosbag record /amcl_pose /camera/color/image_raw/compressed /clock /tracker
+     ```
+
+  Record ROS bag data for evaluation HF-PGM 
+     ```shell
+         rosbag record /camera/color/image_raw/compressed /scan /tf /tf_static /tracker /cmd_vel /imu /odom /initialpose /joint_states /clock 
+     ```
+
+## Convert rosbag to npy format for traning.
+     ```shell
+          cd /root/TurtleBot3/ml_rosbag_extractor/scripts/
+          python3 single_rosbag_extractor.py [PathForROSbag] 
+     ```
+
 
       #  Excute robot kidnap by calling following rosservice call 
       #  https://classic.gazebosim.org/tutorials?tut=ros_comm&cat=connect_ros
