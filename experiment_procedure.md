@@ -98,11 +98,11 @@ Complete the environment setup following the [README.md](README.md).
      ```shell
      bash start_experiment.bash dataset
      ```
-     You can change integration mode [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L272). (1:[use RSSM likelihopod](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L337) /2:[replase 25% particle](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L247) based on RSSM estimation )
-     You can change model 1 or model 2 [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/launch/rssm_amcl.launch#L12). model detail is described in the paper.(coming soon)
+     You can change integration mode [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py?ref_type=heads#L276). (1:[use RSSM likelihopod](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L337) /2:[replase 25% particle](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/navigation/amcl/src/amcl/sensors/amcl_laser.cpp#L247) based on RSSM estimation )
+     You can change model 1 or model 2 [here](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/ros_rssm/launch/rssm_amcl.launch?ref_type=heads#L15). model detail is described in the paper.(coming soon)
 
 
-     Then npy files that include beleief h_t and states s_t are saved in the directory specified in the [RSSM_node.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node.py#L93) or [RSSM_node_MRSSM.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_MRSSM-otake/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py#L104).
+     Then npy files that include beleief h_t and states s_t are saved in the directory specified in the [RSSM_node.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/ros_rssm/scripts/RSSM_node.py?ref_type=heads#L96) or [RSSM_node_MRSSM.py](https://gitlab.com/emlab/TurtleBot3/-/blob/HF-PGM_nakashima/catkin_ws/src/ros_rssm/scripts/RSSM_node_MRSSM.py?ref_type=heads#L106).
 
 ## Evaluation
 1.   copy bash and python files for evaluation from [this directory](https://gitlab.com/emlab/TurtleBot3/-/tree/HF-PGM_MRSSM-otake/ex_data/JSAI/log_model2_particle_dataset) to directory  that log npy files are
