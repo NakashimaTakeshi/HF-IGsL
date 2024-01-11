@@ -42,8 +42,8 @@ from scipy.spatial.transform import Rotation as R
 torch.set_grad_enabled(False)
 
 # Load Config
-# train_log_dir = "HF-PGM_model1-seed_0/2023-11-26/run_2"
-train_log_dir = "HF-PGM_model2-seed_0/2023-11-26/run_1"
+train_log_dir = "HF-PGM_model1-seed_0/2023-11-26/run_2"
+# train_log_dir = "HF-PGM_model2-seed_0/2023-11-26/run_1"
 mun_iteration = "_3000.pth"
 
 data="train"
@@ -110,7 +110,9 @@ def cell_norm_online(cells, positions, current_cell_mat, current_num_visits,num_
 
 n_episord = 9
 range_discretize = [(-6,6),(-5,5),(-np.pi,np.pi)]
-num_discretize = [40,32,2]
+# num_discretize = [40,32,2]
+num_discretize = [48,40,2]
+# num_discretize = [24,20,2]
 
 ht_all = np.zeros(tuple(num_discretize)+ (200,))
 st_all = np.zeros(tuple(num_discretize)+ (30,))
@@ -126,7 +128,6 @@ for epi_idx in range(n_episord):
     elif model_type == "model2":
         state = model.estimate_state(observations_target, actions[:-1], rewards, nonterminals[:-1], subset_index = 1,det=True)
         positions = observations_target["Pose"]
-
 
     def discretize_pose(positions, range_discretize, num_discretize):
         
@@ -217,7 +218,6 @@ def square_plot(cell, save_name="test", maxmin=False, lims=False, direction_stat
         cbar.ax.yaxis.set_ticks_position('left')
 
     fig.savefig("./" + save_name + ".pdf", bbox_inches='tight')
-    # f.savefig("./" + name + ".png", bbox_inches='tight')
 
     plt.close('all')
 
@@ -227,11 +227,14 @@ if sum_orientatation:
     save_name_h = "ht_{}_state({}-{})_{}".format(model_type, num_discretize[0], num_discretize[1], now.strftime('%Y%m%d%H%M'))
     save_name_s = "st_{}_state({}-{})_{}".format(model_type, num_discretize[0], num_discretize[1], now.strftime('%Y%m%d%H%M'))
     save_name_n = "num_visits_state({}-{})_{}".format( num_discretize[0], num_discretize[1], now.strftime('%Y%m%d%H%M'))
-    # os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
     square_plot(ht_all_norm, save_name=save_name_h, lims=[-1.0,1.0])
     # square_plot(ht_all_norm, save_name=save_name_h, lims=[ht_all_norm.min(),ht_all_norm.max()])
     square_plot(st_all_norm, save_name=save_name_s, lims=[st_all_norm.min(),st_all_norm.max()])
     square_plot(num_visits, save_name=save_name_n, lims=[num_visits.min(),num_visits.max()])
+    # square_plot(ht_all_norm, save_name=save_name_h)
+    # square_plot(st_all_norm, save_name=save_name_s)
+    # square_plot(num_visits, save_name=save_name_n)
 else:
     for direction_state in range(num_discretize[2]):
         save_name_h = "ht_{}_state({}-{}-{}_{})_{}".format(model_type, num_discretize[0], num_discretize[1], direction_state+1,num_discretize[2], now.strftime('%Y%m%d%H%M'))
