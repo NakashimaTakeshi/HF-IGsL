@@ -32,15 +32,20 @@ from nav_msgs.msg import Odometry
 from std_srvs.srv import *
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+
 class RSSM_ros():
     def __init__(self):
         # 勾配を計算しない
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_model2-seed_0/2023-01-26/run_2"
-        model_idx = 2
-        cfg_device = "cuda:0"
+        # for env1
+        # path_name = "HF-PGM_model2-seed_0/2023-01-26/run_2"
+        # for env2
+        path_name = "HF-PGM_model2-seed_0/2023-11-26/run_1"
+        mun_iteration = "_3000.pth"
+
+        # cfg_device = "cuda:0"
 
         # 相対パス（ここを変えれば、コマンドを実行するdirを変更できる、必ず"config_path"は相対パスで渡すこと！！）
         model_folder =  os.path.join("./../Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results", path_name) 
@@ -54,7 +59,7 @@ class RSSM_ros():
         # #仮の修正
         cfg.main.wandb=False
 
-        cfg.main.device = cfg_device
+        # cfg.main.device = cfg_device
         # # cfg.train.n_episode = 100
         print(' ' * 26 + 'Options')
         for k, v in cfg.items():
@@ -64,11 +69,9 @@ class RSSM_ros():
 
         # # # Load Model, Data and States
         model_paths = glob.glob(os.path.join(model_folder_launch, '*.pth'))
+        model_path = [item for item in model_paths if mun_iteration in item][0]
         print(model_paths)
-
         self.model = build_RSSM(cfg, device)
-        model_paths.sort()
-        model_path = model_paths[model_idx]
         print(f"model_path:{model_path} ")
         self.model.load_model(model_path)
         self.model.eval()
@@ -208,7 +211,8 @@ class RSSM_ros():
         quarternion: geometry_msgs/Quaternion
         euler: geometry_msgs/Vector3
         """
-        e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        # e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        e = tf.transformations.euler_from_quaternion(quaternion)
         return e
 
 
@@ -220,7 +224,7 @@ class RSSM_ros():
             sub_data = dict(image=self.img.transpose(2, 0, 1), grand_pose=self.grand_pose_receiver)
 
         normalized_img = (normalize_image(np2tensor(sub_data["image"]), 5).unsqueeze(0).unsqueeze(0).to(device=self.model.device))
-        action = torch.zeros([1, 1, 1], device=self.model.device)
+        action = torch.zeros([1, 1, self.model.cfg.env.action_size], device=self.model.device)
 
         if "pose" in sub_data.keys():  # 時刻t=0では動かないような条件
             predict_pose = np2tensor(sub_data["pose"]).unsqueeze(0).unsqueeze(0).to(device=self.model.device)
@@ -274,7 +278,7 @@ class RSSM_ros():
         resp.sin_scale = self.pose_predict_scale[-1][3]*10
         resp.weight = min(0.4, (1/1000)* (self.i - 1)**2)
         resp.integration_mode = 2.0
-        print(resp.weight)
+        print("weight   :",resp.weight)
         # resp.weight = 0
 
 
@@ -325,7 +329,7 @@ class RSSM_ros():
     def PredictPosition_RSSM_server(self):
         s = rospy.Service('PredictPosition_RSSM', SendRssmPredictPosition, self.PredictPosition_RSSM)
         
-
+# Preprocesses an observation inplace (from float32 Tensor [0, 255] to [-0.5, 0.5])
 def normalize_image(observation, bit_depth):
     # Quantise to given bit depth and centre
     observation.div_(2 ** (8 - bit_depth)).floor_().div_(2 ** bit_depth).sub_(0.5)
@@ -346,7 +350,7 @@ def tensor2np(tensor):
         return tensor
 
 def resp2PoseWithCovariance(resp):
-    euler = np.arctan2(resp.cos_loc,resp.sin_loc)
+    euler = np.arctan2(resp.sin_loc,resp.cos_loc)
     rot = tf.transformations.quaternion_from_euler(0, 0, euler)
 
     rssm_estimate_pose = PoseWithCovarianceStamped()

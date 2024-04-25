@@ -39,8 +39,12 @@ class RSSM_ros():
         torch.set_grad_enabled(False)
 
         # #パラーメーター設定
-        path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
-        model_idx = 2
+        # for env1
+        # path_name = "HF-PGM_model1-seed_0/2023-01-25/run_3"
+        # for env2
+        path_name = "HF-PGM_model1-seed_0/2023-11-26/run_2"
+        mun_iteration = "_3000.pth"
+
         cfg_device = "cuda:0"
 
         # 相対パス（ここを変えれば、コマンドを実行するdirを変更できる、必ず"config_path"は相対パスで渡すこと！！）
@@ -64,12 +68,13 @@ class RSSM_ros():
 
         # # # Load Model, Data and States
         model_paths = glob.glob(os.path.join(model_folder_launch, '*.pth'))
+        model_path = [item for item in model_paths if mun_iteration in item][0]
         print(model_paths)
         print("model_pathes: ")
 
         self.model = build_RSSM(cfg, device)
-        model_paths.sort()
-        model_path = model_paths[model_idx]
+        # model_paths.sort()
+        # model_path = model_paths[model_idx]
         print(f"model_path:{model_path} ")
         self.model.load_model(model_path)
         self.model.eval()
@@ -182,7 +187,8 @@ class RSSM_ros():
         quarternion: geometry_msgs/Quaternion
         euler: geometry_msgs/Vector3
         """
-        e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        # e = tf.transformations.euler_from_quaternion((quaternion[1], quaternion[1], quaternion[2], quaternion[3]))
+        e = tf.transformations.euler_from_quaternion(quaternion)
         return e
 
 
@@ -276,7 +282,9 @@ def tensor2np(tensor):
     else:
         return tensor
 def resp2PoseWithCovariance(resp):
-    euler = np.arctan2(resp.cos_loc,resp.sin_loc)
+    # euler = np.arctan2(resp.cos_loc,resp.sin_loc)
+    euler = np.arctan2(resp.sin_loc,resp.cos_loc)
+
     rot = tf.transformations.quaternion_from_euler(0, 0, euler)
 
     rssm_estimate_pose = PoseWithCovarianceStamped()
