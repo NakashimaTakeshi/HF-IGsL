@@ -1,7 +1,9 @@
-image: map.pgm
-resolution: 0.050000
-origin: [-51.224998, -51.224998, 0.000000]
+free_thresh: 0.196
+image: /root/TurtleBot3/catkin_ws/src/sde_launch/config/gazebo/maps/aws_robomaker_small_house_world/map.pgm
 negate: 0
 occupied_thresh: 0.65
-free_thresh: 0.196
-
+origin:
+- -51.224998
+- -51.224998
+- 0.0
+resolution: 0.05
