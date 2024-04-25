@@ -12,7 +12,10 @@
   <arg name="file_1" default="dataset7_2023-01-24-15-32-46.bag" />
   <arg name="rssm_model" default=" " />
   <!-- <group if="$(eval rssm_model=='RSSM_node_MRSSM.py' or rssm_model=='RSSM_node.py')"> -->
-  <node pkg="ros_rssm" type="$(arg rssm_model)" name="RSSM" args="$(arg file_1)" output="screen"/>
+  <node pkg="ros_rssm" type="$(arg rssm_model)" name="RSSM" args="$(arg file_1)" output="screen">
+    <remap from="/camera/rgb/image_raw/compressed" to="//camera/color/image_raw/compressed"/>
+  </node>
+
   <!-- </group> -->
   <!-- <node pkg="ros_rssm" type="RSSM_node_MRSSM.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
   <!-- <node pkg="ros_rssm" type="RSSM_node.py" name="RSSM" args="$(arg file_1)" output="screen"/> -->
@@ -20,18 +23,17 @@
 
   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
     <arg name="map_file" default="$(find sde_launch)/config/gazebo/maps/aws_robomaker_small_house_world/map.yaml"/>
+    <!-- <arg name="map_file" default="$(find rgiro_sweethome3d_worlds)/maps/type_2/3ldk/3ldk_01/map.yaml"/> -->
     <arg name="open_rviz" default="false"/>
     <arg name="move_forward_only" default="false"/>
   </include>
 
   <node pkg="rosservice" type="rosservice" name="global_loc" args="call --wait /global_localization" />
+  <node pkg="rosservice" type="rosservice" name="global_loc2" args="call --wait /global_localization_emcl" />
   
   <arg name="node_start_delay" default="5.5" /> 
 
 <!-- How to set delay before starting nodes https://answers.ros.org/question/233353/set-delay-between-starting-nodes-within-launch-file/ -->
-  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -d $(arg node_start_delay) --clock --hz=100 $(arg path)$(arg file_1) " required="true"/>
-  <!-- <node pkg="rosbag" type="play" name="player" args="-r 3.0 -q -clock $(arg path)$(arg file_1)" required="true" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' "/> -->
-  
-
+  <node pkg="rosbag" type="play" name="player" args="-r 3.0 -d $(arg node_start_delay) --clock --hz=100 $(arg path)$(arg file_1) --topic  /tf /tf_static /tracker /scan /camera/color/image_raw/compressed /camera/rgb/image_raw/compressed /camera/rgb/image_raw/compressed:=/camera/color/image_raw/compressed" required="true"/>
 
 </launch>
