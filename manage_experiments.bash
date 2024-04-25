@@ -4,7 +4,7 @@
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 RESULT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/result/eval/'
 MODEL_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/src/ros_rssm/scripts/'
-VALDATA_PATH='dataset/experiment_target'
+VALDATA_PATH='dataset/eval_episodes/SweetHome3D'
 ANALYSIS_TOOL_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )'/catkin_ws/utils/analysis_tools/'
 
 # Delete the result file
@@ -35,8 +35,8 @@ for RSSM_MODEL in record_amcl RSSM_node_MRSSM RSSM_node ;do
 
         # Execute the experiment
         cd ${CURRENT_PATH}
+        echo "bash start_experiment.bash ${VALDATA_PATH} ${RSSM_MODEL}.py"
         bash start_experiment.bash ${VALDATA_PATH} ${RSSM_MODEL}.py
-
         # Rename and analyze the result data
         NPY_PATH=${RESULT_PATH}/npy/${RSSM_MODEL}_${INTEGRATION_MODE}/
         mkdir -p ${NPY_PATH}

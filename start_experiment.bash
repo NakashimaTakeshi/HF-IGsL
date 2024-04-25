@@ -19,10 +19,10 @@ if [ ! -d ${SAVE_DIR} ]; then
 fi
 $(find ${SAVE_DIR} -maxdepth 1 -name "*.mp4" -type f -delete)
 
-RSSM_MODEL=$2
-# RSSM_MODEL="${RSSM_MODEL:- }"
+# MODEL="${MODEL:- }"
+MODEL=$2
 
-echo "RSSM_MODEL = ${RSSM_MODEL}"
+echo "MODEL = ${MODEL}"
 
 #Command -maxdepth 1 makes sure it only searches in the folder and not subfolders
 for bag in ${BAGS}; 
@@ -31,18 +31,20 @@ do
 	INPUT_DATASET_FILE="${bag}"
 
     # record_all2.sh
-    for((i=0; i<20; i++)); 
+    for((i=0; i<3; i++)); 
     do
         rosclean purge -y
-        roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} rssm_model:=${RSSM_MODEL} &
-        echo "roslaunch ros_rssm rssm_amcl.launch file_1:=${bag}"
+        roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} rssm_model:=${MODEL} &
+        echo "roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} rssm_model:=${MODEL}"
         # roslaunch ros_rssm rssm_amcl.launch file_1:=${bag} &
         sleep 6.0
         ROSLAUNCH_PID=${!}
         echo "roslaunch PID = ${ROSLAUNCH_PID}"
-        movie_name=$(basename "${bag}" .bag)_$(basename "${RSSM_MODEL}" .py)_${i}.mp4
+        movie_name=$(basename "${bag}" .bag)_$(basename "${MODEL}" .py)_${i}.mp4
         # https://ffmpeg.org/ffmpeg-all.html#x11grab
         # ffmpeg -r film -y -an -f x11grab -show_region 1 -draw_mouse 0 -video_size 1850x1020 -framerate film -i :1.0+70,60 "${SAVE_DIR}""${movie_name}" &
+        echo "----------------------------------------------------------------------"
+        echo "ffmpeg -r film -y -an -f x11grab -show_region 1 -draw_mouse 0 -loglevel 8 -video_size 1850x1020 -framerate film -i :1.0+70,60 "${SAVE_DIR}""${movie_name}""
         ffmpeg -r film -y -an -f x11grab -show_region 1 -draw_mouse 0 -loglevel 8 -video_size 1850x1020 -framerate film -i :1.0+70,60 "${SAVE_DIR}""${movie_name}" &
         
         wait $ROSLAUNCH_PID
@@ -53,5 +55,3 @@ do
 	echo "==============================================================================="
 	sleep 1
 done
-
-
