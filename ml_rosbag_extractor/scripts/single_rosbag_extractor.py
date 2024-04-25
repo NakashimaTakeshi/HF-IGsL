@@ -12,7 +12,8 @@ if __name__ == '__main__':
     target_hz = 1
     target_topics = dict(
         image_hsr_256=dict(
-            topic_name = "/camera/rgb/image_raw/compressed",
+            topic_name = "/camera/color/image_raw/compressed",
+            # topic_name = "/camera/rgb/image_raw/compressed",
             topic_msg_type = "sensor_msgs/CompressedImage",
             image_options = dict(
                 clip_mode = 1,
