@@ -44,6 +44,17 @@ qtcreator-*
 
 *~
 
+# files.
+*.bag
+*.pdf
+*.gif
+*.pth
+*.npy
+*.log
+*.wandb
+*.json
+*.mp4
+
 # Emacs
 .#*
 
