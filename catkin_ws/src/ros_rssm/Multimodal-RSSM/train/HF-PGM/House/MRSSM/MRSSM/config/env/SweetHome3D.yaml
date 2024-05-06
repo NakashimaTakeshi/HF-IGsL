@@ -7,7 +7,7 @@ observation_shapes:
   image_hsr_256: [3, 256, 256]
   Pose: [4]
 
-action_name: "action" # Pose or action(dummy)
+action_name: "Pose" # Pose or action(dummy)
 action_size: 4      # 4 or 1(dummy)
 action_repeat: 1
 bit_depth: 5
