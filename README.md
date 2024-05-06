@@ -24,7 +24,7 @@ Complete the environment setup following the [setup_env.md](setup_env.md).
 
 
 ## Execution
-1.   If you use pre-trained models, please download [parameters](https://drive.google.com/file/d/1kQFJCbMcX-ewVZjSNmDQGpsHatH3YaWo/view?usp=drive_link) of a neural network (weights) and put it ./catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results:
+1.   If you use pre-trained models, please download [parameters](https://drive.google.com/file/d/1kQFJCbMcX-ewVZjSNmDQGpsHatH3YaWo/view?usp=drive_link) of a neural network (weights) and put it `./catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results`:
 
   
 2.   Download the [dataset](https://drive.google.com/file/d/1snB7aMvaPxUAKFGFw3PPDGV7ZmJ6X7Md/view?usp=drive_link) for evaluation and unzip it in the `./Turtlebot3/dataset/processed/` directory:
