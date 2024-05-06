@@ -25,24 +25,29 @@ catkin_ws/.catkin_workspace
 catkin_ws/build/
 catkin_ws/devel/
 catkin_ws/install/
+catkin_ws/result/
+catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/old_script/
 
 # files.
 *.bag
 *.pdf
 *.gif
 *.pth
-# *.npy
+*.npy
 *.log
 *.wandb
 *.json
 *.mp4
-
+core
 # catkin_ws/src/turtlebot3.deff
 
 # directories.
 ffmpeg/
 catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/figs_out_dir/
-ex_data/
+catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/results/
+catkin_ws/src/ros_rssm/Multimodal-RSSM/train/HF-PGM/House/MRSSM/MRSSM/outputs/
+catkin_ws/src/ros_rssm/Multimodal-RSSM/dataset/
+# HF-IGL/
 
 #others
 catkin_ws/utils/check_npy.py
