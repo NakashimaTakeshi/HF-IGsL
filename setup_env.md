@@ -33,11 +33,11 @@ Summaries of the development history, requirements, vision, and goals of the SDE
 
 Carefully read the contribution guidelines before pushing new code or requesting a merge.
 Details can be found in the contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md).
-
+<!--
 ## Reporting Issues
 
 Please report any issue or future work using the GitLab issue tracker: [https://gitlab.com/emlab/TurtleBot3/issues](https://gitlab.com/emlab/TurtleBot3/issues).
-
+-->
 ## Getting Started
 
 Follow this step-by-step guide to perform the initial setup of the TurtleBot3 project on a development machine running [Ubuntu](https://www.ubuntu.com/).
@@ -63,15 +63,17 @@ Follow this step-by-step guide to perform the initial setup of the TurtleBot3 pr
 
 *   A development machine running Ubuntu 20.04 LTS (Focal Fossa) based on the AMD64 architecture.
 *   Access to administrator privileges (`sudo`) on the Ubuntu machine.
+<!--
 *   Access to developer privileges on the GitLab project at [https://gitlab.com/emlab/TurtleBot3](https://gitlab.com/emlab/TurtleBot3).
-
+-->
 **Recommended:**
 
 *   A [Robotis TurtleBot3](https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/) robot for full operability.
     If not, the TurtleBot3 simulator provides support for basic operations.
 *   An Nvidia GPU capable of running CUDA 11.2, or newer, to accelerate 3D graphics and deep learning computing.
+<!--
 *   A properly configured gitlab.com account linked with your personal SSH key to push contributions to the project repository: https://docs.gitlab.com/ee/ssh/.
-
+-->
 ### Step 1: Set up the Development Environment
 
 Set up the environment of the development machine with the following instructions.
@@ -85,15 +87,14 @@ Set up the environment of the development machine with the following instruction
 2.   Clone the TurtleBot3 project repository in your home folder:
 
      ```shell
-     git clone -b HF-PGM_MRSSM-otake https://gitlab.com/emlab/TurtleBot3.git
+     git clone -b frontier https://github.com/NakashimaTakeshi/HF-IGsL.git
      ```
      if you clone with ssh, use following command and if [neccesary](https://forum.gitlab.com/t/git-gitlab-com-permission-denied-publickey-keyboard-interactive-since-today-only/50362),set --config option.
 
      ```shell
-     git clone -b HF-PGM_MRSSM-otake git@gitlab.com:emlab/TurtleBot3.git
+     git clone -b frontier git@github.com:NakashimaTakeshi/HF-IGsL.git
      ```
 
-     Enter your GitLab developer credentials if prompted.
 3.   Configure the system environment:
 
      ```shell
